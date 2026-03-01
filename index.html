@@ -3,68 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - النظام الشامل</title>
+    <title>وزارة الموارد البشرية - نظام Asmar المتكامل</title>
     <style>
-        /* التنسيق الأصلي المستوحى من الصور */
+        /* التنسيق الأصلي الفاخر */
         * { box-sizing: border-box; }
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; direction: rtl; }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; direction: rtl; }
+        .mobile-container { width: 100%; max-width: 414px; background: #fff; min-height: 100vh; margin: auto; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        .mobile-container { 
-            width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; 
-            position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); 
-        }
+        header { background: #1a1f36; color: white; padding: 25px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-area h1 { font-size: 18px; margin: 0; }
+        .logo-area p { font-size: 10px; color: #c4a457; margin: 0; }
 
-        header { 
-            background-color: #1a1f36; color: white; padding: 25px 15px; 
-            display: flex; justify-content: space-between; align-items: center; 
-        }
-        .logo-area h1 { font-size: 18px; margin: 0; color: white; }
-        .logo-area p { font-size: 11px; color: #c4a457; margin: 0; }
+        .banner { background: #1a1f36; color: white; padding: 30px 20px 50px; text-align: center; border-radius: 0 0 40px 0; }
+        .status-badge { background: #2ecc71; color: white; font-size: 10px; padding: 5px 10px; border-radius: 20px; display: none; margin-bottom: 10px; }
 
-        .banner { 
-            background-color: #1a1f36; color: white; padding: 35px 20px 60px 20px; 
-            text-align: center; border-radius: 0 0 40px 0; 
-        }
-        .sub-title { color: #c4a457; font-size: 12px; display: block; margin-bottom: 8px; }
-
-        /* الأزرار في الواجهة الرئيسية */
-        .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 10px; }
-        .btn { 
-            width: 100%; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 14px; 
-            cursor: pointer; text-align: center; border: none; transition: 0.3s;
-        }
+        .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 8px; }
+        .btn { width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: 0.3s; text-align: center; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
-        .btn-black { background: #000; color: white; }
+        .btn-black { background: #000; color: #fff; }
 
-        /* الإحصائيات */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 25px 20px; }
-        .stat-card { 
-            background: white; padding: 20px; border-radius: 15px; text-align: center; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; 
-        }
-        .stat-card h3 { margin: 0; font-size: 26px; color: #1a1f36; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }
+        .s-card { background: white; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #eee; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .s-card h3 { margin: 0; font-size: 24px; color: #1a1f36; }
 
-        /* صفحات النظام */
+        /* الصفحات */
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
-        .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; sticky; top: 0; }
+        .p-head { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        /* عناصر القوائم */
-        .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 15px; margin: 10px 15px; border-radius: 8px; }
-        .timer-red { color: #d9534f; font-weight: bold; font-size: 12px; }
+        .item { background: #f8f9fa; border-right: 4px solid #c4a457; padding: 12px; margin: 10px 15px; border-radius: 8px; font-size: 13px; }
+        .timer { color: #e74c3c; font-weight: bold; display: block; margin-top: 5px; }
 
-        footer { background: #1a1f36; color: white; text-align: center; padding: 25px; margin-top: auto; }
-        .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; display: block; }
+        /* المدخلات */
+        .admin-box { background: #f0f2f5; padding: 15px; margin: 10px; border-radius: 10px; display: none; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
 
-        #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; }
+        footer { background: #1a1f36; color: white; text-align: center; padding: 20px; margin-top: auto; }
+        .sig { color: #c4a457; font-family: cursive; font-size: 18px; margin-top: 5px; display: block; }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="init()">
 
 <div class="mobile-container">
     <header>
-        <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
+        <div onclick="openLogin()" style="cursor:pointer; font-size:22px;">☰</div>
         <div class="logo-area">
             <h1>وزارة الموارد البشرية</h1>
             <p>بوابة الخدمات الإلكترونية</p>
@@ -72,164 +54,128 @@
     </header>
 
     <div class="banner">
-        <span class="sub-title">البوابة الرقمية الرسمية</span>
-        <h2>المستقبل المهني يبدأ هنا</h2>
+        <div id="adminStatus" class="status-badge">● تم تسجيل دخول الإدارة</div>
+        <span style="color:#c4a457; font-size:12px;">البوابة الرقمية الرسمية</span>
+        <h2>نظام إدارة الفصائل</h2>
     </div>
 
     <div class="main-nav">
-        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين</button>
-        <button class="btn btn-outline" onclick="openP('resignP')">استقالات (تهدئة 3 أيام)</button>
-        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين</button>
+        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين والرتب</button>
+        <button class="btn btn-outline" onclick="openP('resignP')">الاستقالات (3 أيام تهدئة)</button>
+        <button class="btn btn-outline" onclick="openP('fineP')">نظام المخالفات (تهدئة مخصصة)</button>
+        <button class="btn btn-outline" onclick="openP('taskP')">مهام المحاورين</button>
         <button class="btn btn-black" onclick="openP('blackP')">قائمة البلاك لست</button>
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card"><h3 id="sNum">0</h3><p>عدد الموظفين</p></div>
-        <div class="stat-card"><h3 id="tNum">0</h3><p>المهام النشطة</p></div>
+    <div class="stats">
+        <div class="s-card"><h3 id="sCount">0</h3><p>الموظفين</p></div>
+        <div class="s-card"><h3 id="fCount">0</h3><p>المخالفات</p></div>
     </div>
 
     <footer>
-        <div>وزارة الموارد البشرية والتنمية الاجتماعية</div>
-        <span class="asmar-sig">Designed by Asmar</span>
+        <p>© 2026 جميع الحقوق محفوظة</p>
+        <span class="sig">Designed by Asmar</span>
     </footer>
 
-    <div id="loginScreen">
-        <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
-        <h2>دخول الإدارة</h2>
-        <input type="password" id="pInput" placeholder="كلمة السر...">
-        <button class="btn btn-gold" onclick="doLogin()">دخول</button>
+    <div id="loginScreen" style="position:fixed; top:0; right:-100%; width:100%; height:100%; background:#1a1f36; z-index:3000; transition:0.4s; padding:50px; color:white;">
+        <span onclick="closeLogin()" style="font-size:30px; cursor:pointer;">×</span>
+        <h2>تسجيل دخول الإدارة</h2>
+        <input type="password" id="pass" placeholder="كلمة السر...">
+        <button class="btn btn-gold" onclick="login()">دخول</button>
     </div>
 
     <div id="staffP" class="page">
-        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div>
-        <div id="adminS" style="display:none; padding:15px; background:#eee;">
-            <input type="text" id="inName" placeholder="الاسم">
-            <select id="inFact"><option>الشرطة</option><option>الجيش</option><option>التحالف الطبي</option><option>الحكومة</option></select>
-            <button class="btn btn-gold" onclick="addS()">إضافة موظف</button>
+        <div class="p-head"><span onclick="closeP('staffP')">➔</span><h3>الموظفين والرتب</h3></div>
+        <div class="admin-box" id="aStaff">
+            <input type="text" id="sn" placeholder="الاسم">
+            <select id="sf"><option>الشرطة</option><option>الجيش</option><option>التحالف الطبي</option><option>الحكومة</option></select>
+            <input type="text" id="sr" placeholder="الرتبة">
+            <button class="btn btn-gold" onclick="addS()">إضافة</button>
         </div>
-        <div id="sList"></div>
+        <div id="sl"></div>
     </div>
 
-    <div id="resignP" class="page">
-        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة</h3></div>
-        <div id="adminR" style="display:none; padding:15px;">
-            <input type="text" id="rName" placeholder="اسم المستقيل">
-            <button class="btn btn-gold" onclick="addR()">بدء التهدئة</button>
+    <div id="fineP" class="page">
+        <div class="p-head"><span onclick="closeP('fineP')">➔</span><h3>نظام المخالفات</h3></div>
+        <div class="admin-box" id="aFine">
+            <input type="text" id="fn" placeholder="اسم المخالف">
+            <input type="number" id="fd" placeholder="مدة التهدئة (بالأيام)">
+            <textarea id="fr" placeholder="سبب المخالفة"></textarea>
+            <button class="btn btn-gold" onclick="addF()">إصدار مخالفة</button>
         </div>
-        <div id="rList"></div>
+        <div id="fl"></div>
     </div>
 
-    <div id="tasksP" class="page">
-        <div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>مهام المحاورين</h3></div>
-        <div id="adminT" style="display:none; padding:15px;">
-            <textarea id="tDesc" placeholder="تفاصيل المهمة"></textarea>
-            <button class="btn btn-gold" onclick="addT()">إضافة مهمة</button>
-        </div>
-        <div id="tList"></div>
-    </div>
-
-    <div id="blackP" class="page">
-        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div>
-        <div id="adminB" style="display:none; padding:15px;">
-            <input type="text" id="bName" placeholder="الاسم">
-            <input type="text" id="bReason" placeholder="السبب">
-            <button class="btn btn-black" onclick="addB()">إضافة للبلاك لست</button>
-        </div>
-        <div id="bList"></div>
-    </div>
+    <div id="resignP" class="page"><div class="p-head"><span onclick="closeP('resignP')">➔</span><h3>الاستقالات</h3></div><div class="admin-box" id="aResign"><input type="text" id="rn"><button class="btn btn-gold" onclick="addR()">بدء تهدئة</button></div><div id="rl"></div></div>
+    <div id="taskP" class="page"><div class="p-head"><span onclick="closeP('taskP')">➔</span><h3>المهام</h3></div><div class="admin-box" id="aTask"><textarea id="td"></textarea><button class="btn btn-gold" onclick="addT()">إضافة مهمة</button></div><div id="tl"></div></div>
+    <div id="blackP" class="page"><div class="p-head"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div><div class="admin-box" id="aBlack"><input type="text" id="bn"><input type="text" id="br"><button class="btn btn-black" onclick="addB()">حظر</button></div><div id="bl"></div></div>
 </div>
 
 <script>
-    let data = { staff: [], resigns: [], tasks: [], black: [] };
+    let db = JSON.parse(localStorage.getItem('asmar_v3')) || { s:[], r:[], t:[], b:[], f:[] };
 
-    function initSystem() {
-        const saved = localStorage.getItem('asmar_db');
-        if(saved) data = JSON.parse(saved);
-        if(localStorage.getItem('auth') === 'true') showAdmin();
-        renderAll();
-        setInterval(renderResigns, 1000);
+    function init() {
+        if(localStorage.getItem('isAsmarAdmin') === 'true') {
+            document.getElementById('adminStatus').style.display = 'block';
+            document.querySelectorAll('.admin-box').forEach(b => b.style.display = 'block');
+        }
+        render();
+        setInterval(renderTimers, 1000);
     }
 
-    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
-    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
+    function openLogin() { document.getElementById('loginScreen').style.right = '0'; }
+    function closeLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
     
-    function doLogin() {
-        const p = document.getElementById('pInput').value;
-        if(p === "asmar123" || p === "HR12") {
-            localStorage.setItem('auth', 'true');
+    function login() {
+        if(["asmar123", "HR12"].includes(document.getElementById('pass').value)) {
+            localStorage.setItem('isAsmarAdmin', 'true');
             location.reload();
         }
-    }
-
-    function showAdmin() {
-        document.getElementById('adminS').style.display = 'block';
-        document.getElementById('adminR').style.display = 'block';
-        document.getElementById('adminT').style.display = 'block';
-        document.getElementById('adminB').style.display = 'block';
     }
 
     function openP(id) { document.getElementById(id).style.display = 'block'; }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
 
-    function addS() {
-        data.staff.push({ name: document.getElementById('inName').value, fact: document.getElementById('inFact').value });
-        save();
+    function addS() { db.s.push({n:document.getElementById('sn').value, f:document.getElementById('sf').value, r:document.getElementById('sr').value}); save(); }
+    function addF() { 
+        const days = document.getElementById('fd').value;
+        const end = new Date().getTime() + (days * 24 * 60 * 60 * 1000);
+        db.f.push({n:document.getElementById('fn').value, r:document.getElementById('fr').value, e:end}); 
+        save(); 
+    }
+    function addR() { db.r.push({n:document.getElementById('rn').value, e:new Date().getTime() + (3*24*60*60*1000)}); save(); }
+    function addT() { db.t.push({d:document.getElementById('td').value}); save(); }
+    function addB() { db.b.push({n:document.getElementById('bn').value, r:document.getElementById('br').value}); save(); }
+
+    function save() { localStorage.setItem('asmar_v3', JSON.stringify(db)); render(); }
+
+    function render() {
+        document.getElementById('sl').innerHTML = db.s.map(i => `<div class="item"><strong>${i.n}</strong><br>الفصيل: ${i.f} | الرتبة: ${i.r}</div>`).join('');
+        document.getElementById('tl').innerHTML = db.t.map((i,idx) => `<div class="item">مهمة #${idx+1}: ${i.d}</div>`).join('');
+        document.getElementById('bl').innerHTML = db.b.map(i => `<div class="item" style="border-color:#000"><strong>${i.n}</strong><br>السبب: ${i.r}</div>`).join('');
+        document.getElementById('sCount').innerText = db.s.length;
+        document.getElementById('fCount').innerText = db.f.length;
+        renderTimers();
     }
 
-    function addR() {
-        const endTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
-        data.resigns.push({ name: document.getElementById('rName').value, end: endTime });
-        save();
-    }
-
-    function addT() {
-        data.tasks.push({ desc: document.getElementById('tDesc').value });
-        save();
-    }
-
-    function addB() {
-        data.black.push({ name: document.getElementById('bName').value, reason: document.getElementById('bReason').value });
-        save();
-    }
-
-    function save() {
-        localStorage.setItem('asmar_db', JSON.stringify(data));
-        renderAll();
-    }
-
-    function renderAll() {
-        // موظفين
-        const sl = document.getElementById('sList'); sl.innerHTML = "";
-        data.staff.forEach(s => sl.innerHTML += `<div class="item-card"><strong>${s.name}</strong> - ${s.fact}</div>`);
-        document.getElementById('sNum').innerText = data.staff.length;
-
-        // مهام
-        const tl = document.getElementById('tList'); tl.innerHTML = "";
-        data.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card">مهمة #${i+1}: ${t.desc}</div>`);
-        document.getElementById('tNum').innerText = data.tasks.length;
-
-        // بلاك لست
-        const bl = document.getElementById('bList'); bl.innerHTML = "";
-        data.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-color:#000"><strong>${b.name}</strong><br><small>السبب: ${b.reason}</small></div>`);
-        
-        renderResigns();
-    }
-
-    function renderResigns() {
-        const rl = document.getElementById('rList'); rl.innerHTML = "";
+    function renderTimers() {
         const now = new Date().getTime();
-        data.resigns.forEach(r => {
-            const diff = r.end - now;
-            let timeTxt = "انتهت فترة التهدئة";
-            if(diff > 0) {
-                const d = Math.floor(diff/(1000*60*60*24));
-                const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-                const m = Math.floor((diff%(1000*60*60))/(1000*60));
-                const s = Math.floor((diff%(1000*60))/1000);
-                timeTxt = `باقي: ${d} يوم و ${h}:${m}:${s}`;
-            }
-            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><span class="timer-red">${timeTxt}</span></div>`;
-        });
+        document.getElementById('rl').innerHTML = db.r.map(i => {
+            const d = i.e - now;
+            return `<div class="item"><strong>${i.n}</strong><span class="timer">${d > 0 ? formatTime(d) : 'استقالة نظيفة'}</span></div>`;
+        }).join('');
+        
+        document.getElementById('fl').innerHTML = db.f.map(i => {
+            const d = i.e - now;
+            return `<div class="item"><strong>المخالف: ${i.n}</strong><br><small>السبب: ${i.r}</small><span class="timer">${d > 0 ? 'مدة التهدئة: ' + formatTime(d) : 'انتهت العقوبة'}</span></div>`;
+        }).join('');
+    }
+
+    function formatTime(ms) {
+        const h = Math.floor(ms / 3600000);
+        const m = Math.floor((ms % 3600000) / 60000);
+        const s = Math.floor((ms % 60000) / 1000);
+        return `${h} ساعة و ${m} دقيقة و ${s} ثانية`;
     }
 </script>
 </body>
