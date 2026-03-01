@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية | HR ASMAR</title>
+    <title>HR ASMAR | المركز الإداري الموحد</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <style>
@@ -15,6 +15,7 @@
             --dark: #050c14;
             --white: #ffffff;
             --accent-red: #ff4655;
+            --sidebar-w: 280px;
         }
 
         body {
@@ -23,285 +24,206 @@
             color: var(--white);
             margin: 0;
             background-image: radial-gradient(circle at top, #102a43, #050c14);
+            background-attachment: fixed;
+            overflow-x: hidden;
         }
 
-        /* لوجو HR المزخرف */
+        /* القائمة الجانبية */
+        .sidebar {
+            position: fixed; top: 0; right: calc(-1 * var(--sidebar-w));
+            width: var(--sidebar-w); height: 100%;
+            background: var(--gov-blue); border-left: 2px solid var(--gold);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000; padding: 20px; box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        .sidebar.active { right: 0; }
+        .menu-toggle { font-size: 30px; color: var(--gold); cursor: pointer; position: fixed; top: 20px; right: 20px; z-index: 2100; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; }
+
         header {
-            background: rgba(11, 30, 51, 0.9);
-            padding: 30px;
-            text-align: center;
+            background: rgba(11, 30, 51, 0.9); padding: 40px; text-align: center;
             border-bottom: 4px solid var(--gold);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
-
-        .hr-logo {
-            font-family: 'Amiri', serif;
-            font-size: 60px;
-            color: var(--gold);
-            margin: 0;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-
-        .sub-title { font-size: 18px; color: var(--white); opacity: 0.8; margin-top: -10px; }
-
-        /* الأزرار العلوية */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 20px;
-            background: rgba(0,0,0,0.3);
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 10px 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            border-radius: 3px;
-        }
-
-        .nav-btn:hover, .nav-btn.active { background: var(--gold); color: var(--gov-blue); }
+        .hr-logo { font-family: 'Amiri', serif; font-size: 70px; color: var(--gold); margin: 0; text-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
 
         .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
-        .page { display: none; }
-        .page.active { display: block; animation: slideUp 0.5s ease; }
-
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* نموذج الإدخال */
-        .admin-section {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            display: none;
-        }
-
-        .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        input, select, textarea {
-            background: #0d1b2a;
-            border: 1px solid #1e3a5a;
-            color: white;
-            padding: 12px;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .btn-confirm {
-            background: var(--gold);
-            color: var(--gov-blue);
-            border: none;
-            padding: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-
-        /* الجداول الملكية */
-        .faction-card {
-            background: #0a1929;
-            border-radius: 5px;
-            margin-bottom: 25px;
-            border-right: 5px solid var(--gold);
-            overflow: hidden;
-        }
-
-        .faction-title {
-            padding: 15px;
-            background: rgba(212, 175, 55, 0.1);
-            font-weight: bold;
-            border-bottom: 1px solid #1e3a5a;
-        }
-
+        
+        /* البطاقات والجداول */
+        .faction-card { background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 30px; border-right: 5px solid var(--gold); overflow: hidden; }
+        .faction-title { padding: 15px; background: rgba(212, 175, 55, 0.1); font-weight: bold; font-size: 1.2em; display: flex; justify-content: space-between; }
+        
         table { width: 100%; border-collapse: collapse; }
-        th { background: #0d1b2a; color: var(--gold); padding: 12px; text-align: right; font-size: 13px; }
-        td { padding: 12px; border-bottom: 1px solid #1e3a5a; font-size: 14px; }
+        th { background: #0d1b2a; color: var(--gold); padding: 15px; text-align: right; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        .badge { padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; }
+        /* مدخلات الإدارة */
+        .admin-input-group { margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.2); padding-bottom: 15px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; background: #050c14; border: 1px solid var(--gold); color: white; border-radius: 4px; box-sizing: border-box; }
+        .btn-gold { background: var(--gold); color: var(--gov-blue); border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* الدعم الفني المدمج */
+        #chat-box { height: 200px; background: #000; overflow-y: auto; padding: 10px; font-size: 12px; border-radius: 4px; margin-bottom: 10px; }
+        .msg-admin { color: var(--gold); }
+        .msg-user { color: #00ff88; }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; }
         .bg-active { background: #00ff88; color: #000; }
         .bg-red { background: var(--accent-red); color: #fff; }
 
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
+<div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+
+<div class="sidebar" id="sidebar">
+    <h2 style="color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px;">إعدادات النظام</h2>
+    
+    <div id="login-section">
+        <button class="btn-gold" onclick="login()">🔐 دخول الإدارة</button>
+    </div>
+
+    <div id="admin-controls" class="hidden">
+        <div class="admin-input-group">
+            <h4>👤 إضافة موظف</h4>
+            <input type="text" id="name" placeholder="الاسم الكامل">
+            <select id="sector"><option value="جيش">الجيش</option><option value="شرطة">الشرطة</option><option value="طبي">الطبي</option><option value="حكومي">الحكومي</option></select>
+            <input type="text" id="rank" placeholder="الرتبة">
+            <select id="status"><option value="نشط">نشط</option><option value="استقالة">استقالة</option><option value="فصل">فصل</option></select>
+            <button class="btn-gold" onclick="saveData()">إضافة السجل</button>
+        </div>
+
+        <div class="admin-input-group">
+            <h4>📁 إضافة خانة جديدة</h4>
+            <input type="text" id="newSectorName" placeholder="اسم القسم الجديد">
+            <button class="btn-gold" onclick="addNewSector()" style="background: #28a745; color: white;">فتح الخانة</button>
+        </div>
+    </div>
+
+    <div class="admin-input-group" style="margin-top:20px;">
+        <h4>🎧 الدعم الفني المباشر</h4>
+        <div id="chat-box"></div>
+        <input type="text" id="chatInput" placeholder="اكتب رسالتك...">
+        <button class="btn-gold" onclick="sendChat()">إرسال</button>
+    </div>
+</div>
+
 <header>
     <h1 class="hr-logo">𝓗𝓡</h1>
-    <div class="sub-title">وزارة الموارد البشرية | المبرمج Asmar</div>
+    <div style="color: var(--gold); font-weight: bold; letter-spacing: 2px;">وزارة الموارد البشرية | ASMAR</div>
 </header>
 
-<nav>
-    <button class="nav-btn active" onclick="showPage('main')">🏠 سجل الموظفين</button>
-    <button class="nav-btn" onclick="showPage('blacklist')">🚫 القائمة السوداء</button>
-    <button class="nav-btn" onclick="loginSystem()" id="login-txt">🔐 دخول الإدارة</button>
-</nav>
-
 <div class="container">
-    
-    <div id="p-main" class="page active">
-        <div id="admin-area" class="admin-section">
-            <h3 style="color: var(--gold); margin-top:0;">إصدار قرار رسمي جديد</h3>
-            <div class="grid-form">
-                <input type="text" id="name" placeholder="اسم اللاعب الكامل">
-                <select id="sector" onchange="updateRanks()">
-                    <option value="">اختر القطاع</option>
-                    <option value="جيش">🎖️ قوات الجيش</option>
-                    <option value="شرطة">🚔 جهاز الشرطة</option>
-                    <option value="طبي">🏥 التحالف الطبي</option>
-                    <option value="حكومي">🏛️ القطاع الحكومي</option>
-                </select>
-                <select id="rank"><option>الرتبة</option></select>
-                <select id="status" onchange="toggleBlacklistFields()">
-                    <option value="نشط">متواجد (نشط)</option>
-                    <option value="استقالة">استقالة</option>
-                    <option value="فصل">فصل نهائي</option>
-                </select>
-            </div>
-            
-            <div id="blacklist-fields" style="display:none; margin-top:15px;">
-                <textarea id="reason" placeholder="سبب الإجراء..."></textarea>
-                <div class="grid-form" style="margin-top:10px;">
-                    <input type="text" id="punish" placeholder="العقوبة المطبقة">
-                    <input type="number" id="cooldown" placeholder="فترة التهدئة (بالأيام)">
-                </div>
-            </div>
-            <button class="btn-confirm" onclick="saveData()">اعتماد في السجلات السحابية</button>
-        </div>
-
-        <div class="faction-card">
-            <div class="faction-title">🎖️ كشوفات قوات الجيش</div>
+    <div id="faction-container">
+        <div class="faction-card" id="card-جيش">
+            <div class="faction-title">🎖️ كشوفات الجيش</div>
             <table id="t-جيش"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
         </div>
-        <div class="faction-card">
-            <div class="faction-title">🚔 كشوفات جهاز الشرطة</div>
+        <div class="faction-card" id="card-شرطة">
+            <div class="faction-title">🚔 جهاز الشرطة</div>
             <table id="t-شرطة"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
         </div>
-        <div class="faction-card">
-            <div class="faction-title">🏥 كشوفات التحالف الطبي</div>
+        <div class="faction-card" id="card-طبي">
+            <div class="faction-title">🏥 التحالف الطبي</div>
             <table id="t-طبي"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
         </div>
-        <div class="faction-card">
-            <div class="faction-title">🏛️ كشوفات القطاع الحكومي</div>
-            <table id="t-حكومي"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-        </div>
     </div>
 
-    <div id="p-blacklist" class="page">
-        <div class="faction-card" style="border-right-color: var(--accent-red);">
-            <div class="faction-title" style="color: var(--accent-red);">🚫 السجل الأسود (Blacklist)</div>
-            <table>
-                <thead><tr><th>الاسم</th><th>الحالة</th><th>السبب</th><th>العقوبة</th><th>التهدئة</th><th>الإجراء</th></tr></thead>
-                <tbody id="black-table"></tbody>
-            </table>
-        </div>
+    <div class="faction-card" style="border-right-color: var(--accent-red);">
+        <div class="faction-title" style="color: var(--accent-red);">🚫 القائمة السوداء (Blacklist)</div>
+        <table id="t-blacklist"><thead><tr><th>الاسم</th><th>القطاع</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
     </div>
-
 </div>
 
 <script>
-    // Firebase Config (نفس بياناتك)
     const firebaseConfig = {
         apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
         databaseURL: "https://hr-asmar-default-rtdb.firebaseio.com",
-        projectId: "hr-asmar",
-        appId: "1:642339321351:web:28780333d7b819f798ec4b"
+        projectId: "hr-asmar"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    let isAsmar = false;
 
-    let userRole = null;
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
 
-    function loginSystem() {
-        const u = prompt("اسم المستخدم:");
-        const p = prompt("كلمة المرور:");
-        if(u === "Asmar" && p === "asmar123") {
-            userRole = "admin";
-            document.getElementById('admin-area').style.display = 'block';
-            document.getElementById('login-txt').innerText = "مرحباً Asmar";
-        } else if(u === "Helper" && p === "help123") {
-            userRole = "helper";
-            document.getElementById('admin-area').style.display = 'block';
-            document.getElementById('login-txt').innerText = "مرحباً المساعد";
-        } else { alert("خطأ في البيانات!"); }
+    function login() {
+        const p = prompt("كلمة سر الإدارة:");
+        if(p === "asmar123") {
+            isAsmar = true;
+            document.getElementById('admin-controls').classList.remove('hidden');
+            document.getElementById('login-section').innerHTML = "<p style='color:gold'>✅ وضع المبرمج نشط</p>";
+        }
     }
 
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('p-' + id).classList.add('active');
-        event.target.classList.add('active');
-    }
-
-    const rankData = {
-        "جيش": ["جندي", "جندي أول", "عريف", "رقيب", "ملازم", "نقيب", "رائد", "عقيد", "لواء"],
-        "شرطة": ["شرطي", "عريف", "رقيب", "ملازم", "نقيب", "رائد", "عميد", "مدير أمن"],
-        "طبي": ["مسعف", "ممرض", "طبيب عام", "جراح", "استشاري", "مدير مستشفى"],
-        "حكومي": ["موظف مستجد", "إداري", "رئيس قسم", "مدير مكتب", "وكيل", "وزير"]
-    };
-
-    function updateRanks() {
-        const s = document.getElementById('sector').value;
-        const r = document.getElementById('rank');
-        r.innerHTML = "";
-        if(rankData[s]) rankData[s].forEach(x => r.innerHTML += `<option value="${x}">${x}</option>`);
-    }
-
-    function toggleBlacklistFields() {
-        const s = document.getElementById('status').value;
-        document.getElementById('blacklist-fields').style.display = (s === 'نشط') ? 'none' : 'block';
+    function addNewSector() {
+        const name = document.getElementById('newSectorName').value;
+        if(name) {
+            db.ref('SECTORS/').push({ name: name });
+            document.getElementById('newSectorName').value = "";
+        }
     }
 
     function saveData() {
-        const status = document.getElementById('status').value;
-        let cooldownText = "منتهية";
-        if(status === 'استقالة') {
-            let d = new Date(); d.setDate(d.getDate() + 3);
-            cooldownText = d.toLocaleDateString();
-        } else if(status === 'فصل') {
-            let days = parseInt(document.getElementById('cooldown').value) || 0;
-            let d = new Date(); d.setDate(d.getDate() + days);
-            cooldownText = d.toLocaleDateString();
-        }
-
         const data = {
             name: document.getElementById('name').value,
             sector: document.getElementById('sector').value,
             rank: document.getElementById('rank').value,
-            status: status,
-            reason: document.getElementById('reason').value || "لا يوجد",
-            punish: document.getElementById('punish').value || "لا يوجد",
-            cooldown: cooldownText,
+            status: document.getElementById('status').value,
             date: new Date().toLocaleDateString()
         };
-        db.ref('GOV_RECORDS/').push(data);
-        alert("تم الحفظ في السجلات الرسمية");
+        db.ref('RECORDS/').push(data);
     }
 
-    db.ref('GOV_RECORDS/').on('value', snap => {
-        const sectors = ["جيش", "شرطة", "طبي", "حكومي"];
-        sectors.forEach(s => document.querySelector(`#t-${s} tbody`).innerHTML = "");
-        document.getElementById('black-table').innerHTML = "";
-
+    // جلب الخانات الديناميكية
+    db.ref('SECTORS/').on('value', snap => {
+        const container = document.getElementById('faction-container');
+        const selector = document.getElementById('sector');
         snap.forEach(child => {
-            const v = child.val();
-            const id = child.key;
-            const btn = (userRole === 'admin') ? `<button onclick="db.ref('GOV_RECORDS/${id}').remove()" style="background:none; border:none; color:red; cursor:pointer">🗑️</button>` : '';
-
-            if(v.status === 'نشط') {
-                const table = document.querySelector(`#t-${v.sector} tbody`);
-                if(table) table.innerHTML += `<tr><td>${v.name}</td><td>${v.rank}</td><td><span class="badge bg-active">نشط</span></td><td>${v.date} ${btn}</td></tr>`;
-            } else {
-                document.getElementById('black-table').innerHTML += `<tr><td>${v.name}</td><td><span class="badge bg-red">${v.status}</span></td><td>${v.reason}</td><td>${v.punish}</td><td>${v.cooldown}</td><td>${btn}</td></tr>`;
+            const s = child.val();
+            if(!document.getElementById('card-' + s.name)) {
+                container.innerHTML += `
+                    <div class="faction-card" id="card-${s.name}">
+                        <div class="faction-title">📁 قسم ${s.name}</div>
+                        <table id="t-${s.name}"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
+                    </div>`;
+                selector.innerHTML += `<option value="${s.name}">${s.name}</option>`;
             }
         });
+    });
+
+    // جلب الموظفين
+    db.ref('RECORDS/').on('value', snap => {
+        const tables = document.querySelectorAll('tbody');
+        tables.forEach(t => t.innerHTML = "");
+        snap.forEach(child => {
+            const v = child.val();
+            const row = `<tr><td>${v.name}</td><td>${v.rank}</td><td><span class="badge ${v.status === 'نشط' ? 'bg-active' : 'bg-red'}">${v.status}</span></td><td>${v.date} ${isAsmar ? `<button onclick="db.ref('RECORDS/${child.key}').remove()">🗑️</button>` : ''}</td></tr>`;
+            
+            if(v.status === 'نشط') {
+                const target = document.querySelector(`#t-${v.sector} tbody`);
+                if(target) target.innerHTML += row;
+            } else {
+                document.querySelector('#t-blacklist tbody').innerHTML += row;
+            }
+        });
+    });
+
+    // الدعم الفني
+    function sendChat() {
+        const txt = document.getElementById('chatInput').value;
+        if(txt) {
+            db.ref('SUPPORT/').push({ user: isAsmar ? "الإدارة" : "زائر", msg: txt });
+            document.getElementById('chatInput').value = "";
+        }
+    }
+    db.ref('SUPPORT/').limitToLast(10).on('value', snap => {
+        const box = document.getElementById('chat-box'); box.innerHTML = "";
+        snap.forEach(c => {
+            const m = c.val();
+            box.innerHTML += `<div class="${m.user === 'الإدارة' ? 'msg-admin' : 'msg-user'}"><b>${m.user}:</b> ${m.msg}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
     });
 </script>
 </body>
