@@ -6,165 +6,130 @@
     <title>وزارة الموارد البشرية | المبرمج Asmar</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
     <style>
-        :root {
-            --primary: #1a2a6c;
-            --accent: #b21f1f;
-            --gold: #fdbb2d;
-            --bg: #f8f9fa;
-        }
+        :root { --main-blue: #0d1b2a; --gold-accent: #e0e1dd; --admin-red: #8b0000; --glass: rgba(255, 255, 255, 0.95); }
+        body { font-family: 'Segoe UI', sans-serif; background: #e0e1dd; margin: 0; transition: 0.3s; }
+        
+        /* الهيدر المزخرف */
+        header { background: var(--main-blue); color: white; padding: 20px; text-align: center; border-bottom: 4px solid #1b263b; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .logo-hr { font-size: 40px; font-weight: bold; font-family: 'Georgia', serif; }
+        .logo-hr span { color: #778da9; font-style: italic; }
+        
+        /* الملاحة */
+        nav { background: #1b263b; display: flex; justify-content: center; padding: 10px; position: sticky; top: 0; z-index: 1000; }
+        nav button { background: none; border: none; color: white; margin: 0 15px; padding: 10px 20px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        nav button:hover, nav button.active { background: #415a77; border-radius: 8px; }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; color: #333; }
-
-        /* الهيدر واللوجو المزخرف */
-        header { 
-            background: linear-gradient(135deg, var(--primary), var(--accent)); 
-            color: white; padding: 25px; text-align: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .logo-hr { font-size: 40px; font-weight: 900; letter-spacing: 3px; font-style: italic; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .logo-hr span { color: var(--gold); }
-        .sub-title { font-size: 18px; opacity: 0.9; margin-top: 5px; }
-
-        /* نظام التنقل */
-        nav { background: white; display: flex; justify-content: center; border-bottom: 2px solid #ddd; position: sticky; top: 0; z-index: 100; }
-        nav button { 
-            padding: 15px 30px; border: none; background: none; 
-            font-weight: bold; cursor: pointer; font-size: 16px; 
-            color: var(--primary); transition: 0.3s;
-        }
-        nav button.active { border-bottom: 4px solid var(--accent); color: var(--accent); }
-
-        /* الحاويات */
-        .container { max-width: 1100px; margin: 20px auto; padding: 15px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* كروت الأقسام */
-        .card { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; color: var(--primary); }
+        /* الكروت والجداول */
+        .card { background: var(--glass); border-radius: 15px; padding: 25px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.3); }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
+        th { background: #415a77; color: white; padding: 15px; text-align: right; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
 
         /* فورم الإدارة */
-        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        input, select, textarea { 
-            padding: 12px; border-radius: 8px; border: 1px solid #ccc; 
-            font-size: 15px; width: 100%; box-sizing: border-box;
-        }
-        .full { grid-column: span 2; }
-        .btn-save { 
-            grid-column: span 2; background: var(--primary); color: white; 
-            padding: 15px; border: none; border-radius: 8px; 
-            font-weight: bold; cursor: pointer; font-size: 16px;
-        }
+        .admin-panel { display: none; background: #f1f2f6; border-right: 10px solid var(--main-blue); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        input, select, textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; font-size: 14px; }
+        .btn-save { grid-column: span 2; background: #1b263b; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-        /* الجداول */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { background: #f1f3f5; padding: 12px; text-align: right; color: var(--primary); }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
-        .status-tag { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .active-bg { background: #e6fffa; color: #2d6a4f; }
-        .banned-bg { background: #fff5f5; color: #c53030; }
+        /* الدعم الفني الداخلي */
+        #support-container { position: fixed; bottom: 20px; left: 20px; width: 320px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 2000; overflow: hidden; border: 1px solid #ddd; }
+        #chat-header { background: var(--main-blue); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; }
+        #chat-msgs { height: 250px; overflow-y: auto; padding: 15px; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 8px 12px; border-radius: 10px; max-width: 80%; font-size: 13px; }
+        .msg.admin { background: #d1e7dd; align-self: flex-start; }
+        .msg.user { background: #e2e3e5; align-self: flex-end; }
 
-        /* شات الدعم الداخلي */
-        #chat-window { 
-            position: fixed; bottom: 20px; left: 20px; width: 320px; height: 450px; 
-            background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-            display: none; flex-direction: column; z-index: 1000; overflow: hidden;
-        }
-        .chat-header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        #chat-msgs { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; }
-        .chat-input { display: flex; padding: 10px; border-top: 1px solid #eee; }
-        .chat-input input { flex: 1; border: none; padding: 10px; }
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .bg-active { background: #d4edda; color: #155724; }
+        .bg-black { background: #f8d7da; color: #721c24; }
+
+        #site-img { width: 100%; max-height: 250px; object-fit: cover; border-radius: 15px; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo-hr">𝓗𝓡 <span>𝓐𝓼𝓶𝓪𝓻</span></div>
-    <div class="sub-title">وزارة الموارد البشرية - بوابة التحكم الشاملة</div>
+    <div style="letter-spacing: 2px; font-size: 14px;">وزارة الموارد البشرية - النظام المركزي</div>
 </header>
 
 <nav>
-    <button id="nav-main" class="active" onclick="switchPage('main')">🏛️ شؤون الموظفين</button>
-    <button id="nav-black" onclick="switchPage('black')">🚫 البلاك ليست</button>
-    <button onclick="checkAdmin()">🔐 لوحة الإدارة</button>
+    <button id="nav-home" class="active" onclick="switchPage('home')">🏠 شؤون الموظفين</button>
+    <button id="nav-blacklist" onclick="switchPage('blacklist')">🚫 القائمة السوداء</button>
+    <button id="nav-admin" onclick="authAdmin()">🔐 لوحة التحكم</button>
 </nav>
 
 <div class="container">
-    
-    <div id="page-main" class="page active">
-        <div id="admin-panel" class="card" style="display:none; border: 2px dashed var(--primary);">
-            <h3>🛠️ إضافة بيانات (صلاحية المبرمج Asmar)</h3>
-            <div class="admin-grid">
-                <input type="text" id="name" placeholder="اسم الشخص">
-                <select id="sector" onchange="loadRanks()">
-                    <option value="">اختر القطاع</option>
-                    <option value="military">🎖️ عسكري</option>
-                    <option value="medical">🏥 طبي</option>
-                    <option value="gov">🏛️ حكومي</option>
+    <img id="site-img" src="" alt="صورة الإدارة">
+
+    <div id="page-home" class="page active">
+        <div id="admin-form-container" class="card admin-panel">
+            <h3>⚙️ إدارة السجلات - المبرمج Asmar</h3>
+            <div class="form-grid">
+                <input type="text" id="empName" placeholder="اسم الموظف">
+                <select id="empSector" onchange="loadRanks()">
+                    <option value="">نوع القطاع</option>
+                    <option value="عسكري">🎖️ عسكري</option>
+                    <option value="طبي">🏥 طبي</option>
+                    <option value="حكومي">🏛️ حكومي</option>
                 </select>
-                <select id="rank"><option>حدد القطاع أولاً</option></select>
-                <select id="status" onchange="toggleFields()">
+                <select id="empRank"><option>الرتبة</option></select>
+                <select id="empStatus" onchange="togglePenaltyFields()">
                     <option value="نشط">✅ نشط</option>
                     <option value="استقالة">📄 استقالة</option>
                     <option value="فصل">❌ فصل</option>
                 </select>
-                <div id="punish-fields" class="full" style="display:none;">
-                    <textarea id="reason" placeholder="سبب الفصل أو الاستقالة"></textarea>
-                    <input type="text" id="penalty" placeholder="العقوبة المفروضة">
-                    <input type="number" id="cooldown" placeholder="فترة التهدئة (أيام)">
+                <div id="penalty-fields" style="display:none; grid-column: span 2;">
+                    <textarea id="reason" placeholder="سبب الإجراء..." style="margin-bottom:10px;"></textarea>
+                    <div class="form-grid">
+                        <input type="text" id="penalty" placeholder="العقوبة المطبقة">
+                        <input type="number" id="cooldown" placeholder="فترة التهدئة (بالأيام)">
+                    </div>
                 </div>
-                <button class="btn-save" onclick="saveData()">حفظ البيانات في السحابة</button>
+                <input type="text" id="imgUrl" placeholder="رابط صورة لتغيير واجهة الموقع (اختياري)" class="full-width">
+                <button class="btn-save" onclick="saveData()">إرسال البيانات إلى السحابة</button>
             </div>
         </div>
 
         <div class="card">
-            <h3>👥 سجل الكادر الوظيفي</h3>
+            <h3>📋 قائمة الموظفين النشطين</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>الرتبة</th>
-                        <th>القطاع</th>
-                        <th>الحالة</th>
-                    </tr>
+                    <tr><th>الاسم</th><th>القطاع</th><th>الرتبة</th><th>الحالة</th><th>تاريخ الإضافة</th></tr>
                 </thead>
-                <tbody id="table-main"></tbody>
+                <tbody id="home-table"></tbody>
             </table>
         </div>
     </div>
 
-    <div id="page-black" class="page">
-        <div class="card">
-            <h3 style="color:var(--accent)">🚫 قائمة الحظر والاستقالات</h3>
+    <div id="page-blacklist" class="page">
+        <div class="card" style="border-top: 6px solid var(--admin-red);">
+            <h2 style="color:var(--admin-red)">🚫 السجل الأسود وفترات التهدئة</h2>
             <table>
                 <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>السبب</th>
-                        <th>العقوبة</th>
-                        <th>فترة التهدئة</th>
-                        <th>التاريخ</th>
-                    </tr>
+                    <tr><th>الاسم</th><th>النوع</th><th>السبب</th><th>العقوبة</th><th>التهدئة</th><th>الإجراء</th></tr>
                 </thead>
-                <tbody id="table-black"></tbody>
+                <tbody id="black-table"></tbody>
             </table>
         </div>
     </div>
-
 </div>
 
-<div id="chat-window">
-    <div class="chat-header"><span>دعم الوزارة</span> <span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
+<div id="support-container">
+    <div id="chat-header"><span>💬 الدعم الفني الداخلي</span> <span onclick="toggleSupport()" style="cursor:pointer">×</span></div>
     <div id="chat-msgs"></div>
-    <div class="chat-input">
-        <input type="text" id="chat-txt" placeholder="اكتب رسالتك...">
-        <button onclick="sendMsg()" style="border:none; background:var(--primary); color:white; padding:5px 15px; border-radius:5px;">إرسال</button>
+    <div style="display:flex; border-top:1px solid #ddd;">
+        <input type="text" id="userMsg" placeholder="اكتب رسالتك..." style="border:none; flex:1; padding:10px;">
+        <button onclick="sendSupportMsg()" style="background:var(--main-blue); color:white; border:none; padding:10px 15px;">إرسال</button>
     </div>
 </div>
-<button onclick="toggleChat()" style="position:fixed; bottom:20px; left:20px; width:60px; height:60px; border-radius:50%; background:var(--primary); color:white; border:none; cursor:pointer; font-size:25px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">💬</button>
+<button onclick="toggleSupport()" style="position:fixed; bottom:20px; left:20px; width:60px; height:60px; border-radius:50%; background:var(--main-blue); color:white; border:none; font-size:24px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.3); z-index:1900;">💬</button>
 
 <script>
     // Firebase Setup
@@ -182,7 +147,7 @@
 
     let isAdmin = false;
 
-    // تبديل الصفحات
+    // التنقل بين الصفحات
     function switchPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -190,84 +155,102 @@
         document.getElementById('nav-' + pageId).classList.add('active');
     }
 
-    function checkAdmin() {
-        let p = prompt("كلمة مرور المبرمج Asmar:");
+    function authAdmin() {
+        let p = prompt("أدخل رمز الدخول للمبرمج Asmar:");
         if(p === "asmar123") {
             isAdmin = true;
-            document.getElementById('admin-panel').style.display = 'block';
-            alert("مرحباً بك يا مدير النظام");
+            document.getElementById('admin-form-container').style.display = 'block';
+            switchPage('home');
         }
     }
 
-    // نظام الرتب
     function loadRanks() {
-        const s = document.getElementById('sector').value;
-        const r = document.getElementById('rank');
-        r.innerHTML = "";
+        const sector = document.getElementById('empSector').value;
+        const rankSelect = document.getElementById('empRank');
+        rankSelect.innerHTML = "";
         const ranks = {
-            military: ["جندي", "عريف", "رقيب", "ملازم", "نقيب", "لواء"],
-            medical: ["مسعف", "ممرض", "دكتور جراح", "مدير مستشفى"],
-            gov: ["موظف مدني", "رئيس قسم", "وكيل", "وزير"]
+            "عسكري": ["جندي", "عريف", "رقيب", "ملازم", "نقيب", "عقيد"],
+            "طبي": ["مساعد", "ممرض", "طبيب", "استشاري", "مدير طبابة"],
+            "حكومي": ["موظف", "إداري", "رئيس قسم", "وكيل", "وزير"]
         };
-        if(ranks[s]) ranks[s].forEach(item => r.innerHTML += `<option value="${item}">${item}</option>`);
+        if(ranks[sector]) ranks[sector].forEach(r => rankSelect.innerHTML += `<option value="${r}">${r}</option>`);
     }
 
-    function toggleFields() {
-        const s = document.getElementById('status').value;
-        const f = document.getElementById('punish-fields');
-        f.style.display = (s === 'نشط') ? 'none' : 'block';
-        if(s === 'استقالة') document.getElementById('cooldown').value = 3;
+    function togglePenaltyFields() {
+        const status = document.getElementById('empStatus').value;
+        const fields = document.getElementById('penalty-fields');
+        fields.style.display = (status === "نشط") ? "none" : "block";
+        if(status === "استقالة") document.getElementById('cooldown').value = 3;
     }
 
-    // حفظ البيانات
     function saveData() {
         const data = {
-            name: document.getElementById('name').value,
-            sector: document.getElementById('sector').value,
-            rank: document.getElementById('rank').value,
-            status: document.getElementById('status').value,
+            name: document.getElementById('empName').value,
+            sector: document.getElementById('empSector').value,
+            rank: document.getElementById('empRank').value,
+            status: document.getElementById('empStatus').value,
             reason: document.getElementById('reason').value || "لا يوجد",
             penalty: document.getElementById('penalty').value || "لا يوجد",
-            cool: document.getElementById('cooldown').value || 0,
-            time: new Date().toLocaleDateString()
+            cooldown: document.getElementById('cooldown').value || 0,
+            date: new Date().toLocaleDateString(),
+            timestamp: Date.now()
         };
-        db.ref('ASMAR_DATA/').push(data);
-        alert("تم الحفظ بنجاح!");
+        
+        const img = document.getElementById('imgUrl').value;
+        if(img) db.ref('SITE_CONFIG/img').set(img);
+
+        db.ref('HR_RECORDS/').push(data);
+        alert("تم الحفظ بنجاح يا Asmar");
     }
 
     // جلب البيانات
-    db.ref('ASMAR_DATA/').on('value', (snap) => {
-        const main = document.getElementById('table-main');
-        const black = document.getElementById('table-black');
-        main.innerHTML = ""; black.innerHTML = "";
-        const all = snap.val();
-        for(let id in all) {
-            const d = all[id];
-            if(d.status === "نشط") {
-                main.innerHTML += `<tr><td>${d.name}</td><td>${d.rank}</td><td>${d.sector}</td><td><span class="status-tag active-bg">نشط</span></td></tr>`;
+    db.ref('HR_RECORDS/').on('value', snap => {
+        const homeTable = document.getElementById('home-table');
+        const blackTable = document.getElementById('black-table');
+        homeTable.innerHTML = ""; blackTable.innerHTML = "";
+        
+        snap.forEach(child => {
+            const item = child.val();
+            const id = child.key;
+            if(item.status === "نشط") {
+                homeTable.innerHTML += `<tr><td>${item.name}</td><td>${item.sector}</td><td>${item.rank}</td><td><span class="status-pill bg-active">نشط</span></td><td>${item.date} ${isAdmin ? `<button onclick="deleteRecord('${id}')">🗑️</button>` : ''}</td></tr>`;
             } else {
-                black.innerHTML += `<tr><td>${d.name}</td><td>${d.reason}</td><td>${d.penalty}</td><td>${d.cool} يوم</td><td>${d.time}</td></tr>`;
+                blackTable.innerHTML += `<tr><td>${item.name}</td><td>${item.status}</td><td>${item.reason}</td><td>${item.penalty}</td><td>${item.cooldown} يوم</td><td>${isAdmin ? `<button onclick="deleteRecord('${id}')">🗑️</button>` : 'محمي'}</td></tr>`;
             }
+        });
+    });
+
+    function deleteRecord(id) { if(confirm("حذف السجل؟")) db.ref('HR_RECORDS/' + id).remove(); }
+
+    db.ref('SITE_CONFIG/img').on('value', snap => {
+        if(snap.val()) {
+            document.getElementById('site-img').src = snap.val();
+            document.getElementById('site-img').style.display = 'block';
         }
     });
 
-    // شات الدعم
-    function toggleChat() { 
-        const c = document.getElementById('chat-window');
-        c.style.display = (c.style.display === 'flex') ? 'none' : 'flex';
+    // نظام الشات
+    function toggleSupport() {
+        const chat = document.getElementById('support-container');
+        chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function sendMsg() {
-        const t = document.getElementById('chat-txt').value;
-        if(t) {
-            db.ref('CHATS/').push({ msg: t, date: new Date().toLocaleTimeString() });
-            document.getElementById('chat-txt').value = "";
+    function sendSupportMsg() {
+        const txt = document.getElementById('userMsg').value;
+        if(txt) {
+            db.ref('SUPPORT_MSGS/').push({ msg: txt, sender: isAdmin ? 'admin' : 'user', time: Date.now() });
+            document.getElementById('userMsg').value = "";
         }
     }
 
-    db.ref('CHATS/').on('child_added', (snap) => {
-        const m = snap.val();
-        document.getElementById('chat-msgs').innerHTML += `<div style="margin-bottom:10px; border-bottom:1px solid #eee;"><b>زائر:</b> ${m.msg} <br><small>${m.date}</small></div>`;
+    db.ref('SUPPORT_MSGS/').limitToLast(10).on('value', snap => {
+        const box = document.getElementById('chat-msgs');
+        box.innerHTML = "";
+        snap.forEach(c => {
+            const m = c.val();
+            box.innerHTML += `<div class="msg ${m.sender}">${m.msg}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
     });
 </script>
 </body>
