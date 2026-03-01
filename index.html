@@ -3,126 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - نظام الإدارة</title>
+    <title>وزارة الموارد البشرية - النظام المطور</title>
     <style>
-        /* تصحيح الأبعاد وتفادي تداخل العناصر */
+        /* التنسيقات الأساسية - تصميم Asmar */
         * { box-sizing: border-box; }
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; direction: rtl; }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; direction: rtl; }
+        .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        .mobile-container { 
-            width: 100%; 
-            max-width: 414px; 
-            background-color: #ffffff; 
-            min-height: 100vh; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        /* إصلاح الهيدر والمسافات */
-        header { 
-            background-color: #1a1f36; 
-            color: white; 
-            padding: 20px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            min-height: 80px;
-        }
-        .menu-icon { font-size: 28px; cursor: pointer; color: white; line-height: 1; }
+        header { background-color: #1a1f36; color: white; padding: 20px 15px; display: flex; justify-content: space-between; align-items: center; min-height: 80px; }
+        .menu-icon { font-size: 28px; cursor: pointer; color: white; }
         .logo-area h1 { font-size: 17px; margin: 0; }
         .logo-area p { font-size: 10px; color: #c4a457; margin: 0; }
 
-        /* منطقة المحتوى العلوي */
-        .top-section { 
-            background-color: #1a1f36; 
-            color: white; 
-            padding: 30px 20px 60px 20px; 
-            text-align: center; 
-            border-radius: 0 0 40px 0; 
-        }
+        .top-section { background-color: #1a1f36; color: white; padding: 30px 20px 60px 20px; text-align: center; border-radius: 0 0 40px 0; }
         .sub-title { color: #c4a457; font-size: 11px; display: block; margin-bottom: 5px; }
         .top-section h2 { font-size: 22px; margin: 10px 0; }
-        .top-section p { font-size: 12px; opacity: 0.8; margin-bottom: 20px; line-height: 1.6; }
 
-        /* تنسيق الأزرار لمنع التداخل */
-        .button-group { 
-            display: flex; 
-            gap: 12px; 
-            padding: 0 20px; 
-            margin-top: -30px; /* سحب الأزرار للأعلى لتتداخل مع الخلفية الداكنة */
-            z-index: 5;
-        }
-        .btn { 
-            flex: 1; 
-            padding: 14px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            font-size: 14px; 
-            cursor: pointer; 
-            text-align: center;
-            transition: 0.3s;
-        }
-        .btn-gold { background: #c4a457; border: none; color: #1a1f36; }
+        .button-group { display: flex; flex-direction: column; gap: 10px; padding: 0 20px; margin-top: -30px; z-index: 5; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; border: none; }
+        .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
+        .btn-tasks { background: #1a1f36; color: white; margin-top: 5px; border: 1px solid #c4a457; }
 
-        /* شبكة الإحصائيات - تبدأ من الصفر */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            padding: 25px 20px; 
-        }
-        .stat-box { 
-            background: white; 
-            padding: 20px 10px; 
-            border-radius: 15px; 
-            text-align: center; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-            border: 1px solid #f0f0f0; 
-        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 25px 20px; }
+        .stat-box { background: white; padding: 20px 10px; border-radius: 15px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
         .stat-box h3 { margin: 0; font-size: 26px; color: #1a1f36; }
-        .stat-box p { margin: 5px 0 0; font-size: 12px; color: #777; }
 
-        /* الفوتر مع توقيع Asmar */
-        footer { 
-            background: #1a1f36; 
-            color: white; 
-            text-align: center; 
-            padding: 30px 20px; 
-            margin-top: auto; 
-        }
-        .footer-logo { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
-        .signature { 
-            color: #c4a457; 
-            font-family: 'Brush Script MT', cursive; 
-            font-size: 18px; 
-            margin-top: 15px;
-            display: block;
-            opacity: 0.9;
-        }
-
-        /* شاشات الإدارة (تظهر عند الدخول) */
-        #staffPanel { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: white; z-index: 1000; display: none; overflow-y: auto; 
-        }
-        .panel-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        /* الصفحات المنبثقة */
+        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; padding-bottom: 50px; }
+        .page-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        #loginPanel { 
-            position: fixed; top: 0; right: -100%; width: 100%; height: 100%; 
-            background: #1a1f36; color: white; z-index: 900; transition: 0.4s; padding: 40px 20px; 
-        }
-        #loginPanel.active { right: 0; }
+        /* تصميم المهام */
+        .task-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 15px; margin: 15px; border-radius: 8px; }
+        .task-counter { float: left; background: #1a1f36; color: white; padding: 2px 10px; border-radius: 20px; font-size: 12px; }
 
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        /* تسجيل الدخول */
+        #loginOverlay { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
+        #loginOverlay.active { right: 0; }
+
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
         th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; }
-        th { background: #f8f9fa; color: #1a1f36; }
+
+        footer { background: #1a1f36; color: white; text-align: center; padding: 30px 20px; margin-top: auto; }
+        .signature { color: #c4a457; font-family: cursive; font-size: 18px; margin-top: 10px; display: block; }
     </style>
 </head>
-<body>
+<body onload="checkSession()">
 
 <div class="mobile-container">
     <header>
@@ -136,119 +63,165 @@
     <div class="top-section">
         <span class="sub-title">البوابة الرقمية الرسمية</span>
         <h2>المستقبل المهني يبدأ هنا</h2>
-        <p>منصة الوزارة لإدارة كفاءات موظفي قطاعات الدولة (شرطة، جيش، تحالف طبي، فصيل حكومة).</p>
+        <p>نظام إدارة الكفاءات والمهام الأسبوعية للفصائل الحكومية.</p>
     </div>
 
     <div class="button-group">
-        <div class="btn btn-gold">تطوير مهاراتي</div>
-        <div class="btn btn-outline" onclick="checkAndOpen()">عرض الموظفين</div>
+        <button class="btn btn-gold" onclick="openStaff()">عرض الموظفين</button>
+        <button class="btn btn-tasks" onclick="openTasks()">مهام المحاورين</button>
+        <button class="btn btn-outline" id="loginBtn" onclick="openLogin()">تسجيل دخول الإدارة</button>
     </div>
 
     <div class="stats-grid">
         <div class="stat-box">
-            <h3 id="countDisplay">0</h3>
+            <h3 id="mainStaffCount">0</h3>
             <p>عدد الموظفين</p>
         </div>
         <div class="stat-box">
-            <h3 id="factionDisplay">0</h3>
-            <p>فرص عمل نشطة</p>
+            <h3 id="taskCountDisplay">0</h3>
+            <p>المهام النشطة</p>
         </div>
     </div>
 
     <footer>
-        <div class="footer-logo">وزارة الموارد البشرية والتنمية الاجتماعية</div>
-        <p style="font-size: 10px; opacity: 0.6; margin: 0;">© 2026 جميع الحقوق محفوظة</p>
+        <div class="footer-logo">وزارة الموارد البشرية</div>
+        <p style="font-size: 10px; opacity: 0.6;">© 2026 جميع الحقوق محفوظة</p>
         <span class="signature">Designed by Asmar</span>
     </footer>
 
-    <div id="loginPanel">
+    <div id="loginOverlay">
         <span style="font-size:30px; cursor:pointer;" onclick="closeLogin()">×</span>
-        <h2 style="margin-top:20px;">دخول نظام الإدارة</h2>
-        <p style="color:#c4a457">يرجى إدخال الرمز السري للمتابعة</p>
-        <input type="password" id="passCode" placeholder="كلمة السر...">
-        <button class="btn btn-gold" style="width:100%; margin-top:10px;" onclick="verify()">دخول</button>
+        <h2>نظام الدخول الموحد</h2>
+        <input type="password" id="passInput" placeholder="كلمة السر...">
+        <button class="btn btn-gold" onclick="login()">دخول</button>
     </div>
 
-    <div id="staffPanel">
-        <div class="panel-header">
-            <span style="cursor:pointer; font-size:22px;" onclick="closePanel()">➔</span>
-            <h3>إدارة موظفي الفصائل</h3>
+    <div id="staffPage" class="full-page">
+        <div class="page-header">
+            <span style="cursor:pointer; font-size:22px;" onclick="closePage('staffPage')">➔</span>
+            <h3>قائمة شؤون الموظفين</h3>
         </div>
-        <div style="padding: 20px;">
-            <div style="background:#f9f9f9; padding:15px; border-radius:10px; margin-bottom:20px;">
-                <h4 style="margin:0 0 10px 0;">إضافة بيانات (موظف/مفصول/بلاك لست)</h4>
-                <input type="text" id="nameInput" placeholder="الاسم الكامل">
-                <select id="factionInput">
-                    <option>الشرطة</option>
-                    <option>الجيش</option>
-                    <option>التحالف الطبي</option>
-                    <option>فصيل الحكومة</option>
+        <div style="padding: 15px;">
+            <div id="adminControls" style="display:none; background:#f0f2f5; padding:15px; border-radius:10px; margin-bottom:15px;">
+                <h4>إضافة/تعديل حالة موظف</h4>
+                <input type="text" id="sName" placeholder="اسم الموظف">
+                <select id="sFaction">
+                    <option>الشرطة</option><option>الجيش</option><option>التحالف الطبي</option><option>الحكومة</option>
                 </select>
-                <select id="statusInput">
-                    <option value="موظف">موظف جديد</option>
-                    <option value="مفصول">مفصول</option>
-                    <option value="بلاك لست">بلاك لست</option>
-                    <option value="استقالة">استقالة</option>
+                <select id="sStatus">
+                    <option value="نشط">تعيين جديد</option>
+                    <option value="استقالة">تقديم استقالة (حذف)</option>
+                    <option value="بلاك لست">بلاك لست (حظر)</option>
                 </select>
-                <button class="btn btn-gold" style="width:100%;" onclick="addEntry()">تحديث وحفظ</button>
+                <textarea id="sReason" placeholder="السبب (خاص بالاستقالة والبلاك لست)"></textarea>
+                <button class="btn btn-gold" onclick="handleStaff()">تحديث النظام</button>
             </div>
-
             <table>
-                <thead>
-                    <tr>
-                        <th>الاسم</th>
-                        <th>الفصيل</th>
-                        <th>الحالة</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
+                <thead><tr><th>الاسم</th><th>الفصيل</th><th>الحالة</th></tr></thead>
+                <tbody id="staffTable"></tbody>
             </table>
+        </div>
+    </div>
+
+    <div id="tasksPage" class="full-page">
+        <div class="page-header">
+            <span style="cursor:pointer; font-size:22px;" onclick="closePage('tasksPage')">➔</span>
+            <h3>مهام المحاورين الأسبوعية</h3>
+        </div>
+        <div style="padding: 15px;" id="taskContainer">
+            </div>
+        <div id="addTaskArea" style="display:none; padding:15px;">
+             <button class="btn btn-tasks" onclick="createNewTask()">إضافة مهمة أسبوعية جديدة +</button>
         </div>
     </div>
 </div>
 
 <script>
-    let staffCount = 0;
+    let isLogged = false;
+    let staffList = [];
+    let tasks = [];
 
-    function openLogin() { document.getElementById('loginPanel').classList.add('active'); }
-    function closeLogin() { document.getElementById('loginPanel').classList.remove('active'); }
-    
-    function verify() {
-        const p = document.getElementById('passCode').value;
-        if(p === "asmar123" || p === "HR12") {
-            document.getElementById('staffPanel').style.display = 'block';
-            closeLogin();
-        } else {
-            alert("الرمز غير صحيح");
+    // نظام الجلسة المستمرة (LocalStorage)
+    function checkSession() {
+        if (localStorage.getItem('asmar_session') === 'active') {
+            isLogged = true;
+            document.getElementById('loginBtn').innerText = "تم الدخول (أدمن)";
+            document.getElementById('adminControls').style.display = 'block';
+            document.getElementById('addTaskArea').style.display = 'block';
         }
     }
 
-    function checkAndOpen() {
-        // إذا لم يكن مسجل دخول يطلب الرمز أولاً
-        openLogin();
+    function openLogin() { document.getElementById('loginOverlay').classList.add('active'); }
+    function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
+
+    function login() {
+        const p = document.getElementById('passInput').value;
+        if (p === "asmar123" || p === "HR12") {
+            localStorage.setItem('asmar_session', 'active');
+            location.reload(); // لإعادة تحميل الصلاحيات
+        } else { alert("خطأ في كلمة السر"); }
     }
 
-    function closePanel() { document.getElementById('staffPanel').style.display = 'none'; }
+    function openStaff() { document.getElementById('staffPage').style.display = 'block'; }
+    function openTasks() { document.getElementById('tasksPage').style.display = 'block'; renderTasks(); }
+    function closePage(id) { document.getElementById(id).style.display = 'none'; }
 
-    function addEntry() {
-        const name = document.getElementById('nameInput').value;
-        const faction = document.getElementById('factionInput').value;
-        const status = document.getElementById('statusInput').value;
+    // إدارة الموظفين (مع منطق الاستقالة)
+    function handleStaff() {
+        const name = document.getElementById('sName').value;
+        const fact = document.getElementById('sFaction').value;
+        const status = document.getElementById('sStatus').value;
+        const reason = document.getElementById('sReason').value;
 
-        if(!name) return alert("يرجى كتابة الاسم");
+        if (!name) return alert("الاسم مطلوب");
 
-        const tbody = document.getElementById('tableBody');
-        const row = tbody.insertRow();
-        row.innerHTML = `<td>${name}</td><td>${faction}</td><td>${status}</td>`;
-
-        // تحديث العدادات تلقائياً
-        staffCount++;
-        document.getElementById('countDisplay').innerText = staffCount;
+        if (status === "استقالة") {
+            // إذا استقالة، نحذف الاسم من القائمة فوراً
+            staffList = staffList.filter(s => s.name !== name);
+            alert(`تم قبول استقالة ${name} وحذفه من النظام. السبب: ${reason}`);
+        } else {
+            // إضافة أو تحديث (بلاك لست أو نشط)
+            const obj = { name, fact, status, reason };
+            staffList.push(obj);
+        }
         
-        // مسح الحقول
-        document.getElementById('nameInput').value = "";
-        alert("تمت الإضافة بنجاح وتحديث العداد الرئيسي");
+        renderStaff();
+        document.getElementById('sName').value = "";
+    }
+
+    function renderStaff() {
+        const body = document.getElementById('staffTable');
+        body.innerHTML = "";
+        staffList.forEach(s => {
+            body.innerHTML += `<tr><td>${s.name}</td><td>${s.fact}</td><td>${s.status}</td></tr>`;
+        });
+        document.getElementById('mainStaffCount').innerText = staffList.length;
+    }
+
+    // إدارة المهام والعدادات
+    function createNewTask() {
+        const desc = prompt("أدخل تفاصيل المهمة للأسبوع الجديد:");
+        const faction = prompt("اسم الفصيل الموجه له:");
+        if (desc && faction) {
+            tasks.push({ desc, faction, date: new Date().toLocaleDateString() });
+            renderTasks();
+        }
+    }
+
+    function renderTasks() {
+        const container = document.getElementById('taskContainer');
+        container.innerHTML = "";
+        tasks.forEach((t, index) => {
+            container.innerHTML += `
+                <div class="task-card">
+                    <span class="task-counter">مهمة #${index + 1}</span>
+                    <h4 style="margin:0">${t.faction}</h4>
+                    <p style="font-size:13px; color:#555;">${t.desc}</p>
+                    <small>بتاريخ: ${t.date}</small>
+                </div>
+            `;
+        });
+        document.getElementById('taskCountDisplay').innerText = tasks.length;
     }
 </script>
 
