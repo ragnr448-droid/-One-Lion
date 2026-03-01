@@ -3,184 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة وزارة الموارد البشرية - النظام الشامل</title>
+    <title>بوابة الموارد البشرية - Asmar</title>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <style>
-        :root {
-            --primary: #006C35;
-            --army: #4b5320;
-            --police: #002366;
-            --medical: #c0392b;
-            --gov: #2980b9;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --bg: #f0f2f5;
-        }
-
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-
-        header {
-            background: white; padding: 15px 5%; display: flex; justify-content: space-between;
-            align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
-        }
-
-        .btn-nav { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-
-        .page { display: none; padding: 25px 5%; animation: fadeIn 0.4s; flex: 1; }
-        .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .admin-box { background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .input-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        input, select { flex: 1; min-width: 150px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; }
-        .btn-add { background: #D4AF37; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-
-        .sectors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .sector-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 6px solid #ccc; }
-        .card-gov { border-top-color: var(--gov); }
-        .card-army { border-top-color: var(--army); }
-        .card-police { border-top-color: var(--police); }
-        .card-medical { border-top-color: var(--medical); }
-
-        .sector-card h3 { padding: 15px; margin: 0; font-size: 1.1rem; background: #fafafa; display: flex; justify-content: space-between; align-items: center; }
+        :root { --primary: #006C35; --bg: #f4f7f6; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
+        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-primary { background: var(--primary); color: white; }
+        #loginOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 30px; border-radius: 15px; text-align: center; }
+        .admin-controls { display: none; }
+        .container { padding: 20px 5%; }
+        .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--primary); }
         table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: right; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        
-        .btn-del { color: var(--danger); background: none; border: 1px solid var(--danger); padding: 3px 8px; border-radius: 5px; cursor: pointer; }
-
-        /* لوحة التحكم */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-item { background: white; padding: 25px; border-radius: 15px; text-align: center; border-bottom: 4px solid var(--primary); }
-
-        /* التوقيع - Signature Section */
-        footer {
-            background: #ffffff;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #eee;
-            margin-top: 50px;
-        }
-
-        .signature {
-            font-size: 0.9rem;
-            color: #777;
-        }
-
-        .signature b {
-            color: var(--primary);
-            letter-spacing: 1px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: right; }
+        footer { text-align: center; padding: 20px; color: #888; }
     </style>
 </head>
 <body>
 
-<header>
-    <div>
-        <h2 style="color: var(--primary); margin:0;">وزارة الموارد البشرية</h2>
-        <small>نظام إدارة الكوادر والقطاعات</small>
+<div id="loginOverlay">
+    <div class="login-box">
+        <h3>دخول المبرمج Asmar</h3>
+        <input type="password" id="passInput" placeholder="كلمة المرور" style="padding:10px; margin-bottom:10px; width:80%"><br>
+        <button class="btn btn-primary" onclick="login()">دخول</button>
     </div>
-    <button class="btn-nav" id="pageToggle" onclick="togglePage()">لوحة التحكم الإدارية ←</button>
+</div>
+
+<header>
+    <div><h2>وزارة الموارد البشرية</h2><small id="status">وضع العرض</small></div>
+    <button class="btn btn-primary" id="loginBtn" onclick="openLogin()">دخول الآدمن</button>
 </header>
 
-<div id="mainPage" class="page active-page">
-    <div class="admin-box">
-        <h3>📋 إضافة سجل جديد للنظام</h3>
-        <div class="input-row">
-            <input type="text" id="nameInp" placeholder="اسم الموظف بالكامل">
-            <select id="sectorInp">
-                <option value="gov">القطاع الحكومي</option>
-                <option value="army">القوات المسلحة (الجيش)</option>
-                <option value="police">وزارة الداخلية (الشرطة)</option>
-                <option value="medical">التحالف الطبي</option>
-            </select>
-            <select id="statusInp">
-                <option value="نشط">موظف نشط</option>
-                <option value="بلاك">قائمة سوداء (بلاك ليست)</option>
-                <option value="استقالة">استقالة (فترة تهدئة)</option>
-            </select>
-            <button class="btn-add" onclick="addData()">إضافة وإدراج</button>
-        </div>
+<div class="container">
+    <div class="card admin-controls" style="margin-bottom: 20px;">
+        <h3>➕ إضافة موظف</h3>
+        <input type="text" id="nameInp" placeholder="الاسم">
+        <select id="sectorInp">
+            <option value="gov">حكومي</option>
+            <option value="army">جيش</option>
+            <option value="police">شرطة</option>
+        </select>
+        <button class="btn btn-primary" onclick="saveData()">حفظ سحابي</button>
     </div>
 
-    <div class="sectors-grid">
-        <div class="sector-card card-gov"><h3>🏛️ الحكومي <span id="c-gov">0</span></h3><table id="t-gov"><tbody></tbody></table></div>
-        <div class="sector-card card-army"><h3>🎖️ الجيش <span id="c-army">0</span></h3><table id="t-army"><tbody></tbody></table></div>
-        <div class="sector-card card-police"><h3>🚔 الشرطة <span id="c-police">0</span></h3><table id="t-police"><tbody></tbody></table></div>
-        <div class="sector-card card-medical"><h3>🏥 الطبي <span id="c-medical">0</span></h3><table id="t-medical"><tbody></tbody></table></div>
+    <div class="sector-grid">
+        <div class="card"><h3>🏛️ الحكومي</h3><table id="t-gov"></table></div>
+        <div class="card"><h3>🎖️ الجيش</h3><table id="t-army"></table></div>
+        <div class="card"><h3>🚔 الشرطة</h3><table id="t-police"></table></div>
     </div>
 </div>
 
-<div id="adminPage" class="page">
-    <div class="stats-grid">
-        <div class="stat-item"><h4>إجمالي المسجلين</h4><p id="s-total">0</p></div>
-        <div class="stat-item" style="border-color: var(--danger);"><h4>البلاك ليست</h4><p id="s-black">0</p></div>
-        <div class="stat-item" style="border-color: var(--warning);"><h4>في التهدئة</h4><p id="s-wait">0</p></div>
-    </div>
-    <div class="admin-box">
-        <h3>📊 تقارير النظام</h3>
-        <button class="btn-nav" onclick="window.print()" style="background: #333;">طباعة التقرير</button>
-    </div>
-</div>
-
-<footer>
-    <div class="signature">
-        جميع الحقوق محفوظة © 2024 | تم التطوير بواسطة المبرمج: <b>Asmar</b>
-    </div>
-</footer>
+<footer>تم التطوير بواسطة: <b>Asmar</b></footer>
 
 <script>
-    let dataCounts = { gov: 0, army: 0, police: 0, medical: 0, total: 0, black: 0, wait: 0 };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
+        authDomain: "hr-asmar.firebaseapp.com",
+        databaseURL: "https://hr-asmar-default-rtdb.firebaseio.com",
+        projectId: "hr-asmar",
+        storageBucket: "hr-asmar.firebasestorage.app",
+        messagingSenderId: "642339321351",
+        appId: "1:642339321351:web:28780333d7b819f798ec4b"
+    };
 
-    function togglePage() {
-        const isMain = document.getElementById('mainPage').classList.toggle('active-page');
-        document.getElementById('adminPage').classList.toggle('active-page');
-        document.getElementById('pageToggle').innerText = isMain ? "لوحة التحكم الإدارية ←" : "← العودة للإضافة";
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    let isAdmin = false;
+
+    function openLogin() { document.getElementById('loginOverlay').style.display='flex'; }
+    function login() {
+        if(document.getElementById('passInput').value === "asmar123") {
+            isAdmin = true;
+            document.querySelectorAll('.admin-controls').forEach(e => e.style.display='block');
+            document.getElementById('loginOverlay').style.display='none';
+            document.getElementById('status').innerText = "مرحباً Asmar";
+        }
     }
 
-    function addData() {
+    function saveData() {
         const name = document.getElementById('nameInp').value;
         const sector = document.getElementById('sectorInp').value;
-        const status = document.getElementById('statusInp').value;
-        if(!name) return alert("أدخل الاسم!");
-
-        const table = document.getElementById(`t-${sector}`).tBodies[0];
-        const row = table.insertRow();
-        let sClass = "color: green;";
-        let displayStatus = status;
-
-        if(status === 'بلاك') { sClass = "color: red;"; dataCounts.black++; }
-        else if(status === 'استقالة') { 
-            let d = new Date(); d.setDate(d.getDate() + 30);
-            displayStatus = `تهدئة لغاية: ${d.toLocaleDateString('ar-SA')}`;
-            sClass = "color: orange;"; dataCounts.wait++;
-        }
-
-        row.innerHTML = `<td><b>${name}</b><br><small style="${sClass}">${displayStatus}</small></td>
-                         <td style="text-align:left"><button class="btn-del" onclick="deleteEntry(this, '${sector}', '${status}')">إزالة</button></td>`;
-        
-        dataCounts[sector]++; dataCounts.total++;
-        updateUI();
-        document.getElementById('nameInp').value = "";
-    }
-
-    function deleteEntry(btn, sector, status) {
-        if(confirm("حذف السجل؟")) {
-            btn.closest('tr').remove();
-            dataCounts[sector]--; dataCounts.total--;
-            if(status === 'بلاك') dataCounts.black--;
-            if(status === 'استقالة') dataCounts.wait--;
-            updateUI();
+        if(name) {
+            db.ref('emps/').push({ name, sector });
+            document.getElementById('nameInp').value = "";
         }
     }
 
-    function updateUI() {
-        ['gov', 'army', 'police', 'medical'].forEach(s => document.getElementById(`c-${s}`).innerText = dataCounts[s]);
-        document.getElementById('s-total').innerText = dataCounts.total;
-        document.getElementById('s-black').innerText = dataCounts.black;
-        document.getElementById('s-wait').innerText = dataCounts.wait;
-    }
+    db.ref('emps/').on('value', (snap) => {
+        ['gov','army','police'].forEach(s => document.getElementById(`t-${s}`).innerHTML="");
+        const data = snap.val();
+        for(let id in data) {
+            const row = document.getElementById(`t-${data[id].sector}`).insertRow();
+            row.innerHTML = `<td>${data[id].name}</td><td>${isAdmin ? `<button onclick="db.ref('emps/${id}').remove()">حذف</button>` : ''}</td>`;
+        }
+    });
 </script>
-
 </body>
 </html>
