@@ -3,144 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>وزارة الموارد البشرية | HR ASMAR</title>
+    <title>HR ASMAR | وزارة الموارد البشرية</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Tajawal:wght@400;700&display=swap');
         
         :root {
-            --gov-blue: #0b1e33;
+            --grand-bg: #1a2332; /* لون خلفية جراند */
+            --grand-nav: #121926;
             --gold: #d4af37;
-            --dark-bg: #050c14;
-            --panel-bg: rgba(16, 33, 54, 0.95);
             --danger: #ff4655;
             --success: #00ff88;
+            --white: #ffffff;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--dark-bg);
-            color: white;
+            background-color: var(--grand-bg);
+            color: var(--white);
             margin: 0;
             overflow-x: hidden;
-            background-image: radial-gradient(circle at top, #0d1b2a, #050c14);
-            background-attachment: fixed;
         }
 
-        /* الهيدر واللوجو */
-        header {
-            padding: 50px 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--gold);
-            background: linear-gradient(to bottom, var(--gov-blue), transparent);
+        /* الهيدر العلوي - نفس تصميم RP GRAND */
+        .top-nav {
+            background-color: var(--grand-nav);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .hr-main-logo {
-            font-family: 'Amiri', serif;
-            font-size: 6rem;
-            color: var(--gold);
-            margin: 0;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-            line-height: 0.8;
-        }
+        .grand-logo { font-family: 'Amiri', serif; font-size: 35px; color: var(--gold); font-weight: bold; }
 
-        .gov-title {
-            color: var(--gold);
-            font-size: 1.4rem;
-            margin-top: 15px;
-            font-weight: bold;
-            letter-spacing: 2px;
+        .menu-btn {
+            font-size: 28px; color: var(--gold); cursor: pointer;
+            padding: 5px 10px; border-radius: 5px; transition: 0.3s;
         }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); }
 
-        /* زر القائمة الثلاثي (مثل صورة GRND) */
-        .menu-toggle {
-            position: fixed; top: 20px; right: 20px;
-            z-index: 10000; cursor: pointer;
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--gold); padding: 12px;
-            border-radius: 5px; border: 1px solid var(--gold);
-            font-size: 24px; transition: 0.3s;
-        }
-
-        /* القائمة الجانبية (Sidebar) */
+        /* القائمة الجانبية المنسدلة */
         .sidebar {
-            position: fixed; top: 0; right: -100%;
-            width: 85%; max-width: 300px; height: 100%;
-            background: var(--panel-bg);
-            backdrop-filter: blur(15px);
-            z-index: 9999; transition: 0.5s ease;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.9);
-            padding: 40px 20px;
+            position: fixed; top: 0; right: -100%; width: 300px; height: 100%;
+            background: var(--grand-nav); z-index: 2000; transition: 0.5s ease;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.8); padding: 40px 20px;
             border-left: 2px solid var(--gold);
         }
         .sidebar.active { right: 0; }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; z-index: 9998;
+            background: rgba(0,0,0,0.7); display: none; z-index: 1500;
         }
         .overlay.active { display: block; }
 
-        /* الأقسام والجداول */
+        /* بطاقات الأقسام - مستوحاة من صورة وزارة العدل */
         .container { padding: 20px; max-width: 1200px; margin: auto; }
-        
-        .section-box {
-            background: rgba(255,255,255,0.02);
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+        .hero-section {
+            background: linear-gradient(135deg, #121926 0%, #1a2332 100%);
+            border-radius: 15px; padding: 40px; text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.2); margin-bottom: 30px;
         }
 
-        .section-header {
-            background: rgba(212, 175, 55, 0.1);
-            padding: 18px; color: var(--gold);
-            font-weight: bold; font-size: 1.2rem;
+        .section-card {
+            background: rgba(255,255,255,0.03); border-radius: 12px;
+            margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            background: rgba(212, 175, 55, 0.1); padding: 15px;
+            color: var(--gold); font-weight: bold; font-size: 1.1rem;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex; align-items: center; gap: 10px;
         }
 
-        .table-wrapper { overflow-x: auto; }
+        /* الجداول الاحترافية */
+        .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th { background: rgba(0,0,0,0.4); color: var(--gold); padding: 15px; text-align: right; font-size: 0.95rem; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+        th { background: rgba(0,0,0,0.2); color: var(--gold); padding: 15px; text-align: right; }
+        td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* أدوات الإدارة داخل القائمة */
-        .admin-controls input, .admin-controls select, .admin-controls textarea {
-            width: 100%; padding: 12px; margin: 8px 0;
-            background: #050c14; border: 1px solid var(--gold);
-            color: white; border-radius: 5px; box-sizing: border-box;
+        /* أدوات الآدمن */
+        .admin-form input, .admin-form select {
+            width: 100%; padding: 12px; margin: 10px 0; background: #0b121d;
+            border: 1px solid var(--gold); color: white; border-radius: 5px;
+        }
+        .btn-grand {
+            background: var(--gold); color: #121926; border: none;
+            padding: 12px; width: 100%; font-weight: bold; border-radius: 5px; cursor: pointer;
         }
 
-        .btn-gold {
-            background: var(--gold); color: var(--gov-blue);
-            border: none; padding: 12px; width: 100%;
-            font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px;
-        }
-
-        .status-active { color: var(--success); font-weight: bold; }
-        .status-danger { color: var(--danger); font-weight: bold; }
-        .status-warning { color: #f39c12; font-weight: bold; }
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; }
+        .bg-active { background: var(--success); color: #000; }
+        .bg-danger { background: var(--danger); color: #fff; }
 
     </style>
 </head>
 <body>
 
-<div class="menu-toggle" onclick="toggleMenu()">☰</div>
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+<div class="top-nav">
+    <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+    <div class="grand-logo">𝓗𝓡 𝓐𝓢𝓜𝓐𝓡</div>
+    <div style="width: 30px;"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <div class="sidebar" id="sidebar">
-    <h2 style="color:var(--gold); border-bottom:1px solid var(--gold); padding-bottom:10px;">🛡️ الإدارة العليا</h2>
+    <h2 style="color: var(--gold);">⚙️ لوحة التحكم</h2>
     
-    <div id="login-form">
-        <input type="password" id="adminPass" class="input-style" style="width:100%; padding:10px; background:#000; border:1px solid var(--gold); color:white;" placeholder="كلمة المرور">
-        <button class="btn-gold" onclick="checkLogin()">دخول الإدارة</button>
+    <div id="login-section">
+        <input type="password" id="adminPass" placeholder="رمز الدخول الإداري" style="width:100%; padding:10px; background:#000; color:white; border:1px solid var(--gold)">
+        <button class="btn-grand" style="margin-top:10px;" onclick="doLogin()">تسجيل الدخول</button>
     </div>
 
-    <div id="admin-tools" style="display:none;" class="admin-controls">
-        <p style="color:var(--success)">✅ مرحبا أيها المسؤول</p>
+    <div id="admin-tools" style="display:none;" class="admin-form">
+        <p style="color:var(--success)">✅ مرحباً بك يا مدير</p>
         <input type="text" id="pName" placeholder="اسم الموظف">
         <select id="pSector">
             <option value="الحكومة">🏛️ الحكومة</option>
@@ -150,76 +132,27 @@
         </select>
         <input type="text" id="pRank" placeholder="الرتبة">
         <select id="pStatus">
-            <option value="نشط">✅ موظف نشط</option>
-            <option value="استقالة">📄 استقالة</option>
-            <option value="فصل">🚫 فصل نهائي (بلاك ليست)</option>
+            <option value="نشط">نشط</option>
+            <option value="استقالة">استقالة</option>
+            <option value="فصل">فصل (بلاك ليست)</option>
         </select>
-        <textarea id="pReason" placeholder="السبب (في حال الفصل/الاستقالة)"></textarea>
-        <button class="btn-gold" onclick="saveToFirebase()">إصدار القرار</button>
-        <button class="btn-gold" style="background:#444; color:white; margin-top:20px;" onclick="logout()">تسجيل خروج</button>
-    </div>
-
-    <div style="margin-top:40px; border-top:1px solid #333; padding-top:20px;">
-        <p>🎧 الدعم الفني المباشر:</p>
-        <div id="chat-display" style="height:120px; background:rgba(0,0,0,0.5); overflow-y:auto; padding:5px; font-size:11px; margin-bottom:10px; border:1px solid #444;"></div>
-        <input type="text" id="chatMsg" style="width:100%; padding:8px; background:#000; border:1px solid var(--gold); color:white;" placeholder="رسالتك...">
-        <button class="btn-gold" onclick="sendChat()" style="padding:5px;">إرسال</button>
+        <button class="btn-grand" onclick="uploadData()">إرسال البيانات</button>
+        <button class="btn-grand" style="background:#555; margin-top:15px;" onclick="doLogout()">تسجيل الخروج</button>
     </div>
 </div>
 
-<header>
-    <div class="hr-main-logo">𝓗𝓡</div>
-    <div class="gov-title">وزارة الموارد البشرية | ASMAR</div>
-</header>
-
 <div class="container">
-    <div id="sections-container">
-        <div class="section-box">
-            <div class="section-header">🏛️ كشوفات القطاع الحكومي</div>
-            <div class="table-wrapper">
-                <table id="t-الحكومة"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div class="section-box">
-            <div class="section-header">🏥 كشوفات التحالف الطبي</div>
-            <div class="table-wrapper">
-                <table id="t-التحالف طبي"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div class="section-box">
-            <div class="section-header">🎖️ كشوفات قوات الجيش</div>
-            <div class="table-wrapper">
-                <table id="t-الجيش"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div class="section-box">
-            <div class="section-header">🚔 كشوفات جهاز الشرطة</div>
-            <div class="table-wrapper">
-                <table id="t-الشرطة"><thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div class="section-box" style="border-color: #f39c12;">
-            <div class="section-header" style="color:#f39c12">📄 سجل الاستقالات</div>
-            <div class="table-wrapper">
-                <table id="t-استقالة"><thead><tr><th>الاسم</th><th>القطاع السابق</th><th>السبب</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div class="section-box" style="border-color: var(--danger);">
-            <div class="section-header" style="color:var(--danger)">🚫 القائمة السوداء (المفصولين)</div>
-            <div class="table-wrapper">
-                <table id="t-blacklist"><thead><tr><th>الاسم</th><th>القطاع</th><th>السبب</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
+    <div class="hero-section">
+        <h1 style="color: var(--gold); margin:0;">وزارة الموارد البشرية</h1>
+        <p style="opacity:0.7;">نظام إدارة شؤون الموظفين - الإصدار الملكي V10</p>
     </div>
+
+    <div id="tables-container">
+        </div>
 </div>
 
 <script>
-    // إعدادات Firebase
+    // Firebase Config (استخدام نفس بياناتك المسجلة)
     const firebaseConfig = {
         apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
         databaseURL: "https://hr-asmar-default-rtdb.firebaseio.com",
@@ -228,92 +161,79 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // خاصية حفظ تسجيل الدخول (Session Management)
+    // التحقق من تسجيل الدخول السابق (حفظ الرتبة)
     window.onload = function() {
-        if(localStorage.getItem('asmar_admin') === 'active') {
-            showAdminTools();
+        if(localStorage.getItem('isAsmarAdmin') === 'true') {
+            showAdmin();
         }
+        renderTables();
     };
 
-    function toggleMenu() {
+    function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('active');
         document.getElementById('overlay').classList.toggle('active');
     }
 
-    function checkLogin() {
+    function doLogin() {
         const p = document.getElementById('adminPass').value;
-        if(p === "asmar123") { // يمكنك تغيير كلمة السر هنا
-            localStorage.setItem('asmar_admin', 'active');
-            showAdminTools();
-        } else { alert("كلمة المرور غير صحيحة"); }
+        if(p === "asmar123") {
+            localStorage.setItem('isAsmarAdmin', 'true');
+            showAdmin();
+        } else { alert("كلمة السر خاطئة!"); }
     }
 
-    function showAdminTools() {
-        document.getElementById('login-form').style.display = 'none';
+    function showAdmin() {
+        document.getElementById('login-section').style.display = 'none';
         document.getElementById('admin-tools').style.display = 'block';
     }
 
-    function logout() {
-        localStorage.removeItem('asmar_admin');
+    function doLogout() {
+        localStorage.removeItem('isAsmarAdmin');
         location.reload();
     }
 
-    function saveToFirebase() {
-        const status = document.getElementById('pStatus').value;
+    function uploadData() {
         const data = {
             name: document.getElementById('pName').value,
             sector: document.getElementById('pSector').value,
             rank: document.getElementById('pRank').value,
-            status: status,
-            reason: document.getElementById('pReason').value || "لا يوجد",
+            status: document.getElementById('pStatus').value,
             date: new Date().toLocaleDateString()
         };
-
-        if(!data.name) return alert("يرجى كتابة الاسم");
-        db.ref('ASMAR_V10/RECORDS').push(data);
-        alert("تم اعتماد القرار بنجاح");
+        db.ref('ASMAR_V10/DATA').push(data);
+        alert("تم الحفظ بنجاح");
     }
 
-    // جلب البيانات وتوزيعها ديناميكياً
-    db.ref('ASMAR_V10/RECORDS').on('value', snap => {
-        const bodies = document.querySelectorAll('tbody');
-        bodies.forEach(b => b.innerHTML = "");
+    function renderTables() {
+        const sectors = ["الحكومة", "التحالف طبي", "الجيش", "الشرطة", "استقالة", "فصل"];
+        const container = document.getElementById('tables-container');
+        
+        db.ref('ASMAR_V10/DATA').on('value', snap => {
+            container.innerHTML = "";
+            sectors.forEach(s => {
+                let html = `
+                <div class="section-card">
+                    <div class="card-header">${s === 'فصل' ? '🚫 القائمة السوداء' : s === 'استقالة' ? '📄 السجل الإداري الاستقالات' : s}</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>الاسم</th><th>الرتبة</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+                            <tbody>`;
+                
+                snap.forEach(child => {
+                    const v = child.val();
+                    const isAdmin = localStorage.getItem('isAsmarAdmin') === 'true';
+                    const del = isAdmin ? `<button onclick="db.ref('ASMAR_V10/DATA/${child.key}').remove()" style="background:none; border:none; color:red; cursor:pointer">🗑️</button>` : '';
+                    
+                    if(v.status === s || (s === 'فصل' && v.status === 'فصل') || (v.status === 'نشط' && v.sector === s)) {
+                        html += `<tr><td>${v.name}</td><td>${v.rank}</td><td><span class="badge ${v.status==='نشط'?'bg-active':'bg-danger'}">${v.status}</span></td><td>${v.date} ${del}</td></tr>`;
+                    }
+                });
 
-        snap.forEach(child => {
-            const v = child.val();
-            const id = child.key;
-            const delBtn = localStorage.getItem('asmar_admin') === 'active' ? `<button onclick="deleteRec('${id}')" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button>` : '';
-
-            if(v.status === 'نشط') {
-                const target = document.querySelector(`#t-${v.sector} tbody`);
-                if(target) target.innerHTML += `<tr><td>${v.name}</td><td>${v.rank}</td><td class="status-active">نشط</td><td>${v.date} ${delBtn}</td></tr>`;
-            } else if(v.status === 'استقالة') {
-                document.querySelector('#t-استقالة tbody').innerHTML += `<tr><td>${v.name}</td><td>${v.sector}</td><td>${v.reason}</td><td>${v.date} ${delBtn}</td></tr>`;
-            } else if(v.status === 'فصل') {
-                document.querySelector('#t-blacklist tbody').innerHTML += `<tr><td>${v.name}</td><td>${v.sector}</td><td>${v.reason}</td><td>${v.date} ${delBtn}</td></tr>`;
-            }
+                html += `</tbody></table></div></div>`;
+                container.innerHTML += html;
+            });
         });
-    });
-
-    function deleteRec(id) { if(confirm("هل تريد حذف هذا السجل؟")) db.ref('ASMAR_V10/RECORDS/' + id).remove(); }
-
-    // نظام الدعم الفني
-    function sendChat() {
-        const m = document.getElementById('chatMsg').value;
-        const sender = localStorage.getItem('asmar_admin') === 'active' ? "الإدارة" : "زائر";
-        if(m) {
-            db.ref('ASMAR_V10/SUPPORT').push({ sender: sender, msg: m });
-            document.getElementById('chatMsg').value = "";
-        }
     }
-    db.ref('ASMAR_V10/SUPPORT').limitToLast(10).on('value', snap => {
-        const chat = document.getElementById('chat-display'); chat.innerHTML = "";
-        snap.forEach(c => {
-            const d = c.val();
-            chat.innerHTML += `<div><b style="color:var(--gold)">${d.sender}:</b> ${d.msg}</div>`;
-        });
-        chat.scrollTop = chat.scrollHeight;
-    });
 </script>
 </body>
 </html>
