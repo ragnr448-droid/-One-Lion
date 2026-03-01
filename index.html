@@ -17,31 +17,30 @@
         .banner { background-color: #1a1f36; color: white; padding: 35px 20px 60px 20px; text-align: center; border-radius: 0 0 40px 0; }
         .sub-title { color: #c4a457; font-size: 12px; display: block; margin-bottom: 8px; }
 
-        /* الأزرار */
         .main-nav { padding: 0 20px; margin-top: -35px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
         .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; border: none; transition: 0.3s; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
         .btn-black { background: #000; color: white; }
 
-        /* الإشعارات */
         #notification { 
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
             background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; 
             font-size: 13px; font-weight: bold; display: none; z-index: 5000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* الإحصائيات */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
         .stat-card h3 { margin: 0; font-size: 24px; color: #1a1f36; }
 
-        /* الصفحات */
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
         .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 12px; margin: 8px 15px; border-radius: 8px; font-size: 13px; }
-        .f-tag { font-size: 10px; background: #eee; padding: 2px 6px; border-radius: 4px; margin-right: 5px; }
+        /* تحسين شكل بطاقة الموظف */
+        .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 12px; margin: 8px 15px; border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+        .status-active { color: #28a745; font-size: 10px; font-weight: bold; background: #eafff0; padding: 2px 8px; border-radius: 10px; border: 1px solid #28a745; }
+        
+        .fact-title { background: #f0f2f5; color: #1a1f36; padding: 8px 15px; margin: 15px 0 5px 0; font-weight: bold; border-left: 4px solid #c4a457; }
 
         footer { background: #1a1f36; color: white; text-align: center; padding: 20px; margin-top: auto; }
         .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 18px; display: block; margin-top: 5px; }
@@ -97,11 +96,27 @@
         <div id="admS" style="display:none; padding:15px; border-bottom:2px solid #eee;">
             <input type="text" id="inName" placeholder="اسم الموظف">
             <select id="inFact">
-                <option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option>
+                <option>الحكومة</option>
+                <option>جيش</option>
+                <option>شرطة</option>
+                <option>تحالف طبي</option>
             </select>
             <button class="btn btn-gold" onclick="addStaff()">إضافة الموظف للفصيل</button>
         </div>
-        <div id="staffList"></div>
+        
+        <div id="staffSections">
+            <div class="fact-title">🏛️ قطاع الحكومة</div>
+            <div id="list-الحكومة"></div>
+            
+            <div class="fact-title">⚔️ قطاع الجيش</div>
+            <div id="list-جيش"></div>
+            
+            <div class="fact-title">🚔 قطاع الشرطة</div>
+            <div id="list-شرطة"></div>
+            
+            <div class="fact-title">🚑 التحالف الطبي</div>
+            <div id="list-تحالف طبي"></div>
+        </div>
     </div>
 
     <div id="resignP" class="page">
@@ -160,7 +175,10 @@
     }
 
     function showAdmin() {
-        ['admS', 'admR', 'admB', 'admT'].forEach(id => document.getElementById(id).style.display = 'block');
+        ['admS', 'admR', 'admB', 'admT'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.style.display = 'block';
+        });
     }
 
     function openP(id) { 
@@ -169,7 +187,6 @@
     }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
 
-    // إضافة موظف جديد
     function addStaff() {
         const name = document.getElementById('inName').value;
         const fact = document.getElementById('inFact').value;
@@ -179,24 +196,22 @@
         document.getElementById('inName').value = "";
     }
 
-    // تحويل لاستقالة (حذف من جدول الموظفين)
     function addResign() {
         const id = document.getElementById('rSelect').value;
         const emp = db.staff.find(s => s.id == id);
         if(!emp) return;
         db.resigns.push({ name: emp.name, end: new Date().getTime() + (3*24*60*60*1000) });
-        db.staff = db.staff.filter(s => s.id != id); // حذف الموظف من الجدول
+        db.staff = db.staff.filter(s => s.id != id);
         save("تم تحويل الموظف للاستقالة وحذفه من الجدول ✅");
     }
 
-    // تحويل لبلاك لست (حذف من جدول الموظفين)
     function addBlack() {
         const id = document.getElementById('bSelect').value;
         const reason = document.getElementById('bReason').value;
         const emp = db.staff.find(s => s.id == id);
         if(!emp) return;
         db.black.push({ name: emp.name, reason: reason });
-        db.staff = db.staff.filter(s => s.id != id); // حذف الموظف من الجدول
+        db.staff = db.staff.filter(s => s.id != id);
         save("تم إدراج الموظف في البلاك لست وحذفه من الجدول ✅");
     }
 
@@ -216,36 +231,52 @@
     function updateSelects() {
         const rS = document.getElementById('rSelect');
         const bS = document.getElementById('bSelect');
-        [rS, bS].forEach(s => {
-            s.innerHTML = db.staff.map(emp => `<option value="${emp.id}">${emp.name} (${emp.fact})</option>`).join('');
-        });
+        if(rS && bS) {
+            const options = db.staff.map(emp => `<option value="${emp.id}">${emp.name} (${emp.fact})</option>`).join('');
+            rS.innerHTML = options;
+            bS.innerHTML = options;
+        }
     }
 
     function render() {
-        // الموظفين
-        const sl = document.getElementById('staffList'); sl.innerHTML = "";
-        db.staff.forEach(s => sl.innerHTML += `<div class="item-card"><span class="f-tag">${s.fact}</span> <strong>${s.name}</strong></div>`);
+        // تفريغ القوائم المقسمة
+        const facts = ['الحكومة', 'جيش', 'شرطة', 'تحالف طبي'];
+        facts.forEach(f => document.getElementById(`list-${f}`).innerHTML = "");
+
+        // توزيع الموظفين مع علامة "نشط"
+        db.staff.forEach(s => {
+            const container = document.getElementById(`list-${s.fact}`);
+            if(container) {
+                container.innerHTML += `
+                    <div class="item-card">
+                        <strong>${s.name}</strong>
+                        <span class="status-active">● نشط</span>
+                    </div>`;
+            }
+        });
+
         document.getElementById('sNum').innerText = db.staff.length;
 
         // المهام
         const tl = document.getElementById('tasksList'); tl.innerHTML = "";
-        db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card">مهمة #${i+1}: ${t.desc}</div>`);
+        db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card"><span>مهمة #${i+1}: ${t.desc}</span></div>`);
         document.getElementById('tNum').innerText = db.tasks.length;
 
         // البلاك لست
         const bl = document.getElementById('blackList'); bl.innerHTML = "";
-        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:black;"><strong>${b.name}</strong><br><small style="color:red;">السبب: ${b.reason}</small></div>`);
+        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:black; flex-direction:column; align-items:start;"><strong>${b.name}</strong><small style="color:red;">السبب: ${b.reason}</small></div>`);
         
         renderResigns();
     }
 
     function renderResigns() {
-        const rl = document.getElementById('resignList'); rl.innerHTML = "";
+        const rl = document.getElementById('resignList'); if(!rl) return;
+        rl.innerHTML = "";
         const now = new Date().getTime();
         db.resigns.forEach(r => {
             const diff = r.end - now;
             let timeTxt = (diff > 0) ? `باقي: ${Math.floor(diff/(1000*60*60*24))} يوم و ${Math.floor((diff%(1000*60*60*24))/(1000*60*60))}:${Math.floor((diff%(1000*60*60))/(1000*60))}:${Math.floor((diff%(1000*60))/1000)}` : "استقالة نظيفة ✅";
-            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><span style="color:#d9534f; font-weight:bold; font-size:11px;">${timeTxt}</span></div>`;
+            rl.innerHTML += `<div class="item-card" style="flex-direction:column; align-items:start;"><strong>${r.name}</strong><span style="color:#d9534f; font-weight:bold; font-size:11px;">${timeTxt}</span></div>`;
         });
     }
 </script>
