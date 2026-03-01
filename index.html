@@ -21,9 +21,9 @@
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
         .btn-black { background: #000; color: white; }
-        .btn-danger { background: #d9534f; color: white; padding: 5px 10px; font-size: 11px; }
+        .btn-danger { background: #fee; color: #d9534f; padding: 4px 8px; font-size: 10px; border: 1px solid #d9534f; border-radius: 5px; cursor: pointer; }
 
-        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; font-size: 13px; font-weight: bold; display: none; z-index: 5000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; font-size: 13px; font-weight: bold; display: none; z-index: 5000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: center; min-width: 250px; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
@@ -36,7 +36,7 @@
         .status-active { color: #28a745; font-size: 10px; font-weight: bold; background: #eafff0; padding: 2px 8px; border-radius: 10px; border: 1px solid #28a745; }
         .fact-title { background: #f0f2f5; color: #1a1f36; padding: 8px 15px; margin: 15px 0 5px 0; font-weight: bold; border-left: 4px solid #c4a457; }
 
-        .admin-box { background: #f9f9f9; padding: 15px; border-bottom: 2px solid #eee; margin-bottom: 10px; }
+        .admin-only { display: none; background: #fffcf5; padding: 15px; border: 1px dashed #c4a457; margin: 10px 15px; border-radius: 10px; }
         input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; }
         
         #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
@@ -44,14 +44,14 @@
 </head>
 <body onload="init()">
 
-<div id="notification">تمت العملية بنجاح ✅</div>
+<div id="notification">عملية ناجحة</div>
 
 <div class="mobile-container">
     <header>
         <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
         <div class="logo-area">
             <h1>وزارة الموارد البشرية</h1>
-            <p>بوابة الخدمات الإلكترونية</p>
+            <p id="roleDisplay">بوابة الخدمات الإلكترونية</p>
         </div>
     </header>
 
@@ -74,8 +74,9 @@
 
     <div id="staffP" class="page">
         <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div>
-        <div id="admS" class="admin-box" style="display:none;">
-            <input type="text" id="inName" placeholder="اسم الموظف الجديد">
+        <div id="admS" class="admin-only">
+            <strong>إضافة موظف جديد:</strong>
+            <input type="text" id="inName" placeholder="اسم الموظف">
             <select id="inFact">
                 <option>الحكومة</option><option>جيش</option><option>شرطة</option><option>تحالف طبي</option>
             </select>
@@ -91,28 +92,27 @@
 
     <div id="resignP" class="page">
         <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة</h3></div>
-        <div id="admR" class="admin-box" style="display:none;">
-            <p style="font-size: 11px; margin: 0; color: #666;">تحويل موظف موجود:</p>
+        <div id="admR" class="admin-only">
+            <p style="font-size: 11px; color: #666;">تحويل موظف موجود:</p>
             <select id="rSelect"></select>
             <button class="btn btn-gold" onclick="addResign()">تحويل من الموظفين</button>
             <hr>
-            <p style="font-size: 11px; margin: 5px 0; color: #666;">أو إضافة يدوية بالاسم:</p>
-            <input type="text" id="manualRName" placeholder="اسم الشخص للاستقالة">
-            <button class="btn btn-outline" onclick="addManualResign()">إضافة يدوية</button>
+            <input type="text" id="manualRName" placeholder="اسم شخص (إضافة يدوية)">
+            <button class="btn btn-outline" onclick="addManualResign()">إضافة يدوية للتهدئة</button>
         </div>
         <div id="resignList"></div>
     </div>
 
     <div id="blackP" class="page">
         <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>قائمة البلاك لست</h3></div>
-        <div id="admB" class="admin-box" style="display:none;">
-            <p style="font-size: 11px; margin: 0; color: #666;">تحويل موظف موجود:</p>
+        <div id="admB" class="admin-only">
+            <p style="font-size: 11px; color: #666;">تحويل موظف موجود:</p>
             <select id="bSelect"></select>
             <input type="text" id="bReason" placeholder="السبب">
             <button class="btn btn-black" onclick="addBlack()">إدراج من الموظفين</button>
             <hr>
-            <input type="text" id="manualBName" placeholder="اسم الشخص للبلاك لست">
-            <input type="text" id="manualBReason" placeholder="السبب">
+            <input type="text" id="manualBName" placeholder="اسم (إضافة يدوية)">
+            <input type="text" id="manualBReason" placeholder="سبب البلاك لست">
             <button class="btn btn-outline" onclick="addManualBlack()">إضافة يدوية للبلاك لست</button>
         </div>
         <div id="blackList"></div>
@@ -120,7 +120,7 @@
 
     <div id="tasksP" class="page">
         <div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام الأسبوعية</h3></div>
-        <div id="admT" class="admin-box" style="display:none;">
+        <div id="admT" class="admin-only">
             <textarea id="tDesc" placeholder="اكتب المهمة هنا..."></textarea>
             <button class="btn btn-gold" onclick="addTask()">إضافة المهمة</button>
         </div>
@@ -132,6 +132,7 @@
         <h2>دخول الإدارة</h2>
         <input type="password" id="pass" placeholder="كلمة السر...">
         <button class="btn btn-gold" onclick="login()">دخول</button>
+        <button class="btn btn-danger" style="margin-top:20px; width:100%" onclick="logout()">تسجيل الخروج</button>
     </div>
 </div>
 
@@ -140,14 +141,18 @@
     const isAdmin = () => localStorage.getItem('auth') === 'true';
 
     function init() {
-        if(isAdmin()) showAdmin();
+        if(isAdmin()) {
+            showAdminElements();
+            document.getElementById('roleDisplay').innerText = localStorage.getItem('role') || "المسؤول الإداري";
+        }
         render();
         setInterval(renderResigns, 1000);
     }
 
-    function showNotify(msg) {
+    function showNotify(msg, color="#28a745") {
         const n = document.getElementById('notification');
-        n.innerText = msg; n.style.display = 'block';
+        n.innerText = msg; n.style.backgroundColor = color;
+        n.style.display = 'block';
         setTimeout(() => n.style.display = 'none', 3000);
     }
 
@@ -156,86 +161,114 @@
     
     function login() {
         const p = document.getElementById('pass').value;
-        if(p === "asmar123" || p === "HR12") {
+        if(p === "asmar123") {
             localStorage.setItem('auth', 'true');
-            location.reload();
+            localStorage.setItem('role', 'الإدارة العليا 👑');
+            showNotify("تم تسجيل دخول بنجاح - مرحباً بك في الإدارة العليا ✅");
+            setTimeout(() => location.reload(), 1200);
+        } else if(p === "HR12") {
+            localStorage.setItem('auth', 'true');
+            localStorage.setItem('role', 'مساعد إداري 📂');
+            showNotify("تم تسجيل دخول بنجاح - مرحباً بك (مساعد إداري) ✅");
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            showNotify("كلمة السر خاطئة ❌", "#d9534f");
         }
     }
 
-    function showAdmin() {
-        ['admS', 'admR', 'admB', 'admT'].forEach(id => {
-            if(document.getElementById(id)) document.getElementById(id).style.display = 'block';
-        });
+    function logout() {
+        localStorage.removeItem('auth');
+        localStorage.removeItem('role');
+        location.reload();
+    }
+
+    function showAdminElements() {
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
     }
 
     function openP(id) { document.getElementById(id).style.display = 'block'; updateSelects(); }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
 
-    // وظائف الموظفين
+    // إضافة وحذف الموظفين
     function addStaff() {
         const name = document.getElementById('inName').value;
         const fact = document.getElementById('inFact').value;
-        if(!name) return;
+        if(!name || !isAdmin()) return;
         db.staff.push({ id: Date.now(), name, fact });
-        save("تمت الإضافة بنجاح ✅");
+        save("تم إضافة الموظف بنجاح ✅");
         document.getElementById('inName').value = "";
     }
 
-    // وظائف الاستقالات
+    function removeStaff(id) {
+        if(!isAdmin() || !confirm("حذف الموظف نهائياً؟")) return;
+        db.staff = db.staff.filter(s => s.id != id);
+        save("تم حذف الموظف 🗑️");
+    }
+
+    // الاستقالات
     function addResign() {
         const id = document.getElementById('rSelect').value;
         const emp = db.staff.find(s => s.id == id);
-        if(!emp) return;
+        if(!emp || !isAdmin()) return;
         db.resigns.push({ id: Date.now(), name: emp.name, end: Date.now() + (3*24*60*60*1000) });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم التحويل للتهدئة ✅");
+        save("تم تحويل الموظف للتهدئة ✅");
     }
 
     function addManualResign() {
         const name = document.getElementById('manualRName').value;
-        if(!name) return;
+        if(!name || !isAdmin()) return;
         db.resigns.push({ id: Date.now(), name: name, end: Date.now() + (3*24*60*60*1000) });
-        save("تمت الإضافة اليدوية للتهدئة ✅");
+        save("تمت الإضافة اليدوية ✅");
         document.getElementById('manualRName').value = "";
     }
 
     function removeResign(id) {
-        if(!confirm("هل تريد إزالة الشخص من قائمة التهدئة؟")) return;
+        if(!isAdmin() || !confirm("إزالة من التهدئة؟")) return;
         db.resigns = db.resigns.filter(r => r.id != id);
-        save("تمت الإزالة من التهدئة 🗑️");
+        save("تمت الإزالة ✅");
     }
 
-    // وظائف البلاك لست
+    // البلاك لست
     function addBlack() {
         const id = document.getElementById('bSelect').value;
         const reason = document.getElementById('bReason').value || "غير محدد";
         const emp = db.staff.find(s => s.id == id);
-        if(!emp) return;
+        if(!emp || !isAdmin()) return;
         db.black.push({ id: Date.now(), name: emp.name, reason: reason });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم الإدراج في البلاك لست ✅");
+        save("أضيف للبلاك لست ✅");
     }
 
     function addManualBlack() {
         const name = document.getElementById('manualBName').value;
         const reason = document.getElementById('manualBReason').value || "غير محدد";
-        if(!name) return;
+        if(!name || !isAdmin()) return;
         db.black.push({ id: Date.now(), name: name, reason: reason });
-        save("تمت الإضافة اليدوية للبلاك لست ✅");
+        save("تمت الإضافة اليدوية ✅");
         document.getElementById('manualBName').value = "";
         document.getElementById('manualBReason').value = "";
     }
 
     function removeBlack(id) {
-        if(!confirm("هل تريد الحذف من البلاك لست؟")) return;
+        if(!isAdmin() || !confirm("حذف من البلاك لست؟")) return;
         db.black = db.black.filter(b => b.id != id);
         save("تم الحذف من القائمة ✅");
     }
 
     function addTask() {
-        db.tasks.push({ id: Date.now(), desc: document.getElementById('tDesc').value });
+        if(!isAdmin()) return;
+        const desc = document.getElementById('tDesc').value;
+        if(!desc) return;
+        db.tasks.push({ id: Date.now(), desc: desc });
         save("تم إضافة المهمة ✅");
         document.getElementById('tDesc').value = "";
+    }
+
+    function removeTask(id) {
+        if(!isAdmin()) return;
+        db.tasks = db.tasks.filter(t => t.id != id);
+        save("تم حذف المهمة ✅");
     }
 
     function save(msg) {
@@ -254,22 +287,32 @@
     }
 
     function render() {
-        // موظفين
         ['الحكومة', 'جيش', 'شرطة', 'تحالف طبي'].forEach(f => {
             const list = document.getElementById(`list-${f}`);
-            list.innerHTML = "";
-            db.staff.filter(s => s.fact === f).forEach(s => {
-                list.innerHTML += `<div class="item-card"><strong>${s.name}</strong> <span class="status-active">● نشط</span></div>`;
-            });
+            if(list) {
+                list.innerHTML = "";
+                db.staff.filter(s => s.fact === f).forEach(s => {
+                    list.innerHTML += `<div class="item-card">
+                        <strong>${s.name}</strong> 
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span class="status-active">● نشط</span>
+                            ${isAdmin() ? `<button class="btn-danger" onclick="removeStaff(${s.id})">×</button>` : ''}
+                        </div>
+                    </div>`;
+                });
+            }
         });
         document.getElementById('sNum').innerText = db.staff.length;
 
-        // مهام
         const tl = document.getElementById('tasksList'); tl.innerHTML = "";
-        db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card"><span>مهمة #${i+1}: ${t.desc}</span></div>`);
+        db.tasks.forEach((t, i) => {
+            tl.innerHTML += `<div class="item-card">
+                <span>مهمة #${i+1}: ${t.desc}</span>
+                ${isAdmin() ? `<button class="btn-danger" onclick="removeTask(${t.id})">إزالة</button>` : ''}
+            </div>`;
+        });
         document.getElementById('tNum').innerText = db.tasks.length;
 
-        // بلاك لست
         const bl = document.getElementById('blackList'); bl.innerHTML = "";
         db.black.forEach(b => {
             bl.innerHTML += `<div class="item-card">
