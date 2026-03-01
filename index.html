@@ -14,10 +14,16 @@
         .user-profile { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 50px; border: 1px solid #c4a457; }
         .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #c4a457; }
         
-        .banner { background-color: #1a1f36; color: white; padding: 25px 20px 50px 20px; text-align: center; border-radius: 0 0 40px 0; }
+        .banner { background-color: #1a1f36; color: white; padding: 25px 20px 60px 20px; text-align: center; border-radius: 0 0 40px 0; }
         .sub-title { color: #c4a457; font-size: 11px; display: block; }
 
-        .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+        /* خانات العدادات الجديدة */
+        .stats-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; margin-top: -40px; z-index: 10; }
+        .stat-item { background: white; padding: 12px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 3px solid #c4a457; }
+        .stat-item h4 { margin: 0; color: #1a1f36; font-size: 20px; }
+        .stat-item p { margin: 0; color: #888; font-size: 10px; font-weight: bold; }
+
+        .main-nav { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
         .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: 0.3s; text-align: center; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
@@ -29,13 +35,12 @@
         .section-title { background: #f8f9fa; padding: 10px 15px; margin: 10px 0; border-right: 4px solid #1a1f36; color: #1a1f36; font-weight: bold; }
         .item-card { background: #fff; border: 1px solid #eee; padding: 12px; margin: 5px 15px; border-radius: 8px; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         
-        /* الإضافات الجديدة */
-        .status-active { background: #28a745; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-right: 5px; }
+        .status-active { background: #28a745; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
         .rank-tag { color: #c4a457; font-weight: bold; font-size: 11px; }
         
-        /* تصميم البطاقة للتحميل */
-        .id-card { width: 300px; background: #1a1f36; color: white; padding: 20px; border-radius: 15px; margin: 20px auto; text-align: center; border: 3px solid #c4a457; position: relative; }
-        .id-card .stamp { position: absolute; bottom: 10px; left: 10px; border: 2px solid #ff4444; color: #ff4444; padding: 2px 5px; transform: rotate(-15deg); font-weight: bold; font-size: 10px; }
+        /* البطاقة والختم */
+        .id-card { width: 280px; background: #1a1f36; color: white; padding: 20px; border-radius: 15px; margin: 20px auto; text-align: center; border: 3px solid #c4a457; position: relative; }
+        .stamp { position: absolute; bottom: 10px; left: 10px; border: 2px solid #ff4444; color: #ff4444; padding: 2px 5px; transform: rotate(-15deg); font-weight: bold; font-size: 10px; }
 
         #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; display: none; z-index: 5000; }
         
@@ -43,9 +48,6 @@
         .asmar-sig { color: #c4a457; font-family: cursive; font-size: 18px; }
 
         input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
-        .avatar-picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin: 10px 0; }
-        .avatar-opt { width: 100%; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-        .avatar-opt.selected { border-color: #c4a457; }
     </style>
 </head>
 <body onload="init()">
@@ -66,88 +68,80 @@
 
     <div class="banner">
         <span class="sub-title">وزارة الموارد البشرية</span>
-        <h2 id="welcomeMsg">مرحباً بك في النظام</h2>
+        <h2 id="welcomeMsg">نظام الإدارة المطور 2026</h2>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item"><h4 id="countStaff">0</h4><p>إجمالي الموظفين</p></div>
+        <div class="stat-item"><h4 id="countBlack" style="color: #ff4444;">0</h4><p>عدد المخالفات</p></div>
     </div>
 
     <div class="main-nav">
         <button class="btn btn-gold" onclick="openP('staffP')">قوائم القطاعات (الموظفين)</button>
         <button class="btn btn-outline" onclick="openP('resignP')">طلبات الاستقالة / التهدئة</button>
-        <button class="btn btn-outline" onclick="openP('reportP')">تقديم تقرير جديد</button>
-        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين</button>
-        <button class="btn btn-black" onclick="openP('blackP')">القائمة السوداء والفصل</button>
+        <button class="btn btn-black" onclick="openP('blackP')">الفصل والقائمة السوداء</button>
+        <button class="btn btn-outline" onclick="openP('reportP')">مركز التقارير</button>
     </div>
 
     <footer>
         <span class="asmar-sig">Designed by Asmar</span>
     </footer>
 
-    <div id="loginScreen" style="position:fixed; top:0; right:-100%; width:100%; height:100%; background:#1a1f36; z-index:3000; transition:0.4s; padding:40px; color:white;">
-        <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
-        <h3>تسجيل الدخول</h3>
-        <input type="text" id="loginName" placeholder="الاسم الكامل">
-        <input type="password" id="loginPass" placeholder="كلمة السر">
-        <p style="font-size:12px; color:#c4a457;">اختر صورتك:</p>
-        <div class="avatar-picker" id="avatarPicker"></div>
-        <button class="btn btn-gold" onclick="login()">دخول ومزامنة</button>
-        <button class="btn btn-outline" style="margin-top:10px; color:white;" onclick="logout()">خروج</button>
-    </div>
-
     <div id="staffP" class="page">
-        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>توزيع القطاعات</h3></div>
+        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>إضافة وتوزيع الموظفين</h3></div>
         <div id="admS" style="display:none; padding:15px; background:#f0f2f5;">
             <input type="text" id="sName" placeholder="اسم الموظف">
             <select id="sFact">
                 <option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option>
             </select>
             <select id="sRank">
-                <option>موظف جديد</option><option>مساعد</option><option>مدير مكتب</option><option>رئيس قسم</option><option>وكيل</option><option>وزير</option>
+                <option>موظف جديد</option><option>مساعد</option><option>رئيس قسم</option><option>وكيل</option><option>وزير</option>
             </select>
-            <button class="btn btn-gold" onclick="addS()">إضافة للقطاع</button>
+            <button class="btn btn-gold" onclick="addS()">تثبيت الموظف</button>
         </div>
         <div class="section-title">قطاع الشرطة</div><div id="list-شرطة"></div>
         <div class="section-title">قطاع الجيش</div><div id="list-جيش"></div>
-        <div class="section-title">قطاع التحالف الطبي</div><div id="list-تحالف طبي"></div>
+        <div class="section-title">قطاع التحالف طبي</div><div id="list-تحالف طبي"></div>
         <div class="section-title">قطاع الحكومة</div><div id="list-الحكومة"></div>
     </div>
 
-    <div id="resignP" class="page">
-        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>نظام الاستقالة والتهدئة</h3></div>
-        <div id="admR" style="display:none; padding:15px;">
-            <select id="rSelect"></select>
-            <button class="btn btn-gold" onclick="addR()">بدء فترة التهدئة (3 أيام)</button>
-        </div>
-        <div id="resignList"></div>
-    </div>
-
     <div id="blackP" class="page">
-        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>الفصل والقائمة السوداء</h3></div>
+        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>نظام الفصل والبلاك لست</h3></div>
         <div id="admB" style="display:none; padding:15px;">
             <select id="bSelect"></select>
-            <input id="bReason" placeholder="سبب الفصل">
-            <button class="btn btn-black" onclick="addB()">فصل إداري نهائي</button>
+            <input id="bReason" placeholder="سبب الفصل والإدراج">
+            <button class="btn btn-black" onclick="addB()">تأكيد الفصل النهائي</button>
         </div>
         <div id="blackList"></div>
     </div>
 
+    <div id="resignP" class="page">
+        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>المستقيلين والتهدئة</h3></div>
+        <div id="admR" style="display:none; padding:15px;"><select id="rSelect"></select><button class="btn btn-gold" onclick="addR()">بدء تهدئة</button></div>
+        <div id="resignList"></div>
+    </div>
+
     <div id="reportP" class="page"><div class="p-header"><span onclick="closeP('reportP')">➔</span><h3>التقارير</h3></div><div id="reportList"></div></div>
-    <div id="tasksP" class="page"><div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام</h3></div><div id="tasksList"></div></div>
 
     <div id="cardModal" class="page">
-        <div class="p-header"><span onclick="closeP('cardModal')">➔</span><h3>معاينة البطاقة الرسمية</h3></div>
+        <div class="p-header"><span onclick="closeP('cardModal')">➔</span><h3>معاينة المستند الرسمي</h3></div>
         <div id="cardPreviewArea"></div>
-        <div style="padding:20px;">
-            <button class="btn btn-gold" onclick="window.print()">تحميل / طباعة البطاقة</button>
-        </div>
+        <div style="padding:20px;"><button class="btn btn-gold" onclick="window.print()">طباعة / تحميل</button></div>
+    </div>
+
+    <div id="loginScreen" style="position:fixed; top:0; right:-100%; width:100%; height:100%; background:#1a1f36; z-index:3000; transition:0.4s; padding:40px; color:white;">
+        <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
+        <h3>دخول الإدارة</h3>
+        <input type="password" id="loginPass" placeholder="كلمة السر">
+        <button class="btn btn-gold" onclick="login()">دخول</button>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('asmar_final_v5')) || { staff: [], resigns: [], reports: [], black: [], tasks: [] };
-    const imgs = ["https://i.pravatar.cc/150?img=11","https://i.pravatar.cc/150?img=12","https://i.pravatar.cc/150?img=13","https://i.pravatar.cc/150?img=14"];
-    let selImg = imgs[0];
 
     function init() {
-        checkAuth(); renderAll(); renderAvatars();
+        checkAuth(); renderAll();
         setInterval(renderResigns, 1000);
     }
 
@@ -155,72 +149,46 @@
         const auth = localStorage.getItem('auth');
         if(auth) {
             document.querySelectorAll('[id^="adm"]').forEach(el => el.style.display = 'block');
-            const name = localStorage.getItem('uName');
-            const rank = (auth === 'admin') ? "أدمن" : "مساعد إدارة";
-            document.getElementById('userNameDisp').innerText = name;
-            document.getElementById('userRankDisp').innerText = "رتبة: " + rank;
-            document.getElementById('profileImg').src = localStorage.getItem('uImg');
-        } else {
-            document.getElementById('profileImg').src = "https://ui-avatars.com/api/?name=Guest";
+            document.getElementById('userNameDisp').innerText = localStorage.getItem('uName') || "Asmar Admin";
+            document.getElementById('profileImg').src = "https://ui-avatars.com/api/?name=Admin&background=c4a457";
         }
     }
 
-    function renderAvatars() {
-        const p = document.getElementById('avatarPicker'); if(!p) return;
-        imgs.forEach(url => {
-            const img = document.createElement('img');
-            img.src = url; img.className = 'avatar-opt';
-            img.onclick = () => { document.querySelectorAll('.avatar-opt').forEach(i=>i.classList.remove('selected')); img.classList.add('selected'); selImg = url; };
-            p.appendChild(img);
-        });
-    }
-
     function login() {
-        const p = document.getElementById('loginPass').value;
-        const n = document.getElementById('loginName').value || "مستخدم";
-        if(p === "asmar123") { localStorage.setItem('auth', 'admin'); }
-        else if(p === "HR12") { localStorage.setItem('auth', 'assistant'); }
-        else { return alert("خطأ"); }
-        localStorage.setItem('uName', n); localStorage.setItem('uImg', selImg);
-        location.reload();
+        if(document.getElementById('loginPass').value === "asmar123") {
+            localStorage.setItem('auth', 'admin');
+            localStorage.setItem('uName', 'Asmar Admin');
+            location.reload();
+        } else { alert("خطأ"); }
     }
-
-    function logout() { localStorage.clear(); location.reload(); }
-
-    function openP(id) { document.getElementById(id).style.display = 'block'; updateSelects(); }
-    function closeP(id) { document.getElementById(id).style.display = 'none'; }
-    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
-    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
 
     function addS() {
         const now = new Date();
-        const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        const dateStr = now.getDate() + " " + now.toLocaleString('en-US', { month: 'long' });
         db.staff.push({ 
             id: Date.now(), 
             name: document.getElementById('sName').value, 
             fact: document.getElementById('sFact').value,
             rank: document.getElementById('sRank').value,
-            joinDate: dateStr,
-            img: "https://ui-avatars.com/api/?name=" + document.getElementById('sName').value + "&background=random"
+            joinDate: dateStr
         });
-        save("تمت الإضافة بنجاح ✅");
-    }
-
-    function addR() {
-        const id = document.getElementById('rSelect').value;
-        const emp = db.staff.find(s => s.id == id);
-        db.resigns.push({ ...emp, end: Date.now() + (3*24*60*60*1000), type: 'استقالة' });
-        db.staff = db.staff.filter(s => s.id != id);
-        save("بدأت فترة التهدئة ✅");
+        save("تمت إضافة الموظف ✅");
     }
 
     function addB() {
         const id = document.getElementById('bSelect').value;
         const emp = db.staff.find(s => s.id == id);
-        const reason = document.getElementById('bReason').value;
-        db.black.push({ ...emp, reason: reason, date: new Date().toLocaleDateString() });
+        db.black.push({ ...emp, reason: document.getElementById('bReason').value });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم الفصل والإدراج في القائمة السوداء 🚫");
+        save("تم الفصل 🚫");
+    }
+
+    function addR() {
+        const id = document.getElementById('rSelect').value;
+        const emp = db.staff.find(s => s.id == id);
+        db.resigns.push({ ...emp, end: Date.now() + (3*24*60*60*1000) });
+        db.staff = db.staff.filter(s => s.id != id);
+        save("بدأت التهدئة ✅");
     }
 
     function save(m) {
@@ -230,81 +198,64 @@
         setTimeout(()=> n.style.display = 'none', 2000);
     }
 
-    function updateSelects() {
-        const opt = db.staff.map(s => `<option value="${s.id}">${s.name} (${s.fact})</option>`).join('');
-        if(document.getElementById('rSelect')) document.getElementById('rSelect').innerHTML = opt;
-        if(document.getElementById('bSelect')) document.getElementById('bSelect').innerHTML = opt;
-    }
-
     function renderAll() {
+        // تحديث العدادات
+        document.getElementById('countStaff').innerText = db.staff.length;
+        document.getElementById('countBlack').innerText = db.black.length;
+
+        // تحديث القوائم
         const facts = ['شرطة', 'جيش', 'تحالف طبي', 'الحكومة'];
         facts.forEach(f => {
             const el = document.getElementById('list-' + f); if(!el) return;
-            el.innerHTML = "";
-            db.staff.filter(s => s.fact === f).forEach(s => {
-                el.innerHTML += `
-                <div class="item-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${s.name}</strong> <span class="rank-tag">[${s.rank}]</span>
-                            <br><small style="color:gray">${s.joinDate}</small>
-                        </div>
-                        <span class="status-active">نشط</span>
-                    </div>
-                </div>`;
-            });
+            el.innerHTML = db.staff.filter(s => s.fact === f).map(s => `
+                <div class="item-card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><strong>${s.name}</strong> <span class="rank-tag">[${s.rank}]</span><br><small>${s.joinDate}</small></div>
+                    <span class="status-active">نشط</span>
+                </div>
+            `).join('');
         });
 
-        const bl = document.getElementById('blackList'); if(bl) {
-            bl.innerHTML = "";
-            db.black.forEach(b => {
-                bl.innerHTML += `
-                <div class="item-card" style="border-right: 4px solid red;">
-                    <strong>${b.name}</strong> - <span style="color:red">مفصول</span>
-                    <br><small>السبب: ${b.reason}</small>
-                    <button class="btn btn-outline" style="padding:2px; font-size:10px; margin-top:5px;" onclick="viewID('${b.id}', 'black')">طباعة قرار فصل</button>
-                </div>`;
-            });
-        }
+        const bl = document.getElementById('blackList');
+        if(bl) bl.innerHTML = db.black.map(b => `
+            <div class="item-card" style="border-right:4px solid red;">
+                <strong>${b.name}</strong> - <span style="color:red">مفصول</span><br><small>السبب: ${b.reason}</small>
+                <button class="btn btn-outline" style="padding:2px; font-size:10px; margin-top:5px;" onclick="viewID('${b.id}', 'black')">طباعة قرار فصل</button>
+            </div>
+        `).join('');
+
+        const opt = db.staff.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        ['rSelect', 'bSelect'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = opt; });
     }
 
     function renderResigns() {
         const rl = document.getElementById('resignList'); if(!rl) return;
-        rl.innerHTML = "";
-        const now = Date.now();
-        db.resigns.forEach(r => {
-            const diff = r.end - now;
-            let txt = (diff > 0) ? `باقي: ${Math.floor(diff/86400000)}يوم و ${Math.floor((diff%86400000)/3600000)}ساعة` : "تهدئة مكتملة ✅";
-            rl.innerHTML += `
-            <div class="item-card">
-                <strong>${r.name}</strong> <span class="rank-tag">${r.fact}</span>
-                <br><span style="color:red; font-size:11px;">${txt}</span>
-                <button class="btn btn-gold" style="padding:2px; font-size:10px; margin-top:5px;" onclick="viewID('${r.id}', 'resign')">طباعة بطاقة تهدئة</button>
-            </div>`;
-        });
+        rl.innerHTML = db.resigns.map(r => {
+            const diff = r.end - Date.now();
+            let txt = (diff > 0) ? `باقي: ${Math.floor(diff/3600000)} ساعة` : "مكتمل ✅";
+            return `<div class="item-card"><strong>${r.name}</strong><br><span style="color:red">${txt}</span>
+            <button class="btn btn-gold" style="padding:2px; font-size:10px; margin-top:5px;" onclick="viewID('${r.id}', 'resign')">طباعة بطاقة</button></div>`;
+        }).join('');
     }
 
     function viewID(id, mode) {
-        let person;
-        if(mode === 'resign') person = db.resigns.find(x => x.id == id);
-        else person = db.black.find(x => x.id == id);
-        
-        const preview = document.getElementById('cardPreviewArea');
-        preview.innerHTML = `
-            <div class="id-card" id="idCardToPrint">
-                <img src="${person.img}" style="width:80px; height:80px; border-radius:10px; border:2px solid #c4a457;">
-                <h3 style="margin:10px 0; color:#c4a457;">${person.name}</h3>
-                <p style="font-size:12px;">القطاع: ${person.fact}</p>
-                <p style="font-size:12px;">الرتبة: ${person.rank}</p>
+        let p = (mode === 'resign') ? db.resigns.find(x => x.id == id) : db.black.find(x => x.id == id);
+        document.getElementById('cardPreviewArea').innerHTML = `
+            <div class="id-card">
+                <h3 style="color:#c4a457;">وزارة الموارد البشرية</h3>
+                <h4>${p.name}</h4>
+                <p>الرتبة: ${p.rank} | القطاع: ${p.fact}</p>
                 <hr style="border-color:#c4a457">
-                <p style="color:#ff4444; font-weight:bold;">${mode === 'resign' ? 'حالة: فترة تهدئة' : 'حالة: قرار فصل إداري'}</p>
-                ${mode === 'black' ? `<p style="font-size:10px;">السبب: ${person.reason}</p>` : ''}
+                <p style="color:red; font-weight:bold;">${mode === 'resign' ? 'بطاقة تهدئة استقالة' : 'قرار فصل إداري'}</p>
                 <div class="stamp">ختم الموارد البشرية</div>
-                <div style="font-size:9px; margin-top:10px; opacity:0.6;">صادر عن نظام Asmar 2026</div>
             </div>
         `;
         openP('cardModal');
     }
+
+    function openP(id) { document.getElementById(id).style.display = 'block'; }
+    function closeP(id) { document.getElementById(id).style.display = 'none'; }
+    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
+    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
 </script>
 </body>
 </html>
