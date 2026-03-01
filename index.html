@@ -3,63 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الموارد البشرية - Asmar</title>
+    <title>بوابة وزارة الموارد البشرية | Grand RP Style</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
     <style>
-        :root { --primary: #006C35; --bg: #f4f7f6; --danger: #e74c3c; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; }
-        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
-        .btn-primary { background: var(--primary); color: white; }
-        #loginOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; justify-content: center; align-items: center; }
-        .login-box { background: white; padding: 30px; border-radius: 15px; text-align: center; }
-        .admin-controls { display: none; }
-        .container { padding: 20px 5%; }
-        .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--primary); }
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 10px; border-bottom: 1px solid #eee; text-align: right; }
-        footer { text-align: center; padding: 20px; color: #888; }
+        :root {
+            --main-bg: #ebedef;
+            --header-blue: #253352;
+            --card-border: #d8dee3;
+            --text-dark: #14171a;
+            --accent-blue: #324671;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--main-bg);
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        /* الهيدر العلوي */
+        .top-nav {
+            background: var(--header-blue);
+            color: white;
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1a243a;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-area img { height: 45px; filter: brightness(0) invert(1); }
+
+        /* حاوية الأقسام (Forum Style) */
+        .forum-container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .category-title {
+            background: #fdfdfd;
+            padding: 12px 20px;
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            color: var(--accent-blue);
+            font-weight: bold;
+            font-size: 1.1em;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .forum-section {
+            background: white;
+            border: 1px solid var(--card-border);
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .node-item {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .node-item:hover { background: #f9fafb; }
+
+        .node-icon {
+            font-size: 24px;
+            color: var(--accent-blue);
+            margin-left: 20px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .node-info { flex-grow: 1; }
+        .node-info h3 { margin: 0; font-size: 1.05em; color: var(--accent-blue); }
+        .node-info p { margin: 5px 0 0; font-size: 0.85em; color: #657786; }
+
+        .node-stats {
+            text-align: left;
+            font-size: 0.8em;
+            color: #657786;
+            min-width: 100px;
+        }
+
+        /* أزرار التحكم */
+        .admin-btn {
+            background: #324671;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        #loginOverlay {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7); z-index:1000; justify-content: center; align-items: center;
+        }
+
+        .login-box { background: white; padding: 30px; border-radius: 8px; width: 300px; }
+
+        .admin-panel {
+            background: #fff; border: 2px dashed var(--accent-blue);
+            padding: 20px; margin-bottom: 20px; display: none;
+        }
+
+        input, select { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
 
 <div id="loginOverlay">
     <div class="login-box">
-        <h3>دخول المبرمج Asmar</h3>
-        <input type="password" id="passInput" placeholder="كلمة المرور" style="padding:10px; margin-bottom:10px; width:80%"><br>
-        <button class="btn btn-primary" onclick="login()">دخول</button>
+        <h3>تسجيل دخول الإدارة</h3>
+        <input type="password" id="passInp" placeholder="كلمة المرور" style="width: 90%;">
+        <button class="admin-btn" onclick="checkPass()" style="width: 100%; margin-top: 10px;">دخول</button>
     </div>
 </div>
 
-<header>
-    <div><h2>وزارة الموارد البشرية</h2><small id="status">وضع العرض</small></div>
-    <button class="btn btn-primary" id="loginBtn" onclick="openLogin()">دخول الآدمن</button>
+<header class="top-nav">
+    <div class="logo-area">
+        <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/0/03/Logo_of_the_Ministry_of_Human_Resources_and_Social_Development.svg/1200px-Logo_of_the_Ministry_of_Human_Resources_and_Social_Development.svg.png" alt="شعار الوزارة">
+        <span>بوابة الموارد البشرية</span>
+    </div>
+    <button class="admin-btn" id="loginBtn" onclick="document.getElementById('loginOverlay').style.display='flex'">دخول الآدمن</button>
 </header>
 
-<div class="container">
-    <div class="card admin-controls" style="margin-bottom: 20px;">
-        <h3>➕ إضافة موظف</h3>
-        <input type="text" id="nameInp" placeholder="الاسم">
+<div class="forum-container">
+    
+    <div id="adminArea" class="admin-panel">
+        <h3>🛠️ لوحة تحكم Asmar</h3>
+        <input type="text" id="nameInp" placeholder="اسم الموظف">
         <select id="sectorInp">
-            <option value="gov">حكومي</option>
-            <option value="army">جيش</option>
-            <option value="police">شرطة</option>
+            <option value="gov">القطاع الحكومي</option>
+            <option value="army">القوات المسلحة</option>
+            <option value="police">المديرية العامة للشرطة</option>
         </select>
-        <button class="btn btn-primary" onclick="saveData()">حفظ سحابي</button>
+        <button class="admin-btn" onclick="saveToCloud()">إضافة موظف جديد</button>
     </div>
 
-    <div class="sector-grid">
-        <div class="card"><h3>🏛️ الحكومي</h3><table id="t-gov"></table></div>
-        <div class="card"><h3>🎖️ الجيش</h3><table id="t-army"></table></div>
-        <div class="card"><h3>🚔 الشرطة</h3><table id="t-police"></table></div>
+    <div class="category-title">القطاعات الرسمية</div>
+    <div class="forum-section">
+        <div class="node-item">
+            <div class="node-icon">🏛️</div>
+            <div class="node-info">
+                <h3>القطاع الحكومي والمدني</h3>
+                <p>قائمة الموظفين المسجلين في الوزارات والهيئات الحكومية.</p>
+                <div id="list-gov" style="margin-top:10px"></div>
+            </div>
+        </div>
+
+        <div class="node-item">
+            <div class="node-icon">🎖️</div>
+            <div class="node-info">
+                <h3>القوات المسلحة (الجيش)</h3>
+                <p>سجل الكوادر العسكرية والمجندين في صفوف الجيش.</p>
+                <div id="list-army" style="margin-top:10px"></div>
+            </div>
+        </div>
+
+        <div class="node-item">
+            <div class="node-icon">🚔</div>
+            <div class="node-info">
+                <h3>جهاز الشرطة والأمن العام</h3>
+                <p>بيانات ضباط وأفراد وزارة الداخلية والأمن.</p>
+                <div id="list-police" style="margin-top:10px"></div>
+            </div>
+        </div>
     </div>
 </div>
 
-<footer>تم التطوير بواسطة: <b>Asmar</b></footer>
+<footer style="text-align:center; padding:30px; color:#657786; font-size:0.9em">
+    جميع الحقوق محفوظة © 2026 | تطوير المبرمج **Asmar**
+</footer>
 
 <script>
+    // بيانات Firebase الخاصة بك
     const firebaseConfig = {
         apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
         authDomain: "hr-asmar.firebaseapp.com",
@@ -72,19 +197,19 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let isAdmin = false;
+    let isLogged = false;
 
-    function openLogin() { document.getElementById('loginOverlay').style.display='flex'; }
-    function login() {
-        if(document.getElementById('passInput').value === "asmar123") {
-            isAdmin = true;
-            document.querySelectorAll('.admin-controls').forEach(e => e.style.display='block');
-            document.getElementById('loginOverlay').style.display='none';
-            document.getElementById('status').innerText = "مرحباً Asmar";
+    function checkPass() {
+        if(document.getElementById('passInp').value === "asmar123") {
+            isLogged = true;
+            document.getElementById('adminArea').style.display = 'block';
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('loginBtn').innerText = "وضع الإدارة";
+            refreshUI();
         }
     }
 
-    function saveData() {
+    function saveToCloud() {
         const name = document.getElementById('nameInp').value;
         const sector = document.getElementById('sectorInp').value;
         if(name) {
@@ -93,14 +218,22 @@
         }
     }
 
-    db.ref('emps/').on('value', (snap) => {
-        ['gov','army','police'].forEach(s => document.getElementById(`t-${s}`).innerHTML="");
-        const data = snap.val();
-        for(let id in data) {
-            const row = document.getElementById(`t-${data[id].sector}`).insertRow();
-            row.innerHTML = `<td>${data[id].name}</td><td>${isAdmin ? `<button onclick="db.ref('emps/${id}').remove()">حذف</button>` : ''}</td>`;
-        }
+    db.ref('emps/').on('value', (snapshot) => {
+        refreshUI(snapshot.val());
     });
+
+    function refreshUI(data) {
+        ['gov','army','police'].forEach(s => document.getElementById(`list-${s}`).innerHTML = "");
+        if(!data) return;
+        for(let id in data) {
+            const item = data[id];
+            const div = document.createElement('div');
+            div.style.padding = "5px";
+            div.style.borderBottom = "1px solid #f0f0f0";
+            div.innerHTML = `• ${item.name} ${isLogged ? `<button onclick="db.ref('emps/${id}').remove()" style="color:red; border:none; background:none; cursor:pointer"> [حذف]</button>` : ''}`;
+            document.getElementById(`list-${item.sector}`).appendChild(div);
+        }
+    }
 </script>
 </body>
 </html>
