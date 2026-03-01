@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Blacklist - One Lion</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #1a1a1a; color: white; padding: 20px; }
+        nav { text-align: center; margin-bottom: 30px; }
+        nav a { text-decoration: none; color: #f1c40f; font-weight: bold; margin: 0 15px; padding: 10px 20px; border: 1px solid #f1c40f; border-radius: 5px; }
+        .blacklist-container { max-width: 800px; margin: 0 auto; background: #2c3e50; padding: 30px; border-radius: 15px; border: 2px solid #e74c3c; }
+        h1 { color: #e74c3c; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: center; border-bottom: 1px solid #444; }
+        th { background-color: #e74c3c; color: white; }
+        tr:hover { background-color: #3e5871; }
+        footer { text-align: center; margin-top: 50px; color: #888; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">العودة للرئيسية</a>
+</nav>
+
+<div class="blacklist-container">
+    <h1>قسم القائمة السوداء (Blacklist) 🚫</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>اسم الشخص</th>
+                <th>السبب</th>
+                <th>التاريخ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>مثال: فلان بن فلان</td>
+                <td>مخالفة القوانين</td>
+                <td>2026-03-01</td>
+            </tr>
+            </tbody>
+    </table>
+</div>
+
+<footer>
+    حقوق التصميم محفوظة لـ <strong>Asmar</strong> | One Lion HR System
+</footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل بلاك ليست - One Lion</title>
+    <style>
+        :root {
+            --danger: #c0392b;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent: #f39c12;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header-box {
+            text-align: center;
+            border: 2px solid var(--danger);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            background: rgba(192, 57, 43, 0.1);
+        }
+
+        .admin-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-top: 5px solid var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--danger);
+            outline: none;
+        }
+
+        .btn-submit {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background-color: #e74c3c;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .footer span { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="header-box">
+    <h1>نظام حظر الموظفين - ولاية One Lion 🦁</h1>
+    <p>تحذير: هذه الصفحة مخصصة للإدارة فقط لإضافة المخالفين</p>
+</div>
+
+<div class="admin-form">
+    <form>
+        <div class="form-group">
+            <label>اسم الشخص المخالف:</label>
+            <input type="text" placeholder="أدخل الاسم الكامل" required>
+        </div>
+
+        <div class="form-group">
+            <label>الرقم التعريفي (ID):</label>
+            <input type="number" placeholder="رقم التعريف في الولاية">
+        </div>
+
+        <div class="form-group">
+            <label>سبب الإدراج في البلاك ليست:</label>
+            <textarea rows="4" placeholder="اذكر السبب بالتفصيل (مثلاً: سرقة، سوء تعامل...)"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>مدة الحظر:</label>
+            <select>
+                <option>أسبوع</option>
+                <option>شهر</option>
+                <option>حظر نهائي (Permanent)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>اسم المسؤول الذي قام بالحظر:</label>
+            <input type="text" placeholder="اسمك كصاحب موقع/إدارة">
+        </div>
+
+        <button type="submit" class="btn-submit">تسجيل في القائمة السوداء 🚫</button>
+    </form>
+</div>
+
+<div class="footer">
+    تصميم وبرمجة حصرية لـ <span>Asmar</span> &copy; 2026<br>
+    One Lion Management System
+</div>
+
+</body>
+</html>
+
+                
