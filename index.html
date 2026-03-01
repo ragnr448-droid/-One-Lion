@@ -3,163 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - نظام الإدارة</title>
-    
+    <title>وزارة الموارد البشرية - الإدارة الذكية</title>
     <style>
-        /* التنسيقات الأساسية (نفس التصميم السابق) */
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; direction: rtl; }
-        .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; overflow-x: hidden; display: flex; flex-direction: column; }
-        
-        header { background-color: #1a1f36; color: white; padding: 20px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-icon { font-size: 24px; cursor: pointer; padding: 5px; }
+        /* التنسيق الأساسي وإصلاح أخطاء الشاشة */
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; overflow-x: hidden; }
+        .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+
+        /* الهيدر المحسن */
+        header { background-color: #1a1f36; color: white; padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .menu-icon { font-size: 28px; cursor: pointer; color: white; }
         .logo-area h1 { font-size: 18px; margin: 0; }
         .logo-area p { font-size: 11px; color: #c4a457; margin: 0; }
 
-        .banner { background-color: #1a1f36; color: white; padding: 35px 20px; text-align: center; border-radius: 0 0 25px 25px; }
-        .sub-title { color: #c4a457; font-size: 13px; display: block; margin-bottom: 8px; }
+        /* البانر العلوي */
+        .banner { background-color: #1a1f36; color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 40px 0; margin-bottom: 20px; }
+        .sub-title { color: #c4a457; font-size: 12px; display: block; margin-bottom: 10px; }
         .banner h2 { font-size: 24px; margin: 10px 0; }
-        .banner p { font-size: 13px; opacity: 0.8; margin-bottom: 25px; }
+        .banner p { font-size: 13px; opacity: 0.8; margin-bottom: 30px; }
 
-        .buttons { display: flex; gap: 12px; justify-content: center; }
-        .btn-primary { background: #c4a457; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; color: #1a1f36; cursor: pointer; flex: 1; }
-        .btn-secondary { background: transparent; border: 2px solid #c4a457; color: #c4a457; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; flex: 1; }
+        /* الأزرار */
+        .buttons { display: flex; gap: 10px; padding: 0 20px; margin-top: -15px; }
+        .btn-gold { background: #c4a457; border: none; padding: 15px; border-radius: 12px; font-weight: bold; flex: 1; cursor: pointer; }
+        .btn-outline { background: transparent; border: 2px solid #c4a457; color: #c4a457; padding: 15px; border-radius: 12px; font-weight: bold; flex: 1; cursor: pointer; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: -15px; }
-        .stat-card { background: #fff; padding: 20px 10px; text-align: center; border-radius: 12px; border: 1px solid #eee; }
-        .stat-card h3 { margin: 0; font-size: 26px; color: #1a1f36; }
+        /* الإحصائيات الديناميكية */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .stat-card { background: white; padding: 25px 10px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
+        .stat-card h3 { margin: 0; font-size: 28px; color: #1a1f36; transition: all 0.5s; }
+        .stat-card p { margin: 5px 0 0; font-size: 13px; color: #666; }
 
-        .features { padding: 0 20px 20px; }
-        .feature-card { display: flex; justify-content: space-between; align-items: center; padding: 18px; background: #fff; margin-bottom: 15px; border-radius: 15px; border-right: 6px solid #c4a457; box-shadow: 0 3px 8px rgba(0,0,0,0.04); }
-
-        /* نافذة تسجيل الدخول (القائمة الجانبية) */
-        #loginOverlay {
-            position: absolute; top: 0; right: -100%; width: 100%; height: 100%;
-            background: #1a1f36; color: white; transition: 0.4s; z-index: 100; padding: 40px 20px;
-        }
+        /* قائمة الإدارة الجانبية */
+        #loginOverlay { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 1000; transition: 0.5s; padding: 50px 20px; color: white; }
         #loginOverlay.active { right: 0; }
-        .close-btn { font-size: 30px; cursor: pointer; position: absolute; left: 20px; top: 20px; }
-        .login-box input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
-        
-        /* صفحة إدارة الموظفين */
-        #adminPage {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f4f4f4; z-index: 200; display: none; overflow-y: auto;
-        }
-        .admin-header { background: #1a1f36; color: white; padding: 15px; display: flex; align-items: center; gap: 10px; }
-        .staff-table { width: 100%; border-collapse: collapse; background: white; margin-top: 10px; font-size: 13px; }
-        .staff-table th, .staff-table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        .staff-table th { background: #c4a457; color: #1a1f36; }
-        .status-tag { padding: 4px 8px; border-radius: 5px; color: white; font-size: 10px; }
-        .bg-red { background: #ff4d4d; } .bg-black { background: #000; } .bg-green { background: #2ecc71; }
+        .input-group { margin-bottom: 20px; }
+        input { width: 90%; padding: 15px; border-radius: 10px; border: none; margin-top: 10px; }
 
-        footer { background: #1a1f36; color: white; text-align: center; padding: 25px 20px; margin-top: auto; }
+        /* صفحة الموظفين */
+        #staffPage { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
+        .page-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .table-wrapper { padding: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; }
+        th { background: #f8f9fa; color: #1a1f36; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; color: white; }
+        .bg-black { background: black; } .bg-red { background: #d9534f; } .bg-green { background: #5cb85c; }
+
+        footer { background: #1a1f36; color: white; text-align: center; padding: 30px; margin-top: auto; }
     </style>
 </head>
 <body>
 
-    <div class="mobile-container">
-        <header>
-            <div class="menu-icon" onclick="toggleLogin()">☰</div>
-            <div class="logo-area">
-                <h1>وزارة الموارد البشرية</h1>
-                <p>بوابة الخدمات الإلكترونية</p>
-            </div>
-        </header>
-
-        <section class="banner">
-            <span class="sub-title">البوابة الرقمية الرسمية</span>
-            <h2>المستقبل المهني يبدأ هنا</h2>
-            <p>منصة الموارد البشرية لتطوير المهارات وتوظيف الكفاءات الوطنية.</p>
-            <div class="buttons">
-                <button class="btn-primary">تطوير مهاراتي</button>
-                <button class="btn-secondary" onclick="openStaffList()">عرض الفرص</button>
-            </div>
-        </section>
-
-        <section class="stats-grid">
-            <div class="stat-card"><h3>50</h3><p>برنامج تدريبي</p></div>
-            <div class="stat-card"><h3>1,500</h3><p>فرصة عمل نشطة</p></div>
-        </section>
-
-        <section class="features">
-            <div class="feature-card"><div><h4>اختبارات الكفاءة</h4><p>تقييم المهارات الفنية.</p></div></div>
-        </section>
-
-        <footer>
-            <p>وزارة الموارد البشرية</p>
-            <p style="font-size:10px; opacity:0.5;">© 2026 جميع الحقوق محفوظة</p>
-        </footer>
-
-        <div id="loginOverlay">
-            <div class="close-btn" onclick="toggleLogin()">×</div>
-            <h2>تسجيل دخول الإدارة</h2>
-            <p style="color: #c4a457;">أدخل كلمة السر للوصول للنظام</p>
-            <div class="login-box">
-                <input type="password" id="passInput" placeholder="أدخل كلمة السر هنا...">
-                <button class="btn-primary" onclick="checkLogin()" style="width: 95%;">دخول</button>
-            </div>
+<div class="mobile-container">
+    <header>
+        <div class="menu-icon" onclick="openLogin()">☰</div>
+        <div class="logo-area">
+            <h1>وزارة الموارد البشرية</h1>
+            <p>بوابة الخدمات الإلكترونية</p>
         </div>
+    </header>
 
-        <div id="adminPage">
-            <div class="admin-header">
-                <button onclick="closeAdmin()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">➔</button>
-                <h3>نظام موظفي الفصائل الحكومية</h3>
-            </div>
-            <div style="padding: 10px;">
-                <p>إدارة (الشرطة، الجيش، التحالف الطبي، فصيل الحكومة)</p>
-                <table class="staff-table">
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>الفصيل</th>
-                            <th>الرتبة</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="staffData">
-                        <tr><td>محمد العتيبي</td><td>الشرطة</td><td>نقيب</td><td><span class="status-tag bg-green">موظف جديد</span></td></tr>
-                        <tr><td>فهد العنزي</td><td>الجيش</td><td>ملازم</td><td><span class="status-tag bg-red">مفصول</span></td></tr>
-                        <tr><td>خالد الحربي</td><td>التحالف الطبي</td><td>طبيب جراح</td><td><span class="status-tag bg-black">بلاك لست</span></td></tr>
-                        <tr><td>سلطان الشمري</td><td>فصيل الحكومة</td><td>وزير</td><td><span class="status-tag bg-green">مستقيل</span></td></tr>
-                    </tbody>
-                </table>
-                <button class="btn-primary" style="margin-top:20px; width:100%;">إضافة موظف جديد +</button>
+    <section class="banner">
+        <span class="sub-title">البوابة الرقمية الرسمية</span>
+        <h2>المستقبل المهني يبدأ هنا</h2>
+        <p>منصة الوزارة لإدارة شؤون الموظفين بقطاعات الدولة.</p>
+    </section>
+
+    <div class="buttons">
+        <button class="btn-gold">تطوير مهاراتي</button>
+        <button class="btn-outline" onclick="showStaff()">عرض الموظفين</button>
+    </div>
+
+    <section class="stats-container">
+        <div class="stat-card">
+            <h3 id="staffCount">4</h3>
+            <p>عدد الموظفين</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="activeCount">1,500</h3>
+            <p>فرص عمل نشطة</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>وزارة الموارد البشرية</p>
+        <p style="font-size:10px; opacity:0.5; margin-top:10px;">© 2026 جميع الحقوق محفوظة</p>
+    </footer>
+
+    <div id="loginOverlay">
+        <span style="font-size:30px; cursor:pointer;" onclick="closeLogin()">×</span>
+        <h2>تسجيل دخول الإدارة</h2>
+        <div class="input-group">
+            <label>كلمة السر:</label>
+            <input type="password" id="passCode" placeholder="أدخل الرمز هنا...">
+        </div>
+        <button class="btn-gold" style="width:95%" onclick="checkAccess()">دخول للنظام</button>
+    </div>
+
+    <div id="staffPage">
+        <div class="page-header">
+            <span style="cursor:pointer; font-size:24px;" onclick="hideStaff()">➔</span>
+            <h3>قائمة موظفي الحكومة</h3>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الفصيل</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="staffTableBody">
+                    <tr><td>نايف السبيعي</td><td>الشرطة</td><td><span class="badge bg-green">جديد</span></td></tr>
+                    <tr><td>تركي المطيري</td><td>الجيش</td><td><span class="badge bg-black">بلاك لست</span></td></tr>
+                    <tr><td>عمر القحطاني</td><td>التحالف الطبي</td><td><span class="badge bg-red">مفصول</span></td></tr>
+                    <tr><td>فيصل الشمري</td><td>الحكومة</td><td><span class="badge bg-green">موظف</span></td></tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top:20px; padding:15px; background:#f8f9fa; border-radius:10px;">
+                <h4>إضافة موظف جديد</h4>
+                <input type="text" id="newName" placeholder="اسم الموظف" style="border:1px solid #ddd; margin-bottom:10px;">
+                <select id="newFaction" style="width:100%; padding:15px; border-radius:10px; border:1px solid #ddd;">
+                    <option>الشرطة</option>
+                    <option>الجيش</option>
+                    <option>التحالف الطبي</option>
+                    <option>الحكومة</option>
+                </select>
+                <button class="btn-gold" style="width:100%; margin-top:10px;" onclick="addNewStaff()">تحديث القائمة وإضافة</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // وظيفة فتح وإغلاق قائمة تسجيل الدخول
-        function toggleLogin() {
-            const overlay = document.getElementById('loginOverlay');
-            overlay.classList.toggle('active');
-        }
+<script>
+    // فتح وإغلاق القوائم
+    function openLogin() { document.getElementById('loginOverlay').classList.add('active'); }
+    function closeLogin() { document.getElementById('loginOverlay').classList.remove('active'); }
+    function showStaff() { document.getElementById('staffPage').style.display = 'block'; }
+    function hideStaff() { document.getElementById('staffPage').style.display = 'none'; }
 
-        // التحقق من كلمات السر
-        function checkLogin() {
-            const pass = document.getElementById('passInput').value;
-            if (pass === "asmar123") {
-                alert("تم دخول الأدمن بنجاح");
-                openStaffList();
-                toggleLogin();
-            } else if (pass === "HR12") {
-                alert("تم دخول المساعد بنجاح");
-                openStaffList();
-                toggleLogin();
-            } else {
-                alert("كلمة السر خاطئة!");
-            }
+    // التحقق من الدخول
+    function checkAccess() {
+        const pass = document.getElementById('passCode').value;
+        if(pass === "asmar123" || pass === "HR12") {
+            alert("مرحباً بك في نظام الإدارة");
+            showStaff();
+            closeLogin();
+        } else {
+            alert("كلمة السر خاطئة");
         }
+    }
 
-        // فتح قائمة الموظفين
-        function openStaffList() {
-            document.getElementById('adminPage').style.display = 'block';
-        }
+    // وظيفة إضافة موظف وتحديث العداد تلقائياً
+    function addNewStaff() {
+        const name = document.getElementById('newName').value;
+        const faction = document.getElementById('newFaction').value;
 
-        // إغلاق صفحة الإدارة
-        function closeAdmin() {
-            document.getElementById('adminPage').style.display = 'none';
-        }
-    </script>
+        if(name.trim() === "") return alert("يرجى إدخال الاسم");
+
+        // إضافة الصف للجدول
+        const table = document.getElementById('staffTableBody');
+        const row = table.insertRow();
+        row.innerHTML = `<td>${name}</td><td>${faction}</td><td><span class="badge bg-green">جديد</span></td>`;
+
+        // تحديث الرقم في الشاشة الرئيسية
+        const currentCount = table.rows.length;
+        document.getElementById('staffCount').innerText = currentCount;
+
+        // تصفير المدخلات
+        document.getElementById('newName').value = "";
+        alert("تم إضافة الموظف وتحديث العداد بنجاح");
+    }
+</script>
+
 </body>
 </html>
