@@ -3,41 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR ASMAR | GRAND RP ULTIMATE</title>
+    <title>وزارة الموارد البشرية | المبرمج Asmar</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Tajawal:wght@400;700&display=swap');
-        :root { --dark-panel: #0a0b10; --accent: #ff4655; --glow: rgba(255, 70, 85, 0.4); --text: #a0a0a8; }
         
-        body { font-family: 'Tajawal', sans-serif; background: #050505; color: white; margin: 0; background-image: radial-gradient(circle at top right, #1a1a2e, #050505); background-attachment: fixed; }
-        header { background: rgba(10, 11, 16, 0.95); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent); box-shadow: 0 0 15px var(--glow); position: sticky; top:0; z-index: 1000; }
-        .hr-logo { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 2px; }
+        :root {
+            --panel-dark: #0a0b10;
+            --accent: #ff4655;
+            --gov-blue: #007bff;
+            --med-green: #28a745;
+            --mil-gold: #ffc107;
+            --pol-blue: #17a2b8;
+            --glow: rgba(255, 70, 85, 0.3);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #050505;
+            color: white;
+            margin: 0;
+            background-image: radial-gradient(circle at top right, #1a1a2e, #050505);
+            background-attachment: fixed;
+        }
+
+        header {
+            background: rgba(10, 11, 16, 0.95);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: 0 0 20px var(--glow);
+        }
+
+        .hr-logo { font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900; }
         .hr-logo span { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
 
-        .wrapper { display: flex; min-height: 100vh; }
-        .sidebar { width: 260px; background: var(--dark-panel); border-left: 1px solid #1f1f27; padding-top: 20px; }
-        .nav-item { padding: 15px 25px; color: var(--text); cursor: pointer; transition: 0.3s; border-right: 4px solid transparent; display: block; text-decoration: none; font-weight: bold; font-size: 0.9em; }
-        .nav-item:hover, .nav-item.active { background: linear-gradient(to left, rgba(255, 70, 85, 0.1), transparent); color: white; border-right-color: var(--accent); }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
 
-        .main-content { flex: 1; padding: 30px; }
-        .page { display: none; animation: fadeIn 0.4s; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* لوحة التحكم */
+        .admin-box {
+            display: none; background: #0f1016; border: 1px dashed var(--accent);
+            padding: 25px; border-radius: 8px; margin-bottom: 30px;
+        }
 
-        .stat-card { background: #0f1016; border: 1px solid #1f1f27; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
-        .stat-card h2 { border-right: 4px solid var(--accent); padding-right: 15px; font-size: 1.1em; text-transform: uppercase; margin-bottom: 20px; }
+        .input-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        input, select { background: #16171d; border: 1px solid #2a2a35; color: white; padding: 12px; border-radius: 4px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #16171d; color: var(--accent); padding: 12px; text-align: right; font-size: 0.8em; }
-        td { padding: 12px; border-bottom: 1px solid #15151b; font-size: 0.9em; }
+        .btn-add { background: var(--accent); color: white; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 15px; width: 100%; }
 
-        .admin-only { display: none; background: #111218; border: 1px dashed var(--accent); padding: 20px; margin-bottom: 20px; }
-        input, select { background: #16171d; border: 1px solid #2a2a35; color: white; padding: 10px; margin: 5px 0; width: 100%; box-sizing: border-box; }
-        .btn-action { background: var(--accent); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 10px; }
-        .btn-action:hover { box-shadow: 0 0 10px var(--accent); }
+        /* شبكة الفصائل */
+        .faction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        
+        .faction-card { background: #0f1016; border-radius: 8px; border-top: 5px solid white; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .faction-header { padding: 15px; font-weight: bold; font-family: 'Orbitron'; font-size: 1.1em; display: flex; justify-content: space-between; }
+        
+        .f-gov { border-top-color: var(--gov-blue); }
+        .f-med { border-top-color: var(--med-green); }
+        .f-mil { border-top-color: var(--mil-gold); }
+        .f-pol { border-top-color: var(--pol-blue); }
 
-        .log-entry { font-size: 0.8em; padding: 5px; border-bottom: 1px solid #222; color: #00ff88; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        th { background: #16171d; color: #777; padding: 10px; text-align: right; }
+        td { padding: 10px; border-bottom: 1px solid #15151b; }
+
+        .rank-tag { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; color: #ccc; font-size: 0.8em; }
+        
+        /* سجل الزوار */
+        .visitor-log { position: fixed; bottom: 10px; right: 10px; font-size: 0.7em; color: #444; }
+
     </style>
 </head>
 <body>
@@ -45,53 +81,58 @@
 <header>
     <div class="hr-logo">𝓗𝓡 <span></span></div>
     <div style="text-align: left">
-        <div style="font-size: 0.8em; color: var(--accent)">وزارة الموارد البشرية</div>
-        <div id="clock" style="font-size: 0.7em; color: gray;"></div>
+        <div style="color: var(--accent); font-weight: bold;">وزارة الموارد البشرية</div>
+        <button onclick="auth()" style="background:none; border:none; color:gray; cursor:pointer; font-size:10px;">[ دخول الإدارة ]</button>
     </div>
 </header>
 
-<div class="wrapper">
-    <div class="sidebar" id="sidebar">
-        <div class="nav-item active" onclick="showPage('home')">🏠 الصفحة الرئيسية</div>
-        <div class="nav-item" onclick="showPage('blacklist')">🚫 القائمة السوداء</div>
-        <div id="dynamic-nav"></div>
-        <div class="nav-item" onclick="adminAuth()" style="margin-top: 30px; color: var(--accent)">🔐 دخول الإدارة</div>
+<div class="container">
+    
+    <div id="adminPanel" class="admin-box">
+        <h2 style="margin-top:0;">🛠️ إضافة موظف جديد</h2>
+        <div class="input-group">
+            <input type="text" id="empName" placeholder="الاسم الكامل">
+            <select id="empFaction" onchange="loadRanks()">
+                <option value="">اختر الفصيل</option>
+                <option value="gov">🏛️ القطاع الحكومي</option>
+                <option value="med">🏥 التحالف الطبي</option>
+                <option value="army">🎖️ قوات الجيش</option>
+                <option value="police">🚔 جهاز الشرطة</option>
+            </select>
+            <select id="empRank"><option>الرتبة</option></select>
+        </div>
+        <button class="btn-add" onclick="pushData()">اعتماد وإضافة</button>
+        <div id="logs" style="margin-top:10px; font-size:12px; color: #28a745;"></div>
     </div>
 
-    <div class="main-content">
-        <div id="admin-panel" class="admin-only">
-            <h3>🛠️ لوحة تحكم المبرمج Asmar</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <h4>➕ إضافة موظف</h4>
-                    <input type="text" id="name" placeholder="الاسم الكامل">
-                    <select id="sector" onchange="updateRanks()"><option value="home">الرئيسية</option></select>
-                    <select id="rank"><option>الرتبة</option></select>
-                    <button class="btn-action" onclick="addEmp()">حفظ الموظف</button>
-                </div>
-                <div>
-                    <h4>📂 إضافة صفحة/قسم جديد</h4>
-                    <input type="text" id="newTabName" placeholder="اسم القسم (مثلاً: الاستخبارات)">
-                    <button class="btn-action" style="background:#415a77" onclick="addNewTab()">إنشاء الصفحة فوراً</button>
-                    <h4 style="margin-top:20px;">🕵️ سجل دخول الزوار</h4>
-                    <div id="visitor-logs" style="height: 100px; overflow-y: auto; background: #000; padding: 10px; border-radius: 5px;"></div>
-                </div>
-            </div>
+    <div class="faction-grid">
+        <div class="faction-card f-gov">
+            <div class="faction-header"><span>🏛️ القطاع الحكومي</span> <small id="count-gov">0</small></div>
+            <table><thead><tr><th>الاسم</th><th>الرتبة</th></tr></thead><tbody id="list-gov"></tbody></table>
         </div>
 
-        <div id="p-home" class="page active">
-            <div class="stat-card"><h2>قائمة الموظفين العموميين</h2><table id="t-home"><thead><tr><th>الاسم</th><th>الرتبة</th><th>التاريخ</th></tr></thead><tbody></tbody></table></div>
+        <div class="faction-card f-med">
+            <div class="faction-header"><span>🏥 التحالف الطبي</span> <small id="count-med">0</small></div>
+            <table><thead><tr><th>الاسم</th><th>الرتبة</th></tr></thead><tbody id="list-med"></tbody></table>
         </div>
 
-        <div id="p-blacklist" class="page">
-            <div class="stat-card"><h2>القائمة السوداء</h2><table id="t-blacklist"><thead><tr><th>الاسم</th><th>السبب</th><th>التهدئة</th></tr></thead><tbody></tbody></table></div>
+        <div class="faction-card f-mil">
+            <div class="faction-header"><span>🎖️ قوات الجيش</span> <small id="count-army">0</small></div>
+            <table><thead><tr><th>الاسم</th><th>الرتبة</th></tr></thead><tbody id="list-army"></tbody></table>
         </div>
 
-        <div id="dynamic-pages"></div>
+        <div class="faction-card f-pol">
+            <div class="faction-header"><span>🚔 جهاز الشرطة</span> <small id="count-police">0</small></div>
+            <table><thead><tr><th>الاسم</th><th>الرتبة</th></tr></thead><tbody id="list-police"></tbody></table>
+        </div>
     </div>
+
 </div>
 
+<div class="visitor-log" id="v-log"></div>
+
 <script>
+    // Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
         authDomain: "hr-asmar.firebaseapp.com",
@@ -103,92 +144,70 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
     let isAsmar = false;
 
-    // سجل الزوار التلقائي
-    function logVisitor() {
-        const entry = { time: new Date().toLocaleString(), agent: navigator.userAgent.slice(0, 50) };
-        db.ref('VISITOR_LOGS').push(entry);
-    }
-    logVisitor();
+    // سجل الزوار
+    db.ref('VISITS').push({ time: new Date().toLocaleString() });
+    db.ref('VISITS').limitToLast(1).on('value', s => {
+        document.getElementById('v-log').innerText = "آخر دخول للنظام: " + Object.values(s.val())[0].time;
+    });
 
-    function adminAuth() {
-        if(prompt("كلمة المرور:") === "asmar123") {
+    function auth() {
+        if(prompt("كلمة سر المبرمج Asmar:") === "asmar123") {
             isAsmar = true;
-            document.getElementById('admin-panel').style.display = 'block';
-            alert("مرحباً بك يا أسمر في لوحة التحكم");
+            document.getElementById('adminPanel').style.display = 'block';
+            render();
         }
     }
 
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('p-' + id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const ranksData = {
+        gov: ["موظف مستجد", "إداري", "رئيس قسم", "مدير عام", "وكيل وزارة", "وزير"],
+        med: ["مسعف", "ممرض", "طبيب عام", "جراح", "استشاري", "وزير الصحة"],
+        army: ["جندي", "جندي أول", "عريف", "رقيب", "ملازم", "نقيب", "رائد", "عقيد", "لواء"],
+        police: ["شرطي", "عريف", "رقيب", "ملازم أول", "نقيب", "رائد", "عميد", "مدير الأمن"]
+    };
+
+    function loadRanks() {
+        const f = document.getElementById('empFaction').value;
+        const r = document.getElementById('empRank');
+        r.innerHTML = "";
+        if(ranksData[f]) ranksData[f].forEach(x => r.innerHTML += `<option value="${x}">${x}</option>`);
     }
 
-    // إضافة قسم جديد
-    function addNewTab() {
-        const name = document.getElementById('newTabName').value;
-        if(name) {
-            const id = 'tab_' + Date.now();
-            db.ref('TABS/' + id).set({ name: name });
-            document.getElementById('newTabName').value = "";
+    function pushData() {
+        const name = document.getElementById('empName').value;
+        const faction = document.getElementById('empFaction').value;
+        const rank = document.getElementById('empRank').value;
+        if(name && faction) {
+            db.ref('GRAND_ASMAR/').push({ name, faction, rank });
+            document.getElementById('empName').value = "";
+            document.getElementById('logs').innerText = "✅ تم إضافة " + name + " بنجاح!";
         }
     }
 
-    // جلب الأقسام
-    db.ref('TABS').on('value', snap => {
-        const nav = document.getElementById('dynamic-nav');
-        const pages = document.getElementById('dynamic-pages');
-        const sectorSelect = document.getElementById('sector');
-        nav.innerHTML = ""; pages.innerHTML = "";
-        sectorSelect.innerHTML = '<option value="home">الرئيسية</option><option value="blacklist">البلاك ليست</option>';
+    db.ref('GRAND_ASMAR/').on('value', snap => { render(snap.val()); });
 
-        snap.forEach(child => {
-            const tab = child.val();
-            const id = child.key;
-            // إضافة للسايد بار
-            nav.innerHTML += `<div class="nav-item" onclick="showPage('${id}')">📁 ${tab.name}</div>`;
-            // إضافة الصفحة
-            pages.innerHTML += `<div id="p-${id}" class="page"><div class="stat-card"><h2>قسم ${tab.name}</h2><table id="t-${id}"><thead><tr><th>الاسم</th><th>الرتبة</th><th>التاريخ</th></tr></thead><tbody></tbody></table></div></div>`;
-            // إضافة للخيارات
-            sectorSelect.innerHTML += `<option value="${id}">${tab.name}</option>`;
-        });
-    });
+    function render(data) {
+        const sectors = ['gov', 'med', 'army', 'police'];
+        const counts = { gov:0, med:0, army:0, police:0 };
+        sectors.forEach(s => document.getElementById('list-' + s).innerHTML = "");
 
-    function addEmp() {
-        const data = {
-            name: document.getElementById('name').value,
-            sector: document.getElementById('sector').value,
-            rank: document.getElementById('rank').value,
-            date: new Date().toLocaleDateString()
-        };
-        db.ref('RECORDS/').push(data);
-        alert("تم الحفظ!");
+        if(!data) return;
+
+        for(let id in data) {
+            const emp = data[id];
+            counts[emp.faction]++;
+            const row = `<tr>
+                <td>${emp.name}</td>
+                <td><span class="rank-tag">${emp.rank}</span></td>
+                ${isAsmar ? `<td style="color:red; cursor:pointer" onclick="db.ref('GRAND_ASMAR/${id}').remove()">×</td>` : ''}
+            </tr>`;
+            document.getElementById('list-' + emp.faction).innerHTML += row;
+        }
+
+        sectors.forEach(s => document.getElementById('count-' + s).innerText = counts[s]);
     }
-
-    db.ref('RECORDS/').on('value', snap => {
-        const tables = document.querySelectorAll('tbody');
-        tables.forEach(t => t.innerHTML = "");
-        snap.forEach(child => {
-            const v = child.val();
-            const targetTable = document.querySelector(`#t-${v.sector} tbody`);
-            if(targetTable) {
-                targetTable.innerHTML += `<tr><td>${v.name}</td><td>${v.rank}</td><td>${v.date} ${isAsmar ? `<button onclick="db.ref('RECORDS/${child.key}').remove()">🗑️</button>` : ''}</td></tr>`;
-            }
-        });
-    });
-
-    // جلب سجل الزوار للآدمن
-    db.ref('VISITOR_LOGS').limitToLast(10).on('value', snap => {
-        const logBox = document.getElementById('visitor-logs');
-        logBox.innerHTML = "";
-        snap.forEach(c => {
-            logBox.innerHTML += `<div class="log-entry">👤 دخل زائر في: ${c.val().time}</div>`;
-        });
-    });
-
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
 </script>
 </body>
 </html>
