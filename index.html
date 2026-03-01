@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - النظام الذكي</title>
+    <title>وزارة الموارد البشرية - النظام المطور</title>
     <style>
-        /* التنسيق الأصلي - تصميم Asmar */
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        /* تصميم Asmar الأصلي - فخامة واحترافية */
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; direction: rtl; }
         .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
         header { background-color: #1a1f36; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* كارت الهوية الشخصية */
+        /* كارت الهوية الشخصية - تصميم Asmar */
         .user-profile { 
             display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); 
             padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(196, 164, 87, 0.3);
@@ -25,49 +25,37 @@
         .banner { background-color: #1a1f36; color: white; padding: 25px 20px 50px 20px; text-align: center; border-radius: 0 0 40px 0; }
         .sub-title { color: #c4a457; font-size: 11px; display: block; margin-bottom: 5px; }
 
+        /* الأزرار في الواجهة الرئيسية */
         .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
-        .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: 0.3s; }
+        .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: 0.3s; text-align: center; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
         .btn-black { background: #000; color: white; }
 
-        #notification { 
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; 
-            font-size: 12px; display: none; z-index: 5000;
-        }
-
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
-        .stat-card h3 { margin: 0; font-size: 24px; color: #1a1f36; }
-
+        /* الصفحات */
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
-        .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 12px; margin: 8px 15px; border-radius: 8px; font-size: 13px; }
-        
-        footer { background: #1a1f36; color: white; text-align: center; padding: 20px; margin-top: auto; }
-        .asmar-sig { color: #c4a457; font-family: cursive; font-size: 18px; display: block; margin-top: 5px; }
+        /* عناصر القوائم */
+        .section-title { background: #f8f9fa; padding: 10px 15px; margin: 10px 0; border-right: 4px solid #1a1f36; color: #1a1f36; font-weight: bold; }
+        .item-card { background: #fff; border: 1px solid #eee; padding: 12px; margin: 5px 15px; border-radius: 8px; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .timer-red { color: #d9534f; font-weight: bold; font-size: 12px; }
 
-        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
+        footer { background: #1a1f36; color: white; text-align: center; padding: 25px; margin-top: auto; }
+        .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; display: block; }
+
         #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
-        
-        /* معرض اختيار الصور */
-        .avatar-picker { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .avatar-option { width: 100%; height: 60px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; object-fit: cover; transition: 0.3s; }
-        .avatar-option:hover, .avatar-option.selected { border-color: #c4a457; transform: scale(1.1); }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
     </style>
 </head>
-<body onload="init()">
-
-<div id="notification">تمت العملية بنجاح ✅</div>
+<body onload="initSystem()">
 
 <div class="mobile-container">
     <header>
         <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
         
         <div class="user-profile">
-            <img src="https://ui-avatars.com/api/?name=Guest&background=eee&color=666" id="profileImg" class="user-avatar">
+            <img src="" id="profileImg" class="user-avatar">
             <div class="user-info">
                 <span class="user-name" id="userNameDisp">زائر</span>
                 <span class="user-rank" id="userRankDisp">رتبة: زائر</span>
@@ -77,19 +65,14 @@
 
     <div class="banner">
         <span class="sub-title">وزارة الموارد البشرية</span>
-        <h2 id="welcomeText">مرحباً بك في البوابة</h2>
+        <h2 id="welcomeMsg">مرحباً بك في النظام</h2>
     </div>
 
     <div class="main-nav">
-        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين</button>
+        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين الحاليين</button>
         <button class="btn btn-outline" onclick="openP('resignP')">الاستقالات (التهدئة)</button>
-        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين</button>
-        <button class="btn btn-black" onclick="openP('blackP')">قائمة البلاك لست</button>
-    </div>
-
-    <div class="stats-grid">
-        <div class="stat-card"><h3 id="sNum">0</h3><p>الموظفين</p></div>
-        <div class="stat-card"><h3 id="tNum">0</h3><p>المهام</p></div>
+        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين الأسبوعية</button>
+        <button class="btn btn-black" onclick="openP('blackP')">قائمة البلاك لست (الحظر)</button>
     </div>
 
     <footer>
@@ -99,191 +82,147 @@
     <div id="loginScreen">
         <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
         <h2>تسجيل دخول الإدارة</h2>
-        <input type="text" id="gmailName" placeholder="اسمك الكامل">
+        <input type="text" id="gmailName" placeholder="الاسم الكامل">
         <input type="password" id="pass" placeholder="كلمة السر">
-        
-        <p style="color:#c4a457; font-size:12px; margin-top:15px;">اختر صورتك الشخصية:</p>
-        <div class="avatar-picker" id="avatarPicker">
-            </div>
-        
+        <p style="color:#c4a457; font-size:12px; margin-top:15px;">(سيتم توليد صورة بحرف اسمك تلقائياً)</p>
         <button class="btn btn-gold" style="margin-top:20px;" onclick="login()">دخول ومزامنة</button>
         <button class="btn btn-outline" style="margin-top:10px; color:white;" onclick="logout()">خروج</button>
     </div>
 
-    <div id="staffP" class="page"><div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>الموظفين</h3></div><div id="admS" style="display:none; padding:15px;"><input type="text" id="inName" placeholder="الاسم"><select id="inFact"><option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option></select><button class="btn btn-gold" onclick="addStaff()">إضافة</button></div><div id="staffList"></div></div>
-    <div id="resignP" class="page"><div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>الاستقالات</h3></div><div id="admR" style="display:none; padding:15px;"><select id="rSelect"></select><button class="btn btn-gold" onclick="addResign()">تحويل</button></div><div id="resignList"></div></div>
-    <div id="blackP" class="page"><div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div><div id="admB" style="display:none; padding:15px;"><select id="bSelect"></select><input type="text" id="bReason" placeholder="السبب"><button class="btn btn-black" onclick="addBlack()">إدراج</button></div><div id="blackList"></div></div>
-    <div id="tasksP" class="page"><div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام</h3></div><div id="admT" style="display:none; padding:15px;"><textarea id="tDesc"></textarea><button class="btn btn-gold" onclick="addTask()">إضافة</button></div><div id="tasksList"></div></div>
+    <div id="staffP" class="page">
+        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>توزيع القطاعات</h3></div>
+        <div id="admS" style="display:none; padding:15px; background:#f0f2f5;">
+            <input type="text" id="sName" placeholder="اسم الموظف">
+            <select id="sFact">
+                <option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option>
+            </select>
+            <button class="btn btn-gold" onclick="addS()">إضافة للقطاع</button>
+        </div>
+        <div class="section-title">قطاع الشرطة</div><div id="list-شرطة"></div>
+        <div class="section-title">قطاع الجيش</div><div id="list-جيش"></div>
+        <div class="section-title">قطاع التحالف الطبي</div><div id="list-تحالف طبي"></div>
+        <div class="section-title">قطاع الحكومة</div><div id="list-الحكومة"></div>
+    </div>
+
+    <div id="resignP" class="page">
+        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة - تهدئة 3 أيام</h3></div>
+        <div id="admR" style="display:none; padding:15px;"><select id="rSelect"></select><button class="btn btn-gold" onclick="addR()">بدء فترة التهدئة</button></div>
+        <div id="resignList"></div>
+    </div>
+
+    <div id="blackP" class="page"><div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>القائمة السوداء</h3></div><div id="admB" style="display:none; padding:15px;"><select id="bSelect"></select><input id="bReason" placeholder="السبب"><button class="btn btn-black" onclick="addB()">إدراج للبلاك لست</button></div><div id="blackList"></div></div>
+    <div id="tasksP" class="page"><div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام الأسبوعية</h3></div><div id="admT" style="display:none; padding:15px;"><textarea id="tDesc"></textarea><button class="btn btn-gold" onclick="addT()">إضافة مهمة</button></div><div id="tasksList"></div></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('asmar_v4')) || { staff: [], resigns: [], tasks: [], black: [] };
-    
-    // قائمة الصور المتاحة للاختيار
-    const availableAvatars = [
-        "https://randomuser.me/api/portraits/men/32.jpg",
-        "https://randomuser.me/api/portraits/women/44.jpg",
-        "https://randomuser.me/api/portraits/men/65.jpg",
-        "https://randomuser.me/api/portraits/women/68.jpg",
-        "https://randomuser.me/api/portraits/men/75.jpg",
-        "https://randomuser.me/api/portraits/women/91.jpg",
-        "https://randomuser.me/api/portraits/men/81.jpg",
-        "https://randomuser.me/api/portraits/women/50.jpg"
-    ];
-    
-    let selectedAvatarUrl = availableAvatars[0]; // الصورة الافتراضية
+    let db = JSON.parse(localStorage.getItem('asmar_final_v5')) || { staff: [], resigns: [], black: [], tasks: [] };
 
-    function init() {
-        checkAuth();
-        render();
-        renderAvatarPicker();
+    function initSystem() {
+        checkAuth(); renderAll();
         setInterval(renderResigns, 1000);
     }
 
     function checkAuth() {
         const auth = localStorage.getItem('auth');
         const name = localStorage.getItem('uName') || "زائر";
-        const avatar = localStorage.getItem('uAvatar') || "https://ui-avatars.com/api/?name=Guest&background=eee&color=666";
         
-        if(auth === 'admin') {
-            setProfile(name, "أدمن", avatar);
-            showAdmin();
-        } else if(auth === 'assistant') {
-            setProfile(name, "مساعد إدارة", avatar);
-            showAdmin();
+        if(auth) {
+            document.querySelectorAll('[id^="adm"]').forEach(el => el.style.display = 'block');
+            const rank = (auth === 'admin') ? "أدمن" : "مساعد إدارة";
+            setProfile(name, rank);
         } else {
-            setProfile("زائر", "زائر غير مسجل", "https://ui-avatars.com/api/?name=Guest&background=eee&color=666");
+            setProfile("زائر", "زائر غير مسجل");
         }
     }
 
-    function setProfile(name, rank, img) {
+    function setProfile(name, rank) {
         document.getElementById('userNameDisp').innerText = name;
         document.getElementById('userRankDisp').innerText = "رتبة: " + rank;
-        document.getElementById('profileImg').src = img;
-        document.getElementById('welcomeText').innerText = "مرحباً: " + name;
-    }
-    
-    // عرض الصور في شاشة الدخول واختيارها
-    function renderAvatarPicker() {
-        const picker = document.getElementById('avatarPicker');
-        picker.innerHTML = "";
-        availableAvatars.forEach((url, index) => {
-            const img = document.createElement('img');
-            img.src = url;
-            img.className = 'avatar-option';
-            if(index === 0) img.className += ' selected'; // اختيار أول صورة افتراضياً
-            img.onclick = function() { selectAvatar(this, url); };
-            picker.appendChild(img);
-        });
-    }
-    
-    function selectAvatar(element, url) {
-        // إزالة التحديد من كافة الصور
-        const options = document.querySelectorAll('.avatar-option');
-        options.forEach(opt => opt.classList.remove('selected'));
-        // تحديد الصورة الحالية
-        element.classList.add('selected');
-        selectedAvatarUrl = url;
+        document.getElementById('welcomeMsg').innerText = "مرحباً بك: " + name;
+        // توليد صورة الحرف تلقائياً من API خارجي موثوق
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a1f36&color=c4a457&rounded=true&bold=true`;
+        document.getElementById('profileImg').src = avatarUrl;
     }
 
     function login() {
         const p = document.getElementById('pass').value;
         const n = document.getElementById('gmailName').value || "مستخدم";
-        if(p === "asmar123") {
-            localStorage.setItem('auth', 'admin');
-            localStorage.setItem('uName', n);
-            localStorage.setItem('uAvatar', selectedAvatarUrl); // حفظ الصورة المختارة
-            location.reload();
-        } else if (p === "HR12") {
-            localStorage.setItem('auth', 'assistant');
-            localStorage.setItem('uName', n);
-            localStorage.setItem('uAvatar', selectedAvatarUrl); // حفظ الصورة المختارة
-            location.reload();
-        } else { alert("خطأ في البيانات"); }
+        if(p === "asmar123") { localStorage.setItem('auth', 'admin'); }
+        else if(p === "HR12") { localStorage.setItem('auth', 'assistant'); }
+        else { return alert("خطأ في كلمة السر!"); }
+        localStorage.setItem('uName', n);
+        location.reload();
     }
 
     function logout() { localStorage.clear(); location.reload(); }
 
-    function showNotify(msg) {
-        const n = document.getElementById('notification');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => n.style.display = 'none', 3000);
-    }
-
-    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
-    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
-    function showAdmin() { ['admS', 'admR', 'admB', 'admT'].forEach(id => document.getElementById(id).style.display = 'block'); }
     function openP(id) { document.getElementById(id).style.display = 'block'; updateSelects(); }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
+    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
+    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
 
-    function addStaff() {
-        const name = document.getElementById('inName').value;
-        const fact = document.getElementById('inFact').value;
-        if(!name) return;
-        db.staff.push({ id: Date.now(), name, fact });
-        save("تم إضافة الموظف ✅");
-        document.getElementById('inName').value = "";
+    function addS() {
+        db.staff.push({ id: Date.now(), name: document.getElementById('sName').value, fact: document.getElementById('sFact').value });
+        save();
     }
 
-    function addResign() {
+    function addR() {
         const id = document.getElementById('rSelect').value;
         const emp = db.staff.find(s => s.id == id);
-        if(!emp) return;
-        db.resigns.push({ name: emp.name, end: new Date().getTime() + (3*24*60*60*1000) });
+        db.resigns.push({ name: emp.name, end: Date.now() + (3*24*60*60*1000) });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم تحويل الموظف للاستقالة ✅");
+        save();
     }
 
-    function addBlack() {
+    function addB() {
         const id = document.getElementById('bSelect').value;
         const emp = db.staff.find(s => s.id == id);
-        if(!emp) return;
         db.black.push({ name: emp.name, reason: document.getElementById('bReason').value });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم إدراج الموظف في البلاك لست ✅");
+        save();
     }
 
-    function addTask() {
+    function addT() {
         db.tasks.push({ desc: document.getElementById('tDesc').value });
-        save("تم إضافة المهمة ✅");
-        document.getElementById('tDesc').value = "";
+        save();
     }
 
-    function save(msg) {
-        localStorage.setItem('asmar_v4', JSON.stringify(db));
-        render();
-        showNotify(msg);
-        updateSelects();
+    function save() {
+        localStorage.setItem('asmar_final_v5', JSON.stringify(db));
+        renderAll();
+        alert("تمت العملية بنجاح ✅");
     }
 
     function updateSelects() {
-        const options = db.staff.map(emp => `<option value="${emp.id}">${emp.name} (${emp.fact})</option>`).join('');
-        ['rSelect', 'bSelect'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = options; });
+        const opt = db.staff.map(s => `<option value="${s.id}">${s.name} (${s.fact})</option>`).join('');
+        ['rSelect', 'bSelect'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = opt; });
     }
 
-    function render() {
-        const sl = document.getElementById('staffList'); sl.innerHTML = "";
-        db.staff.forEach(s => sl.innerHTML += `<div class="item-card"><span style="font-size:10px; color:#c4a457">● ${s.fact}</span><br><strong>${s.name}</strong></div>`);
-        document.getElementById('sNum').innerText = db.staff.length;
+    function renderAll() {
+        // توزيع القطاعات
+        const facts = ['شرطة', 'جيش', 'تحالف طبي', 'الحكومة'];
+        facts.forEach(f => {
+            const el = document.getElementById('list-' + f); el.innerHTML = "";
+            db.staff.filter(s => s.fact === f).forEach(s => el.innerHTML += `<div class="item-card">${s.name}</div>`);
+        });
+
+        const bl = document.getElementById('blackList'); bl.innerHTML = "";
+        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:red"><strong>${b.name}</strong>: ${b.reason}</div>`);
 
         const tl = document.getElementById('tasksList'); tl.innerHTML = "";
         db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card">مهمة #${i+1}: ${t.desc}</div>`);
-        document.getElementById('tNum').innerText = db.tasks.length;
-
-        const bl = document.getElementById('blackList'); bl.innerHTML = "";
-        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:black;"><strong>${b.name}</strong><br><small style="color:red;">السبب: ${b.reason}</small></div>`);
-        renderResigns();
     }
 
     function renderResigns() {
         const rl = document.getElementById('resignList'); if(!rl) return; rl.innerHTML = "";
-        const now = new Date().getTime();
+        const now = Date.now();
         db.resigns.forEach(r => {
             const diff = r.end - now;
             let txt = (diff > 0) ? `باقي: ${Math.floor(diff/86400000)}يوم و ${Math.floor((diff%86400000)/3600000)}ساعة` : "استقالة نظيفة ✅";
-            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><small style="color:red;">${txt}</small></div>`;
+            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><span class="timer-red">${txt}</span></div>`;
         });
     }
 </script>
+
 </body>
 </html>
