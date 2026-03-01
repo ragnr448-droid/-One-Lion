@@ -3,194 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - النظام المتكامل</title>
+    <title>وزارة الموارد البشرية - النظام الشامل</title>
     <style>
-        /* التنسيقات الأساسية - تصميم Asmar */
+        /* التنسيق الأصلي المستوحى من الصور */
         * { box-sizing: border-box; }
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; direction: rtl; }
-        .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; direction: rtl; }
         
-        header { background-color: #1a1f36; color: white; padding: 20px 15px; display: flex; justify-content: space-between; align-items: center; min-height: 80px; }
-        .logo-area h1 { font-size: 17px; margin: 0; }
-        .logo-area p { font-size: 10px; color: #c4a457; margin: 0; }
+        .mobile-container { 
+            width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; 
+            position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+        }
 
-        .top-section { background-color: #1a1f36; color: white; padding: 30px 20px 60px 20px; text-align: center; border-radius: 0 0 40px 0; }
-        .sub-title { color: #c4a457; font-size: 11px; display: block; margin-bottom: 5px; }
+        header { 
+            background-color: #1a1f36; color: white; padding: 25px 15px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .logo-area h1 { font-size: 18px; margin: 0; color: white; }
+        .logo-area p { font-size: 11px; color: #c4a457; margin: 0; }
 
-        .button-group { display: flex; flex-direction: column; gap: 8px; padding: 0 20px; margin-top: -40px; z-index: 5; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; border: none; transition: 0.3s; }
+        .banner { 
+            background-color: #1a1f36; color: white; padding: 35px 20px 60px 20px; 
+            text-align: center; border-radius: 0 0 40px 0; 
+        }
+        .sub-title { color: #c4a457; font-size: 12px; display: block; margin-bottom: 8px; }
+
+        /* الأزرار في الواجهة الرئيسية */
+        .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 10px; }
+        .btn { 
+            width: 100%; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 14px; 
+            cursor: pointer; text-align: center; border: none; transition: 0.3s;
+        }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
-        .btn-black { background: #000; color: #fff; }
+        .btn-black { background: #000; color: white; }
 
-        /* الصفحات المنبثقة */
-        .full-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
-        .page-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
+        /* الإحصائيات */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 25px 20px; }
+        .stat-card { 
+            background: white; padding: 20px; border-radius: 15px; text-align: center; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; 
+        }
+        .stat-card h3 { margin: 0; font-size: 26px; color: #1a1f36; }
+
+        /* صفحات النظام */
+        .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
+        .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; sticky; top: 0; }
         
-        /* كروت الاستقالة والبلاك لست */
-        .card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 15px; margin: 10px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .timer { color: #d9534f; font-weight: bold; font-size: 12px; display: block; margin-top: 5px; }
-        .reason-text { font-size: 11px; color: #666; margin-top: 5px; display: block; }
+        /* عناصر القوائم */
+        .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 15px; margin: 10px 15px; border-radius: 8px; }
+        .timer-red { color: #d9534f; font-weight: bold; font-size: 12px; }
 
-        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
-        footer { background: #1a1f36; color: white; text-align: center; padding: 20px; margin-top: auto; }
-        .signature { color: #c4a457; font-family: cursive; font-size: 16px; }
+        footer { background: #1a1f36; color: white; text-align: center; padding: 25px; margin-top: auto; }
+        .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; display: block; }
+
+        #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; }
     </style>
 </head>
-<body onload="checkSession()">
+<body onload="initSystem()">
 
 <div class="mobile-container">
     <header>
-        <div class="menu-icon" onclick="openOverlay('loginOverlay')">☰</div>
+        <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
         <div class="logo-area">
             <h1>وزارة الموارد البشرية</h1>
             <p>بوابة الخدمات الإلكترونية</p>
         </div>
     </header>
 
-    <div class="top-section">
+    <div class="banner">
         <span class="sub-title">البوابة الرقمية الرسمية</span>
-        <h2>نظام الإدارة المتكامل</h2>
+        <h2>المستقبل المهني يبدأ هنا</h2>
     </div>
 
-    <div class="button-group">
-        <button class="btn btn-gold" onclick="openPage('staffPage')">عرض الموظفين</button>
-        <button class="btn btn-outline" onclick="openPage('resignPage')">طلبات الاستقالة (فترة التهدئة)</button>
-        <button class="btn btn-black" onclick="openPage('blacklistPage')">قائمة البلاك لست (الحظر)</button>
+    <div class="main-nav">
+        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين</button>
+        <button class="btn btn-outline" onclick="openP('resignP')">استقالات (تهدئة 3 أيام)</button>
+        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين</button>
+        <button class="btn btn-black" onclick="openP('blackP')">قائمة البلاك لست</button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><h3 id="sNum">0</h3><p>عدد الموظفين</p></div>
+        <div class="stat-card"><h3 id="tNum">0</h3><p>المهام النشطة</p></div>
     </div>
 
     <footer>
-        <span class="signature">Designed by Asmar</span>
+        <div>وزارة الموارد البشرية والتنمية الاجتماعية</div>
+        <span class="asmar-sig">Designed by Asmar</span>
     </footer>
 
-    <div id="resignPage" class="full-page">
-        <div class="page-header">
-            <span onclick="closePage('resignPage')">➔</span>
-            <h3>طلبات الاستقالة - 3 أيام تهدئة</h3>
-        </div>
-        <div id="resignContainer"></div>
-        <div id="resignAdmin" style="display:none; padding:15px;">
-            <input type="text" id="rName" placeholder="اسم الموظف المستقيل">
-            <button class="btn btn-gold" onclick="addResign()">بدء فترة التهدئة</button>
-        </div>
-    </div>
-
-    <div id="blacklistPage" class="full-page">
-        <div class="page-header">
-            <span onclick="closePage('blacklistPage')">➔</span>
-            <h3>قائمة البلاك لست</h3>
-        </div>
-        <div id="blacklistContainer"></div>
-        <div id="blackAdmin" style="display:none; padding:15px;">
-            <input type="text" id="bName" placeholder="الاسم الرباعي">
-            <textarea id="bReason" placeholder="سبب الإدراج في البلاك لست"></textarea>
-            <button class="btn btn-black" onclick="addBlacklist()">إدراج في القائمة السوداء</button>
-        </div>
-    </div>
-
-    <div id="loginOverlay" style="position:fixed; top:0; right:-100%; width:100%; height:100%; background:#1a1f36; z-index:3000; transition:0.4s; padding:40px; color:white;">
-        <span onclick="closeOverlay('loginOverlay')" style="font-size:30px;">×</span>
+    <div id="loginScreen">
+        <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
         <h2>دخول الإدارة</h2>
-        <input type="password" id="adminPass" placeholder="كلمة السر...">
-        <button class="btn btn-gold" onclick="login()">دخول</button>
+        <input type="password" id="pInput" placeholder="كلمة السر...">
+        <button class="btn btn-gold" onclick="doLogin()">دخول</button>
+    </div>
+
+    <div id="staffP" class="page">
+        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div>
+        <div id="adminS" style="display:none; padding:15px; background:#eee;">
+            <input type="text" id="inName" placeholder="الاسم">
+            <select id="inFact"><option>الشرطة</option><option>الجيش</option><option>التحالف الطبي</option><option>الحكومة</option></select>
+            <button class="btn btn-gold" onclick="addS()">إضافة موظف</button>
+        </div>
+        <div id="sList"></div>
+    </div>
+
+    <div id="resignP" class="page">
+        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة</h3></div>
+        <div id="adminR" style="display:none; padding:15px;">
+            <input type="text" id="rName" placeholder="اسم المستقيل">
+            <button class="btn btn-gold" onclick="addR()">بدء التهدئة</button>
+        </div>
+        <div id="rList"></div>
+    </div>
+
+    <div id="tasksP" class="page">
+        <div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>مهام المحاورين</h3></div>
+        <div id="adminT" style="display:none; padding:15px;">
+            <textarea id="tDesc" placeholder="تفاصيل المهمة"></textarea>
+            <button class="btn btn-gold" onclick="addT()">إضافة مهمة</button>
+        </div>
+        <div id="tList"></div>
+    </div>
+
+    <div id="blackP" class="page">
+        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div>
+        <div id="adminB" style="display:none; padding:15px;">
+            <input type="text" id="bName" placeholder="الاسم">
+            <input type="text" id="bReason" placeholder="السبب">
+            <button class="btn btn-black" onclick="addB()">إضافة للبلاك لست</button>
+        </div>
+        <div id="bList"></div>
     </div>
 </div>
 
 <script>
-    let resigneers = JSON.parse(localStorage.getItem('resigneers')) || [];
-    let blacklisted = JSON.parse(localStorage.getItem('blacklisted')) || [];
+    let data = { staff: [], resigns: [], tasks: [], black: [] };
 
-    function checkSession() {
-        if (localStorage.getItem('asmar_auth') === 'true') {
-            document.getElementById('resignAdmin').style.display = 'block';
-            document.getElementById('blackAdmin').style.display = 'block';
-        }
-        renderResign();
-        renderBlacklist();
-        updateTimers();
+    function initSystem() {
+        const saved = localStorage.getItem('asmar_db');
+        if(saved) data = JSON.parse(saved);
+        if(localStorage.getItem('auth') === 'true') showAdmin();
+        renderAll();
+        setInterval(renderResigns, 1000);
     }
 
-    function openPage(id) { document.getElementById(id).style.display = 'block'; }
-    function closePage(id) { document.getElementById(id).style.display = 'none'; }
-    function openOverlay(id) { document.getElementById(id).style.right = '0'; }
-    function closeOverlay(id) { document.getElementById(id).style.right = '-100%'; }
-
-    function login() {
-        const p = document.getElementById('adminPass').value;
+    function showLogin() { document.getElementById('loginScreen').style.right = '0'; }
+    function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
+    
+    function doLogin() {
+        const p = document.getElementById('pInput').value;
         if(p === "asmar123" || p === "HR12") {
-            localStorage.setItem('asmar_auth', 'true');
+            localStorage.setItem('auth', 'true');
             location.reload();
         }
     }
 
-    // منطق الاستقالة والتهدئة
-    function addResign() {
-        const name = document.getElementById('rName').value;
-        if(!name) return;
-        const endTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000); // 3 أيام
-        resigneers.push({ name, endTime });
-        saveAndRender();
+    function showAdmin() {
+        document.getElementById('adminS').style.display = 'block';
+        document.getElementById('adminR').style.display = 'block';
+        document.getElementById('adminT').style.display = 'block';
+        document.getElementById('adminB').style.display = 'block';
     }
 
-    function updateTimers() {
-        setInterval(() => {
-            renderResign();
-        }, 1000);
+    function openP(id) { document.getElementById(id).style.display = 'block'; }
+    function closeP(id) { document.getElementById(id).style.display = 'none'; }
+
+    function addS() {
+        data.staff.push({ name: document.getElementById('inName').value, fact: document.getElementById('inFact').value });
+        save();
     }
 
-    function renderResign() {
-        const container = document.getElementById('resignContainer');
-        container.innerHTML = "";
-        const now = new Date().getTime();
+    function addR() {
+        const endTime = new Date().getTime() + (3 * 24 * 60 * 60 * 1000);
+        data.resigns.push({ name: document.getElementById('rName').value, end: endTime });
+        save();
+    }
+
+    function addT() {
+        data.tasks.push({ desc: document.getElementById('tDesc').value });
+        save();
+    }
+
+    function addB() {
+        data.black.push({ name: document.getElementById('bName').value, reason: document.getElementById('bReason').value });
+        save();
+    }
+
+    function save() {
+        localStorage.setItem('asmar_db', JSON.stringify(data));
+        renderAll();
+    }
+
+    function renderAll() {
+        // موظفين
+        const sl = document.getElementById('sList'); sl.innerHTML = "";
+        data.staff.forEach(s => sl.innerHTML += `<div class="item-card"><strong>${s.name}</strong> - ${s.fact}</div>`);
+        document.getElementById('sNum').innerText = data.staff.length;
+
+        // مهام
+        const tl = document.getElementById('tList'); tl.innerHTML = "";
+        data.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card">مهمة #${i+1}: ${t.desc}</div>`);
+        document.getElementById('tNum').innerText = data.tasks.length;
+
+        // بلاك لست
+        const bl = document.getElementById('bList'); bl.innerHTML = "";
+        data.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-color:#000"><strong>${b.name}</strong><br><small>السبب: ${b.reason}</small></div>`);
         
-        resigneers.forEach(r => {
-            const distance = r.endTime - now;
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((distance % (1000 * 60)) / 1000);
+        renderResigns();
+    }
 
-            const timerText = distance > 0 ? 
-                `باقي على الاستقالة: ${days} يوم و ${hours}:${mins}:${secs}` : 
-                "انتهت فترة التهدئة - استقالة نظيفة";
-
-            container.innerHTML += `
-                <div class="card">
-                    <strong>${r.name}</strong>
-                    <span class="timer">${timerText}</span>
-                </div>`;
+    function renderResigns() {
+        const rl = document.getElementById('rList'); rl.innerHTML = "";
+        const now = new Date().getTime();
+        data.resigns.forEach(r => {
+            const diff = r.end - now;
+            let timeTxt = "انتهت فترة التهدئة";
+            if(diff > 0) {
+                const d = Math.floor(diff/(1000*60*60*24));
+                const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+                const m = Math.floor((diff%(1000*60*60))/(1000*60));
+                const s = Math.floor((diff%(1000*60))/1000);
+                timeTxt = `باقي: ${d} يوم و ${h}:${m}:${s}`;
+            }
+            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><span class="timer-red">${timeTxt}</span></div>`;
         });
-    }
-
-    // منطق البلاك لست
-    function addBlacklist() {
-        const name = document.getElementById('bName').value;
-        const reason = document.getElementById('bReason').value;
-        if(!name) return;
-        blacklisted.push({ name, reason, date: new Date().toLocaleDateString() });
-        saveAndRender();
-    }
-
-    function renderBlacklist() {
-        const container = document.getElementById('blacklistContainer');
-        container.innerHTML = "";
-        blacklisted.forEach(b => {
-            container.innerHTML += `
-                <div class="card" style="border-right-color: #000;">
-                    <strong>${b.name}</strong>
-                    <span class="reason-text">السبب: ${b.reason}</span>
-                    <small style="font-size:9px;">التاريخ: ${b.date}</small>
-                </div>`;
-        });
-    }
-
-    function saveAndRender() {
-        localStorage.setItem('resigneers', JSON.stringify(resigneers));
-        localStorage.setItem('blacklisted', JSON.stringify(blacklisted));
-        renderResign();
-        renderBlacklist();
     }
 </script>
-
 </body>
 </html>
