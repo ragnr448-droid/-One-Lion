@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية 2026 | Asmar System</title>
+    <title>وزارة الموارد البشرية | Asmar System</title>
     <style>
-        :root { --gold: #c4a457; --dark-blue: #1a1f36; --black-bg: #12151e; --text-white: #ffffff; }
+        :root { 
+            --gold: #c4a457; 
+            --dark-blue: #1a1f36; 
+            --black-bg: #12151e; 
+            --text-white: #ffffff; 
+        }
         
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: 0.3s; }
         body { background-color: #0c0e14; margin: 0; overflow-x: hidden; direction: rtl; color: var(--text-white); }
         
         .mobile-container { width: 100%; max-width: 414px; background: var(--black-bg); min-height: 100vh; margin: auto; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 50px rgba(0,0,0,0.6); }
-
-        #welcome-toast {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: #000; padding: 12px 25px;
-            border-radius: 50px; font-weight: bold; z-index: 10000; border: 2px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
 
         header { 
             background: var(--dark-blue); padding: 18px; 
@@ -32,7 +31,7 @@
         .old-banner p { color: #888; font-size: 11px; margin-top: 8px; font-weight: bold; }
 
         .main-nav { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .btn { padding: 15px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 12px; text-align: center; }
+        .btn { padding: 15px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 12px; text-align: center; display: flex; align-items: center; justify-content: center; }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
         .btn-full { grid-column: span 2; }
@@ -40,25 +39,19 @@
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
         .stat-card { background: var(--dark-blue); padding: 18px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
         .stat-card h3 { margin: 0; color: var(--gold); font-size: 26px; }
-        .stat-card p { margin: 5px 0 0; font-size: 10px; color: #aaa; }
+        .stat-card p { margin: 5px 0 0; font-size: 10px; color: #aaa; font-weight: bold; }
 
-        /* التوقيع الرسمي في الأسفل */
-        .footer-sig { background: #0c0e14; padding: 30px; text-align: center; border-top: 2px solid var(--gold); margin-top: auto; }
-        .u-avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 12px; }
-        .official-stamp { font-size: 10px; color: var(--gold); border: 1px solid var(--gold); padding: 5px 10px; display: inline-block; margin-top: 10px; transform: rotate(-5deg); font-weight: bold; }
+        .footer-sig { background: #0c0e14; padding: 30px; text-align: center; border-top: 1px solid rgba(196, 164, 87, 0.2); margin-top: auto; }
+        .u-avatar { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 12px; box-shadow: 0 0 20px rgba(196, 164, 87, 0.3); }
 
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--black-bg); z-index: 8000; display: none; overflow-y: auto; }
-        .p-head { background: var(--dark-blue); color: var(--gold); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--gold); }
+        .p-head { background: var(--dark-blue); color: var(--gold); padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 2px solid var(--gold); position: sticky; top: 0; }
         
-        .item-card { background: var(--dark-blue); border: 1px solid rgba(255,255,255,0.05); padding: 16px; margin: 10px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--gold); }
-        
-        input, textarea, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1f36; color: white; }
+        input, textarea, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1f36; color: white; outline: none; }
         #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: var(--black-bg); z-index: 9000; padding: 50px 25px; transition: 0.5s; }
     </style>
 </head>
 <body onload="checkAuth()">
-
-<div id="welcome-toast">مرحباً بك، <span id="toast-name"></span> 👋</div>
 
 <div class="mobile-container">
     <header>
@@ -67,9 +60,9 @@
     </header>
 
     <div class="old-banner">
-        <p>المملكة العربية السعودية - عام 2026</p>
+        <p>المملكة - القطاع الإداري العام</p>
         <h1>وزارة الموارد البشرية</h1>
-        <p>نظام إدارة الموارد البشرية المعتمد</p>
+        <p>نظام الرقابة والإدارة المتكامل | Asmar System</p>
     </div>
 
     <div class="main-nav">
@@ -77,76 +70,64 @@
         <button class="btn btn-outline" onclick="openP('reportP')">مركز التقارير</button>
         <button class="btn btn-outline" onclick="openP('resignP')">الاستقالات</button>
         <button class="btn btn-outline" onclick="openP('formatP')">فورمات إدارية</button>
-        <button class="btn btn-gold btn-full" style="background:#000; color:var(--gold); border:1px solid var(--gold);" onclick="openP('blackP')">القائمة السوداء 2026</button>
+        <button class="btn btn-gold btn-full" style="background:#000; color:var(--gold); border:1px solid var(--gold);" onclick="openP('blackP')">القائمة السوداء (B.L)</button>
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card"><h3 id="sNum">0</h3><p>موظف نشط</p></div>
-        <div class="stat-card"><h3 id="bNum">0</h3><p>بلاغات الإدارة</p></div>
+        <div class="stat-card"><h3 id="sNum">0</h3><p>موظف رسمي</p></div>
+        <div class="stat-card"><h3 id="bNum">0</h3><p>مخالفات مرصودة</p></div>
     </div>
 
     <div class="footer-sig">
         <img src="" id="footerAvatar" class="u-avatar"><br>
-        <span style="font-size:14px;">بإشراف الإداري: <strong id="adminName" style="color:var(--gold)">زائر</strong></span><br>
-        <div class="official-stamp">ختم موارد بشرية - 2026</div><br>
-        <p style="color:#555; font-size:12px; margin-top:15px; letter-spacing:2px;">تصميم وتطوير الملكي: <span style="color:var(--gold); font-weight:bold;">Asmar</span></p>
+        <span>المسؤول الحالي: <strong id="adminName" style="color:var(--gold)">زائر</strong></span><br>
+        <p style="color:#555; font-family:cursive; font-size:14px; margin-top:8px; display:block;">© 2026 Designed by Asmar</p>
     </div>
 
     <div id="loginScreen">
         <span onclick="toggleLogin()" style="font-size:40px; cursor:pointer; color:var(--gold)">×</span>
-        <h2 style="color:var(--gold); text-align:center;">دخول بوابة 2026</h2>
+        <h2 style="color:var(--gold); text-align:center; margin-top:20px;">دخول الهيئة الإدارية | Asmar</h2>
         <div style="margin-top:50px;">
             <input type="text" id="lName" placeholder="الاسم الكامل">
             <input type="password" id="lPass" placeholder="كلمة المرور">
-            <button class="btn btn-gold btn-full" style="margin-top:30px;" onclick="login()">دخول النظام - Asmar</button>
+            <button class="btn btn-gold btn-full" style="margin-top:30px;" onclick="login()">دخول النظام</button>
         </div>
     </div>
 
-    <div id="staffP" class="page">
-        <div class="p-head"><span onclick="closeP('staffP')">➔</span><h3>شؤون موظفي 2026</h3></div>
-        <div id="admS" style="display:none; padding:15px;"><input type="text" id="inName" placeholder="اسم الموظف"><select id="inFact"><option>شرطة</option><option>جيش</option><option>حكومة</option></select><button class="btn btn-gold btn-full" onclick="addS()">تثبيت الموظف</button></div>
-        <div id="staffList"></div>
+    <div id="resignP" class="page">
+        <div class="p-head"><span onclick="closeP('resignP')">➔</span><h3>نظام الاستقالات</h3></div>
+        <div id="resignList" style="padding:15px;"></div>
     </div>
-    
-    <div id="reportP" class="page"><div class="p-head"><span onclick="closeP('reportP')">➔</span><h3>التقارير الإدارية</h3></div><div id="reportList"></div></div>
-    <div id="formatP" class="page"><div class="p-head"><span onclick="closeP('formatP')">➔</span><h3>فورمات Asmar</h3></div></div>
-    <div id="resignP" class="page"><div class="p-head"><span onclick="closeP('resignP')">➔</span><h3>الاستقالات</h3></div><div id="resignList"></div></div>
-    <div id="blackP" class="page"><div class="p-head"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div><div id="blackList"></div></div>
+
+    <div id="staffP" class="page"><div class="p-head"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div></div>
+    <div id="reportP" class="page"><div class="p-head"><span onclick="closeP('reportP')">➔</span><h3>التقارير</h3></div></div>
+    <div id="formatP" class="page"><div class="p-head"><span onclick="closeP('formatP')">➔</span><h3>فورمات</h3></div></div>
+    <div id="blackP" class="page"><div class="p-head"><span onclick="closeP('blackP')">➔</span><h3>القائمة السوداء</h3></div></div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('asmar_2026_db')) || { staff: [], reports: [], resigns: [], black: [] };
-    
+    let db = JSON.parse(localStorage.getItem('asmar_final_gold')) || { staff: [], reports: [], resigns: [], black: [] };
+
     function checkAuth() {
         const user = localStorage.getItem('uName');
         if(user) {
-            document.querySelectorAll('#admS').forEach(d => d.style.display = 'block');
             document.getElementById('adminName').innerText = user;
             const av = `https://ui-avatars.com/api/?name=${encodeURIComponent(user)}&background=c4a457&color=000&bold=true`;
             document.getElementById('topAvatar').src = av;
             document.getElementById('footerAvatar').src = av;
-            showWelcome(user);
         } else {
-            document.getElementById('topAvatar').src = "https://ui-avatars.com/api/?name=G";
-            document.getElementById('footerAvatar').src = "https://ui-avatars.com/api/?name=G";
+            document.getElementById('topAvatar').src = "https://ui-avatars.com/api/?name=Guest";
+            document.getElementById('footerAvatar').src = "https://ui-avatars.com/api/?name=Guest";
         }
-        render();
-    }
-
-    function showWelcome(name) {
-        const t = document.getElementById('welcome-toast');
-        document.getElementById('toast-name').innerText = name;
-        t.style.top = '20px';
-        setTimeout(() => t.style.top = '-100px', 3500);
     }
 
     function login() {
         const n = document.getElementById('lName').value;
         const p = document.getElementById('lPass').value;
-        if(p === "asmar123" || p === "HR2026") {
+        if(p === "asmar123") {
             localStorage.setItem('uName', n);
             location.reload();
-        } else { alert("خطأ في البيانات"); }
+        } else { alert("خطأ!"); }
     }
 
     function toggleLogin() { 
@@ -156,12 +137,6 @@
 
     function openP(id) { document.getElementById(id).style.display = 'block'; }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
-
-    function render() {
-        document.getElementById('sNum').innerText = db.staff.length;
-        document.getElementById('bNum').innerText = db.black.length;
-        // ... (بقية كود الـ Render كما في النسخة السابقة)
-    }
 </script>
 </body>
 </html>
