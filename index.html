@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>وزارة الموارد البشرية - النظام الذكي</title>
     <style>
-        /* التنسيق الأصلي - تصميم Asmar */
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; direction: rtl; }
         .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
@@ -18,16 +17,13 @@
         .sub-title { color: #c4a457; font-size: 12px; display: block; margin-bottom: 8px; }
 
         .main-nav { padding: 0 20px; margin-top: -35px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
-        .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; border: none; transition: 0.3s; }
+        .btn { width: 100%; padding: 10px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; text-align: center; border: none; transition: 0.3s; margin-top: 5px; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
         .btn-black { background: #000; color: white; }
+        .btn-danger { background: #d9534f; color: white; padding: 5px 10px; font-size: 11px; }
 
-        #notification { 
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; 
-            font-size: 13px; font-weight: bold; display: none; z-index: 5000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
+        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 10px 25px; border-radius: 30px; font-size: 13px; font-weight: bold; display: none; z-index: 5000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
@@ -36,16 +32,13 @@
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
         .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        /* تحسين شكل بطاقة الموظف */
         .item-card { background: #f8f9fa; border-right: 5px solid #c4a457; padding: 12px; margin: 8px 15px; border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
         .status-active { color: #28a745; font-size: 10px; font-weight: bold; background: #eafff0; padding: 2px 8px; border-radius: 10px; border: 1px solid #28a745; }
-        
         .fact-title { background: #f0f2f5; color: #1a1f36; padding: 8px 15px; margin: 15px 0 5px 0; font-weight: bold; border-left: 4px solid #c4a457; }
 
-        footer { background: #1a1f36; color: white; text-align: center; padding: 20px; margin-top: auto; }
-        .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 18px; display: block; margin-top: 5px; }
-
-        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
+        .admin-box { background: #f9f9f9; padding: 15px; border-bottom: 2px solid #eee; margin-bottom: 10px; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; }
+        
         #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
     </style>
 </head>
@@ -79,10 +72,60 @@
         <div class="stat-card"><h3 id="tNum">0</h3><p>المهام</p></div>
     </div>
 
-    <footer>
-        <div style="font-size:12px;">وزارة الموارد البشرية</div>
-        <span class="asmar-sig">Designed by Asmar</span>
-    </footer>
+    <div id="staffP" class="page">
+        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div>
+        <div id="admS" class="admin-box" style="display:none;">
+            <input type="text" id="inName" placeholder="اسم الموظف الجديد">
+            <select id="inFact">
+                <option>الحكومة</option><option>جيش</option><option>شرطة</option><option>تحالف طبي</option>
+            </select>
+            <button class="btn btn-gold" onclick="addStaff()">إضافة للفصيل</button>
+        </div>
+        <div id="staffSections">
+            <div class="fact-title">🏛️ قطاع الحكومة</div><div id="list-الحكومة"></div>
+            <div class="fact-title">⚔️ قطاع الجيش</div><div id="list-جيش"></div>
+            <div class="fact-title">🚔 قطاع الشرطة</div><div id="list-شرطة"></div>
+            <div class="fact-title">🚑 التحالف الطبي</div><div id="list-تحالف طبي"></div>
+        </div>
+    </div>
+
+    <div id="resignP" class="page">
+        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة</h3></div>
+        <div id="admR" class="admin-box" style="display:none;">
+            <p style="font-size: 11px; margin: 0; color: #666;">تحويل موظف موجود:</p>
+            <select id="rSelect"></select>
+            <button class="btn btn-gold" onclick="addResign()">تحويل من الموظفين</button>
+            <hr>
+            <p style="font-size: 11px; margin: 5px 0; color: #666;">أو إضافة يدوية بالاسم:</p>
+            <input type="text" id="manualRName" placeholder="اسم الشخص للاستقالة">
+            <button class="btn btn-outline" onclick="addManualResign()">إضافة يدوية</button>
+        </div>
+        <div id="resignList"></div>
+    </div>
+
+    <div id="blackP" class="page">
+        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>قائمة البلاك لست</h3></div>
+        <div id="admB" class="admin-box" style="display:none;">
+            <p style="font-size: 11px; margin: 0; color: #666;">تحويل موظف موجود:</p>
+            <select id="bSelect"></select>
+            <input type="text" id="bReason" placeholder="السبب">
+            <button class="btn btn-black" onclick="addBlack()">إدراج من الموظفين</button>
+            <hr>
+            <input type="text" id="manualBName" placeholder="اسم الشخص للبلاك لست">
+            <input type="text" id="manualBReason" placeholder="السبب">
+            <button class="btn btn-outline" onclick="addManualBlack()">إضافة يدوية للبلاك لست</button>
+        </div>
+        <div id="blackList"></div>
+    </div>
+
+    <div id="tasksP" class="page">
+        <div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام الأسبوعية</h3></div>
+        <div id="admT" class="admin-box" style="display:none;">
+            <textarea id="tDesc" placeholder="اكتب المهمة هنا..."></textarea>
+            <button class="btn btn-gold" onclick="addTask()">إضافة المهمة</button>
+        </div>
+        <div id="tasksList"></div>
+    </div>
 
     <div id="loginScreen">
         <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
@@ -90,69 +133,14 @@
         <input type="password" id="pass" placeholder="كلمة السر...">
         <button class="btn btn-gold" onclick="login()">دخول</button>
     </div>
-
-    <div id="staffP" class="page">
-        <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>شؤون الموظفين</h3></div>
-        <div id="admS" style="display:none; padding:15px; border-bottom:2px solid #eee;">
-            <input type="text" id="inName" placeholder="اسم الموظف">
-            <select id="inFact">
-                <option>الحكومة</option>
-                <option>جيش</option>
-                <option>شرطة</option>
-                <option>تحالف طبي</option>
-            </select>
-            <button class="btn btn-gold" onclick="addStaff()">إضافة الموظف للفصيل</button>
-        </div>
-        
-        <div id="staffSections">
-            <div class="fact-title">🏛️ قطاع الحكومة</div>
-            <div id="list-الحكومة"></div>
-            
-            <div class="fact-title">⚔️ قطاع الجيش</div>
-            <div id="list-جيش"></div>
-            
-            <div class="fact-title">🚔 قطاع الشرطة</div>
-            <div id="list-شرطة"></div>
-            
-            <div class="fact-title">🚑 التحالف الطبي</div>
-            <div id="list-تحالف طبي"></div>
-        </div>
-    </div>
-
-    <div id="resignP" class="page">
-        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة</h3></div>
-        <div id="admR" style="display:none; padding:15px;">
-            <select id="rSelect" style="margin-bottom:10px;"></select>
-            <button class="btn btn-gold" onclick="addResign()">تحويل للاستقالة (حذف من الموظفين)</button>
-        </div>
-        <div id="resignList"></div>
-    </div>
-
-    <div id="blackP" class="page">
-        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>قائمة البلاك لست</h3></div>
-        <div id="admB" style="display:none; padding:15px;">
-            <select id="bSelect" style="margin-bottom:10px;"></select>
-            <input type="text" id="bReason" placeholder="سبب البلاك لست">
-            <button class="btn btn-black" onclick="addBlack()">إدراج بلاك لست (حذف من الموظفين)</button>
-        </div>
-        <div id="blackList"></div>
-    </div>
-
-    <div id="tasksP" class="page">
-        <div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام الأسبوعية</h3></div>
-        <div id="admT" style="display:none; padding:15px;">
-            <textarea id="tDesc" placeholder="اكتب المهمة هنا..."></textarea>
-            <button class="btn btn-gold" onclick="addTask()">إضافة المهمة</button>
-        </div>
-        <div id="tasksList"></div>
-    </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('asmar_final')) || { staff: [], resigns: [], tasks: [], black: [] };
+    let db = JSON.parse(localStorage.getItem('asmar_v2')) || { staff: [], resigns: [], tasks: [], black: [] };
+    const isAdmin = () => localStorage.getItem('auth') === 'true';
 
     function init() {
-        if(localStorage.getItem('auth') === 'true') showAdmin();
+        if(isAdmin()) showAdmin();
         render();
         setInterval(renderResigns, 1000);
     }
@@ -176,53 +164,82 @@
 
     function showAdmin() {
         ['admS', 'admR', 'admB', 'admT'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) el.style.display = 'block';
+            if(document.getElementById(id)) document.getElementById(id).style.display = 'block';
         });
     }
 
-    function openP(id) { 
-        document.getElementById(id).style.display = 'block'; 
-        updateSelects(); 
-    }
+    function openP(id) { document.getElementById(id).style.display = 'block'; updateSelects(); }
     function closeP(id) { document.getElementById(id).style.display = 'none'; }
 
+    // وظائف الموظفين
     function addStaff() {
         const name = document.getElementById('inName').value;
         const fact = document.getElementById('inFact').value;
         if(!name) return;
         db.staff.push({ id: Date.now(), name, fact });
-        save("تم إضافة الموظف بنجاح ✅");
+        save("تمت الإضافة بنجاح ✅");
         document.getElementById('inName').value = "";
     }
 
+    // وظائف الاستقالات
     function addResign() {
         const id = document.getElementById('rSelect').value;
         const emp = db.staff.find(s => s.id == id);
         if(!emp) return;
-        db.resigns.push({ name: emp.name, end: new Date().getTime() + (3*24*60*60*1000) });
+        db.resigns.push({ id: Date.now(), name: emp.name, end: Date.now() + (3*24*60*60*1000) });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم تحويل الموظف للاستقالة وحذفه من الجدول ✅");
+        save("تم التحويل للتهدئة ✅");
     }
 
+    function addManualResign() {
+        const name = document.getElementById('manualRName').value;
+        if(!name) return;
+        db.resigns.push({ id: Date.now(), name: name, end: Date.now() + (3*24*60*60*1000) });
+        save("تمت الإضافة اليدوية للتهدئة ✅");
+        document.getElementById('manualRName').value = "";
+    }
+
+    function removeResign(id) {
+        if(!confirm("هل تريد إزالة الشخص من قائمة التهدئة؟")) return;
+        db.resigns = db.resigns.filter(r => r.id != id);
+        save("تمت الإزالة من التهدئة 🗑️");
+    }
+
+    // وظائف البلاك لست
     function addBlack() {
         const id = document.getElementById('bSelect').value;
-        const reason = document.getElementById('bReason').value;
+        const reason = document.getElementById('bReason').value || "غير محدد";
         const emp = db.staff.find(s => s.id == id);
         if(!emp) return;
-        db.black.push({ name: emp.name, reason: reason });
+        db.black.push({ id: Date.now(), name: emp.name, reason: reason });
         db.staff = db.staff.filter(s => s.id != id);
-        save("تم إدراج الموظف في البلاك لست وحذفه من الجدول ✅");
+        save("تم الإدراج في البلاك لست ✅");
+    }
+
+    function addManualBlack() {
+        const name = document.getElementById('manualBName').value;
+        const reason = document.getElementById('manualBReason').value || "غير محدد";
+        if(!name) return;
+        db.black.push({ id: Date.now(), name: name, reason: reason });
+        save("تمت الإضافة اليدوية للبلاك لست ✅");
+        document.getElementById('manualBName').value = "";
+        document.getElementById('manualBReason').value = "";
+    }
+
+    function removeBlack(id) {
+        if(!confirm("هل تريد الحذف من البلاك لست؟")) return;
+        db.black = db.black.filter(b => b.id != id);
+        save("تم الحذف من القائمة ✅");
     }
 
     function addTask() {
-        db.tasks.push({ desc: document.getElementById('tDesc').value });
+        db.tasks.push({ id: Date.now(), desc: document.getElementById('tDesc').value });
         save("تم إضافة المهمة ✅");
         document.getElementById('tDesc').value = "";
     }
 
     function save(msg) {
-        localStorage.setItem('asmar_final', JSON.stringify(db));
+        localStorage.setItem('asmar_v2', JSON.stringify(db));
         render();
         showNotify(msg);
         updateSelects();
@@ -231,40 +248,35 @@
     function updateSelects() {
         const rS = document.getElementById('rSelect');
         const bS = document.getElementById('bSelect');
-        if(rS && bS) {
-            const options = db.staff.map(emp => `<option value="${emp.id}">${emp.name} (${emp.fact})</option>`).join('');
-            rS.innerHTML = options;
-            bS.innerHTML = options;
-        }
+        const opt = db.staff.map(e => `<option value="${e.id}">${e.name} (${e.fact})</option>`).join('');
+        if(rS) rS.innerHTML = opt;
+        if(bS) bS.innerHTML = opt;
     }
 
     function render() {
-        // تفريغ القوائم المقسمة
-        const facts = ['الحكومة', 'جيش', 'شرطة', 'تحالف طبي'];
-        facts.forEach(f => document.getElementById(`list-${f}`).innerHTML = "");
-
-        // توزيع الموظفين مع علامة "نشط"
-        db.staff.forEach(s => {
-            const container = document.getElementById(`list-${s.fact}`);
-            if(container) {
-                container.innerHTML += `
-                    <div class="item-card">
-                        <strong>${s.name}</strong>
-                        <span class="status-active">● نشط</span>
-                    </div>`;
-            }
+        // موظفين
+        ['الحكومة', 'جيش', 'شرطة', 'تحالف طبي'].forEach(f => {
+            const list = document.getElementById(`list-${f}`);
+            list.innerHTML = "";
+            db.staff.filter(s => s.fact === f).forEach(s => {
+                list.innerHTML += `<div class="item-card"><strong>${s.name}</strong> <span class="status-active">● نشط</span></div>`;
+            });
         });
-
         document.getElementById('sNum').innerText = db.staff.length;
 
-        // المهام
+        // مهام
         const tl = document.getElementById('tasksList'); tl.innerHTML = "";
         db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card"><span>مهمة #${i+1}: ${t.desc}</span></div>`);
         document.getElementById('tNum').innerText = db.tasks.length;
 
-        // البلاك لست
+        // بلاك لست
         const bl = document.getElementById('blackList'); bl.innerHTML = "";
-        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:black; flex-direction:column; align-items:start;"><strong>${b.name}</strong><small style="color:red;">السبب: ${b.reason}</small></div>`);
+        db.black.forEach(b => {
+            bl.innerHTML += `<div class="item-card">
+                <div><strong>${b.name}</strong><br><small style="color:red">السبب: ${b.reason}</small></div>
+                ${isAdmin() ? `<button class="btn-danger" onclick="removeBlack(${b.id})">إزالة</button>` : ''}
+            </div>`;
+        });
         
         renderResigns();
     }
@@ -272,11 +284,14 @@
     function renderResigns() {
         const rl = document.getElementById('resignList'); if(!rl) return;
         rl.innerHTML = "";
-        const now = new Date().getTime();
+        const now = Date.now();
         db.resigns.forEach(r => {
             const diff = r.end - now;
-            let timeTxt = (diff > 0) ? `باقي: ${Math.floor(diff/(1000*60*60*24))} يوم و ${Math.floor((diff%(1000*60*60*24))/(1000*60*60))}:${Math.floor((diff%(1000*60*60))/(1000*60))}:${Math.floor((diff%(1000*60))/1000)}` : "استقالة نظيفة ✅";
-            rl.innerHTML += `<div class="item-card" style="flex-direction:column; align-items:start;"><strong>${r.name}</strong><span style="color:#d9534f; font-weight:bold; font-size:11px;">${timeTxt}</span></div>`;
+            let timeTxt = (diff > 0) ? `باقي: ${Math.floor(diff/(1000*60*60*24))}ي و ${Math.floor((diff%(1000*60*60*24))/(1000*60*60))}:${Math.floor((diff%(1000*60*60))/(1000*60))}:${Math.floor((diff%(1000*60))/1000)}` : "انتهت فترة التهدئة ✅";
+            rl.innerHTML += `<div class="item-card">
+                <div><strong>${r.name}</strong><br><span style="color:#d9534f; font-size:11px;">${timeTxt}</span></div>
+                ${isAdmin() ? `<button class="btn-danger" onclick="removeResign(${r.id})">إزالة</button>` : ''}
+            </div>`;
         });
     }
 </script>
