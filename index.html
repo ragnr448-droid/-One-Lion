@@ -3,49 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - النظام المطور</title>
+    <title>وزارة الموارد البشرية - نظام الإحصائيات</title>
     <style>
-        /* تصميم Asmar الأصلي - فخامة واحترافية */
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* تصميم Asmar الأصلي */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; direction: rtl; }
         .mobile-container { width: 100%; max-width: 414px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
 
         header { background-color: #1a1f36; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .user-profile { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 50px; border: 1px solid #c4a457; }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #c4a457; }
         
-        /* كارت الهوية الشخصية - تصميم Asmar */
-        .user-profile { 
-            display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); 
-            padding: 5px 12px; border-radius: 50px; border: 1px solid rgba(196, 164, 87, 0.3);
-        }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #c4a457; object-fit: cover; }
-        .user-info { display: flex; flex-direction: column; }
-        .user-name { font-size: 11px; font-weight: bold; color: white; }
-        .user-rank { font-size: 9px; color: #c4a457; }
-
         .banner { background-color: #1a1f36; color: white; padding: 25px 20px 50px 20px; text-align: center; border-radius: 0 0 40px 0; }
-        .sub-title { color: #c4a457; font-size: 11px; display: block; margin-bottom: 5px; }
+        .sub-title { color: #c4a457; font-size: 11px; display: block; }
 
-        /* الأزرار في الواجهة الرئيسية */
+        /* خانات الإحصائيات المستعادة */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; margin-top: 10px; }
+        .stat-card { background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
+        .stat-card h3 { margin: 0; font-size: 24px; color: #1a1f36; }
+        .stat-card p { margin: 5px 0 0; font-size: 12px; color: #666; font-weight: bold; }
+
         .main-nav { padding: 0 20px; margin-top: -30px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
         .btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 13px; cursor: pointer; border: none; transition: 0.3s; text-align: center; }
         .btn-gold { background: #c4a457; color: #1a1f36; }
         .btn-outline { background: white; border: 2px solid #c4a457; color: #c4a457; }
         .btn-black { background: #000; color: white; }
 
-        /* الصفحات */
         .page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; display: none; overflow-y: auto; }
         .p-header { background: #1a1f36; color: white; padding: 20px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; }
         
-        /* عناصر القوائم */
         .section-title { background: #f8f9fa; padding: 10px 15px; margin: 10px 0; border-right: 4px solid #1a1f36; color: #1a1f36; font-weight: bold; }
         .item-card { background: #fff; border: 1px solid #eee; padding: 12px; margin: 5px 15px; border-radius: 8px; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .timer-red { color: #d9534f; font-weight: bold; font-size: 12px; }
-
+        
         footer { background: #1a1f36; color: white; text-align: center; padding: 25px; margin-top: auto; }
-        .asmar-sig { color: #c4a457; font-family: 'Brush Script MT', cursive; font-size: 20px; margin-top: 10px; display: block; }
+        .asmar-sig { color: #c4a457; font-family: cursive; font-size: 20px; }
 
-        #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 50px 20px; color: white; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; }
+        #loginScreen { position: fixed; top: 0; right: -100%; width: 100%; height: 100%; background: #1a1f36; z-index: 3000; transition: 0.4s; padding: 40px; color: white; }
     </style>
 </head>
 <body onload="initSystem()">
@@ -53,12 +47,11 @@
 <div class="mobile-container">
     <header>
         <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
-        
         <div class="user-profile">
             <img src="" id="profileImg" class="user-avatar">
-            <div class="user-info">
-                <span class="user-name" id="userNameDisp">زائر</span>
-                <span class="user-rank" id="userRankDisp">رتبة: زائر</span>
+            <div style="display:flex; flex-direction:column;">
+                <span id="userNameDisp" style="font-size:11px; color:white;">زائر</span>
+                <span id="userRankDisp" style="font-size:9px; color:#c4a457;">رتبة: زائر</span>
             </div>
         </div>
     </header>
@@ -69,10 +62,21 @@
     </div>
 
     <div class="main-nav">
-        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين الحاليين</button>
-        <button class="btn btn-outline" onclick="openP('resignP')">الاستقالات (التهدئة)</button>
-        <button class="btn btn-outline" onclick="openP('tasksP')">مهام المحاورين الأسبوعية</button>
-        <button class="btn btn-black" onclick="openP('blackP')">قائمة البلاك لست (الحظر)</button>
+        <button class="btn btn-gold" onclick="openP('staffP')">عرض الموظفين والقطاعات</button>
+        <button class="btn btn-outline" onclick="openP('resignP')">الاستقالات (تهدئة 3 أيام)</button>
+        <button class="btn btn-outline" onclick="openP('reportP')">مركز التقارير</button>
+        <button class="btn btn-black" onclick="openP('blackP')">القائمة السوداء</button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3 id="sCount">0</h3>
+            <p>إجمالي الموظفين</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="bCount">0</h3>
+            <p>عدد المخالفات</p>
+        </div>
     </div>
 
     <footer>
@@ -81,21 +85,18 @@
 
     <div id="loginScreen">
         <span onclick="hideLogin()" style="font-size:30px; cursor:pointer;">×</span>
-        <h2>تسجيل دخول الإدارة</h2>
-        <input type="text" id="gmailName" placeholder="الاسم الكامل">
-        <input type="password" id="pass" placeholder="كلمة السر">
-        <p style="color:#c4a457; font-size:12px; margin-top:15px;">(سيتم توليد صورة بحرف اسمك تلقائياً)</p>
-        <button class="btn btn-gold" style="margin-top:20px;" onclick="login()">دخول ومزامنة</button>
+        <h3>تسجيل الدخول</h3>
+        <input type="text" id="loginName" placeholder="الاسم الكامل">
+        <input type="password" id="loginPass" placeholder="كلمة السر">
+        <button class="btn btn-gold" onclick="login()">دخول ومزامنة</button>
         <button class="btn btn-outline" style="margin-top:10px; color:white;" onclick="logout()">خروج</button>
     </div>
 
     <div id="staffP" class="page">
         <div class="p-header"><span onclick="closeP('staffP')">➔</span><h3>توزيع القطاعات</h3></div>
         <div id="admS" style="display:none; padding:15px; background:#f0f2f5;">
-            <input type="text" id="sName" placeholder="اسم الموظف">
-            <select id="sFact">
-                <option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option>
-            </select>
+            <input type="text" id="sNameInput" placeholder="اسم الموظف">
+            <select id="sFactInput"><option>شرطة</option><option>جيش</option><option>تحالف طبي</option><option>الحكومة</option></select>
             <button class="btn btn-gold" onclick="addS()">إضافة للقطاع</button>
         </div>
         <div class="section-title">قطاع الشرطة</div><div id="list-شرطة"></div>
@@ -105,51 +106,53 @@
     </div>
 
     <div id="resignP" class="page">
-        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>طلبات الاستقالة - تهدئة 3 أيام</h3></div>
-        <div id="admR" style="display:none; padding:15px;"><select id="rSelect"></select><button class="btn btn-gold" onclick="addR()">بدء فترة التهدئة</button></div>
+        <div class="p-header"><span onclick="closeP('resignP')">➔</span><h3>الاستقالة والتهدئة</h3></div>
+        <div id="admR" style="display:none; padding:15px;"><select id="rSelect"></select><button class="btn btn-gold" onclick="addR()">بدء تهدئة (3 أيام)</button></div>
         <div id="resignList"></div>
     </div>
 
-    <div id="blackP" class="page"><div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>القائمة السوداء</h3></div><div id="admB" style="display:none; padding:15px;"><select id="bSelect"></select><input id="bReason" placeholder="السبب"><button class="btn btn-black" onclick="addB()">إدراج للبلاك لست</button></div><div id="blackList"></div></div>
-    <div id="tasksP" class="page"><div class="p-header"><span onclick="closeP('tasksP')">➔</span><h3>المهام الأسبوعية</h3></div><div id="admT" style="display:none; padding:15px;"><textarea id="tDesc"></textarea><button class="btn btn-gold" onclick="addT()">إضافة مهمة</button></div><div id="tasksList"></div></div>
+    <div id="reportP" class="page">
+        <div class="p-header"><span onclick="closeP('reportP')">➔</span><h3>مركز التقارير</h3></div>
+        <div style="padding:15px;"><input type="text" id="repName" placeholder="الاسم"><textarea id="repText" placeholder="التقرير"></textarea><button class="btn btn-gold" onclick="addRep()">إرسال</button></div>
+        <div id="reportList"></div>
+    </div>
+
+    <div id="blackP" class="page">
+        <div class="p-header"><span onclick="closeP('blackP')">➔</span><h3>البلاك لست</h3></div>
+        <div id="admB" style="display:none; padding:15px;"><select id="bSelect"></select><input id="bReason" placeholder="السبب"><button class="btn btn-black" onclick="addB()">إدراج مخالفة</button></div>
+        <div id="blackList"></div>
+    </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('asmar_final_v5')) || { staff: [], resigns: [], black: [], tasks: [] };
+    let db = JSON.parse(localStorage.getItem('asmar_v6')) || { staff: [], resigns: [], reports: [], black: [] };
 
     function initSystem() {
-        checkAuth(); renderAll();
+        checkAuth();
+        renderAll();
         setInterval(renderResigns, 1000);
     }
 
     function checkAuth() {
         const auth = localStorage.getItem('auth');
         const name = localStorage.getItem('uName') || "زائر";
-        
         if(auth) {
             document.querySelectorAll('[id^="adm"]').forEach(el => el.style.display = 'block');
             const rank = (auth === 'admin') ? "أدمن" : "مساعد إدارة";
-            setProfile(name, rank);
+            document.getElementById('userNameDisp').innerText = name;
+            document.getElementById('userRankDisp').innerText = "رتبة: " + rank;
+            document.getElementById('profileImg').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a1f36&color=c4a457&bold=true`;
         } else {
-            setProfile("زائر", "زائر غير مسجل");
+            document.getElementById('profileImg').src = "https://ui-avatars.com/api/?name=Guest";
         }
     }
 
-    function setProfile(name, rank) {
-        document.getElementById('userNameDisp').innerText = name;
-        document.getElementById('userRankDisp').innerText = "رتبة: " + rank;
-        document.getElementById('welcomeMsg').innerText = "مرحباً بك: " + name;
-        // توليد صورة الحرف تلقائياً من API خارجي موثوق
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1a1f36&color=c4a457&rounded=true&bold=true`;
-        document.getElementById('profileImg').src = avatarUrl;
-    }
-
     function login() {
-        const p = document.getElementById('pass').value;
-        const n = document.getElementById('gmailName').value || "مستخدم";
-        if(p === "asmar123") { localStorage.setItem('auth', 'admin'); }
-        else if(p === "HR12") { localStorage.setItem('auth', 'assistant'); }
-        else { return alert("خطأ في كلمة السر!"); }
+        const p = document.getElementById('loginPass').value;
+        const n = document.getElementById('loginName').value || "مستخدم";
+        if(p === "asmar123") localStorage.setItem('auth', 'admin');
+        else if(p === "HR12") localStorage.setItem('auth', 'assistant');
+        else return alert("خطأ");
         localStorage.setItem('uName', n);
         location.reload();
     }
@@ -162,7 +165,7 @@
     function hideLogin() { document.getElementById('loginScreen').style.right = '-100%'; }
 
     function addS() {
-        db.staff.push({ id: Date.now(), name: document.getElementById('sName').value, fact: document.getElementById('sFact').value });
+        db.staff.push({ id: Date.now(), name: document.getElementById('sNameInput').value, fact: document.getElementById('sFactInput').value });
         save();
     }
 
@@ -182,15 +185,15 @@
         save();
     }
 
-    function addT() {
-        db.tasks.push({ desc: document.getElementById('tDesc').value });
+    function addRep() {
+        db.reports.push({ name: document.getElementById('repName').value, text: document.getElementById('repText').value, date: new Date().toLocaleString() });
         save();
     }
 
     function save() {
-        localStorage.setItem('asmar_final_v5', JSON.stringify(db));
+        localStorage.setItem('asmar_v6', JSON.stringify(db));
         renderAll();
-        alert("تمت العملية بنجاح ✅");
+        alert("تم التحديث ✅");
     }
 
     function updateSelects() {
@@ -199,18 +202,21 @@
     }
 
     function renderAll() {
-        // توزيع القطاعات
+        // تحديث العدادات
+        document.getElementById('sCount').innerText = db.staff.length;
+        document.getElementById('bCount').innerText = db.black.length;
+
         const facts = ['شرطة', 'جيش', 'تحالف طبي', 'الحكومة'];
         facts.forEach(f => {
             const el = document.getElementById('list-' + f); el.innerHTML = "";
             db.staff.filter(s => s.fact === f).forEach(s => el.innerHTML += `<div class="item-card">${s.name}</div>`);
         });
 
-        const bl = document.getElementById('blackList'); bl.innerHTML = "";
-        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:red"><strong>${b.name}</strong>: ${b.reason}</div>`);
+        const rl = document.getElementById('reportList'); rl.innerHTML = "";
+        db.reports.forEach(r => rl.innerHTML += `<div class="item-card"><strong>${r.name}:</strong> ${r.text}</div>`);
 
-        const tl = document.getElementById('tasksList'); tl.innerHTML = "";
-        db.tasks.forEach((t, i) => tl.innerHTML += `<div class="item-card">مهمة #${i+1}: ${t.desc}</div>`);
+        const bl = document.getElementById('blackList'); bl.innerHTML = "";
+        db.black.forEach(b => bl.innerHTML += `<div class="item-card" style="border-right-color:red"><strong>${b.name}:</strong> ${b.reason}</div>`);
     }
 
     function renderResigns() {
@@ -218,11 +224,10 @@
         const now = Date.now();
         db.resigns.forEach(r => {
             const diff = r.end - now;
-            let txt = (diff > 0) ? `باقي: ${Math.floor(diff/86400000)}يوم و ${Math.floor((diff%86400000)/3600000)}ساعة` : "استقالة نظيفة ✅";
-            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong><br><span class="timer-red">${txt}</span></div>`;
+            let txt = (diff > 0) ? `باقي: ${Math.floor(diff/86400000)} يوم` : "مكتمل ✅";
+            rl.innerHTML += `<div class="item-card"><strong>${r.name}</strong> - <span style="color:red">${txt}</span></div>`;
         });
     }
 </script>
-
 </body>
 </html>
