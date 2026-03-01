@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Lion HR | نظام الموارد البشرية</title>
+    <style>
+        /* --- قسم الـ CSS: التنسيق والمظهر --- */
+        :root {
+            --main-dark: #121212;
+            --card-bg: #1e1e1e;
+            --lion-gold: #f1c40f;
+            --danger-red: #e74c3c;
+            --success-green: #27ae60;
+            --text-white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--main-dark);
+            color: var(--text-white);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            border-bottom: 3px solid var(--lion-gold);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            border-right: 4px solid var(--lion-gold);
+            padding-right: 15px;
+            color: var(--lion-gold);
+        }
+
+        .card.blacklist h2 { border-right-color: var(--danger-red); color: var(--danger-red); }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-join { background-color: var(--success-green); color: white; }
+        .btn-resign { background-color: #7f8c8d; color: white; }
+        .btn-blacklist { background-color: var(--danger-red); color: white; }
+
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 1px solid #333;
+            color: #777;
+        }
+
+        .asmar-rights { color: var(--lion-gold); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🦁 موارد بشرية ولاية One Lion</h1>
+    <p>نظام الإدارة المتكامل للموظفين</p>
+</header>
+
+<div class="container">
+    
+    <div class="card">
+        <h2>تسجيل انضمام موظف</h2>
+        <form id="joinForm">
+            <label>اسم الموظف الجديد:</label>
+            <input type="text" id="joinName" placeholder="الاسم الكامل" required>
+            <label>وقت الانضمام:</label>
+            <input type="datetime-local" id="joinDate" required>
+            <button type="submit" class="btn-join">تأكيد التعيين ✅</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>تقديم استقالة موظف</h2>
+        <form id="resignForm">
+            <label>اسم المستقيل:</label>
+            <input type="text" id="resignName" placeholder="اسم الموظف" required>
+            <label>المسؤول المستلم (صاحب الموقع):</label>
+            <input type="text" id="adminResign" placeholder="اسمك" required>
+            <button type="submit" class="btn-resign">تسجيل الاستقالة 📄</button>
+        </form>
+    </div>
+
+    <div class="card blacklist">
+        <h2>إضافة للقائمة السوداء</h2>
+        <form id="blacklistForm">
+            <label>اسم الشخص المحظور:</label>
+            <input type="text" id="blName" placeholder="الاسم الرباعي" required>
+            <label>السبب القانوني:</label>
+            <textarea id="blReason" rows="2" placeholder="لماذا يتم حظره؟" required></textarea>
+            <label>مدة الحظر:</label>
+            <select id="blDuration">
+                <option>أسبوع</option>
+                <option>شهر</option>
+                <option>نهائي (Permanent)</option>
+            </select>
+            <button type="submit" class="btn-blacklist">إدراج في البلاك ليست 🚫</button>
+        </form>
+    </div>
+
+</div>
+
+<footer>
+    جميع الحقوق محفوظة لموقع <span class="asmar-rights">Asmar</span> &copy; 2026<br>
+    إدارة ولاية One Lion - RP System
+</footer>
+
+<script>
+    // وظيفة عامة للتنبيه عند الإرسال
+    function handleSubmit(formId, message) {
+        document.getElementById(formId).addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert(message);
+            this.reset(); // تصفير الخانات بعد الإرسال
+        });
+    }
+
+    // تفعيل التنبيهات لكل نموذج
+    handleSubmit('joinForm', 'تم تسجيل انضمام الموظف بنجاح في سجلات One Lion!');
+    handleSubmit('resignForm', 'تم حفظ طلب الاستقالة وإرساله للإدارة.');
+    handleSubmit('blacklistForm', 'تم إدراج الشخص في القائمة السوداء بنجاح.');
+</script>
+
+</body>
+</html>
