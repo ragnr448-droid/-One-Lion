@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الموارد البشرية المطورة</title>
+    <style>
+        :root {
+            --primary: #006C35; /* أخضر الوزارة */
+            --accent: #D4AF37;  /* ذهبي خفيف */
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --bg: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* الهيدر */
+        header {
+            background: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-area h2 { color: var(--primary); margin: 0; font-size: 1.4rem; }
+        .logo-area small { color: #666; }
+
+        nav button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav button:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* حاوية الصفحات */
+        .page { display: none; padding: 30px 5%; animation: fadeIn 0.5s; }
+        .active-page { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* الكروت والإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border-bottom: 4px solid var(--primary);
+        }
+
+        /* فورم الإضافة */
+        .admin-box {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        input, select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .btn-add {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* الجداول */
+        .tables-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .table-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .table-card h3 { 
+            margin-top: 0; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #eee;
+            font-size: 1.1rem;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: right; padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .bg-success { background: #e8f5e9; color: var(--primary); }
+        .bg-danger { background: #ffebee; color: var(--danger); }
+        .bg-warning { background: #fff3e0; color: var(--warning); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <h2>وزارة الموارد البشرية</h2>
+        <small>نظام الإدارة الإلكتروني الموحد</small>
+    </div>
+    <nav>
+        <button id="toggleBtn" onclick="togglePage()">لوحة التحكم الإدارية ←</button>
+    </nav>
+</header>
+
+<div id="mainPage" class="page active-page">
+    <div class="admin-box">
+        <h3>✨ إضافة سجل جديد للنظام</h3>
+        <div class="input-row">
+            <input type="text" id="nameInp" placeholder="اسم الموظف بالكامل">
+            <select id="statusInp">
+                <option value="نشط">موظف (نشط)</option>
+                <option value="بلاك">مفصول (بلاك ليست)</option>
+                <option value="تهدئة">استقالة (فترة تهدئة)</option>
+            </select>
+            <button class="btn-add" onclick="processData()">تأفيذ الإجراء</button>
+        </div>
+    </div>
+
+    <div class="tables-container">
+        <div class="table-card">
+            <h3 style="color: var(--primary);">✅ الموظفون النشطون</h3>
+            <table id="tableActive">
+                <thead><tr><th>الاسم</th><th>الحالة</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-card">
+            <h3 style="color: var(--danger);">🚫 القائمة السوداء</h3>
+            <table id="tableBlack">
+                <thead><tr><th>الاسم</th><th>السبب</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-card">
+            <h3 style="color: var(--warning);">⌛ فترة التهدئة</h3>
+            <table id="tableResign">
+                <thead><tr><th>الاسم</th><th>تاريخ الانتهاء</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="adminPage" class="page">
+    <div class="stats-grid">
+        <div class="stat-card"><h4>إجمالي الموظفين</h4><p id="countAll">0</p></div>
+        <div class="stat-card" style="border-color: var(--danger);"><h4>البلاك ليست</h4><p id="countBlack">0</p></div>
+        <div class="stat-card" style="border-color: var(--warning);"><h4>قيد الاستقالة</h4><p id="countWait">0</p></div>
+    </div>
+
+    <div class="admin-box">
+        <h3>📊 تقارير الأداء العام</h3>
+        <p>مرحباً بك في لوحة الإدارة. يمكنك من هنا متابعة تدفق الموظفين والعمليات الإدارية الصادرة.</p>
+        <button onclick="window.print()" class="btn-add" style="background: var(--primary);">طباعة تقرير النظام</button>
+    </div>
+</div>
+
+<script>
+    // عدادات للإحصائيات
+    let counts = { active: 0, black: 0, wait: 0 };
+
+    function togglePage() {
+        const main = document.getElementById('mainPage');
+        const admin = document.getElementById('adminPage');
+        const btn = document.getElementById('toggleBtn');
+
+        if (main.classList.contains('active-page')) {
+            main.classList.remove('active-page');
+            admin.classList.add('active-page');
+            btn.innerText = "← العودة لإضافة السجلات";
+        } else {
+            admin.classList.remove('active-page');
+            main.classList.add('active-page');
+            btn.innerText = "لوحة التحكم الإدارية ←";
+        }
+    }
+
+    function processData() {
+        const name = document.getElementById('nameInp').value;
+        const status = document.getElementById('statusInp').value;
+
+        if (!name) return alert("الرجاء كتابة اسم الموظف");
+
+        if (status === "نشط") {
+            addTableRow('tableActive', name, '<span class="badge bg-success">نشط</span>');
+            counts.active++;
+        } else if (status === "بلاك") {
+            addTableRow('tableBlack', name, '<span class="badge bg-danger">مدرج</span>');
+            counts.black++;
+        } else {
+            let d = new Date();
+            d.setDate(d.getDate() + 30); // فترة تهدئة شهر
+            addTableRow('tableResign', name, `<span class="badge bg-warning">${d.toLocaleDateString('ar-SA')}</span>`);
+            counts.wait++;
+        }
+
+        updateStats();
+        document.getElementById('nameInp').value = ""; // تفريغ الخانة
+    }
+
+    function addTableRow(tableId, col1, col2) {
+        const table = document.getElementById(tableId).tBodies[0];
+        const row = table.insertRow();
+        row.innerHTML = `<td>${col1}</td><td>${col2}</td>`;
+    }
+
+    function updateStats() {
+        document.getElementById('countAll').innerText = counts.active;
+        document.getElementById('countBlack').innerText = counts.black;
+        document.getElementById('countWait').innerText = counts.wait;
+    }
+</script>
+
+</body>
+</html>
