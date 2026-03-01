@@ -3,109 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الموارد البشرية | Asmar</title>
+    <title>HR ASMAR | وزارة الموارد البشرية </title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
     <style>
         :root {
-            --primary-color: #004a99;
-            --accent-color: #00d4ff;
-            --bg-color: #f0f2f5;
-            --dark-card: #ffffff;
-            --danger: #d9534f;
-            --warning: #f0ad4e;
+            --primary-green: #2d6a4f;
+            --main-blue: #1b263b;
+            --bg-gray: #f4f7f6;
+            --white: #ffffff;
+            --danger: #bc4749;
+            --gold: #d4af37;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-gray); margin: 0; }
 
-        /* الهيدر */
-        header { background: linear-gradient(135deg, #002b5c, #004a99); color: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 1.4em; font-weight: bold; letter-spacing: 1px; }
-        .menu-btn { font-size: 24px; cursor: pointer; }
+        header { 
+            background: var(--white); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            position: sticky; top: 0; z-index: 1000;
+        }
 
-        /* القائمة الجانبية */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #fff; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; z-index: 2000; padding-top: 20px; }
+        .hr-logo { font-size: 28px; font-weight: 900; color: var(--main-blue); letter-spacing: 2px; }
+        .hr-logo span { color: var(--primary-green); }
+
+        .gov-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-green); }
+
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--main-blue); color: white; transition: 0.4s; z-index: 2000; padding-top: 30px; }
         .sidebar.active { right: 0; }
-        .sidebar a, .sidebar div { padding: 15px 25px; display: block; color: #333; text-decoration: none; border-bottom: 1px solid #eee; cursor: pointer; font-weight: 500; }
-        .sidebar a:hover { background: #f8f9fa; color: var(--primary-color); }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; }
+        .sidebar a { padding: 15px 25px; display: block; color: #cbd5e0; text-decoration: none; border-bottom: 1px solid #2d3748; }
 
-        /* المحتوى الرئيسي */
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
         
-        /* كروت القطاعات */
-        .sector-card { background: var(--dark-card); border-radius: 12px; margin-bottom: 20px; border-right: 6px solid var(--primary-color); box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
-        .sector-header { background: #f8f9fa; padding: 12px 20px; font-weight: bold; display: flex; justify-content: space-between; border-bottom: 1px solid #eee; }
-        .sector-body { padding: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .main-card { 
+            background: var(--white); 
+            border-radius: 20px; 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
 
-        /* تصميم اسم الموظف */
-        .emp-badge { background: #fff; border: 1px solid #d1d9e6; padding: 6px 15px; border-radius: 20px; font-size: 0.9em; display: flex; align-items: center; box-shadow: 2px 2px 5px rgba(0,0,0,0.02); transition: 0.3s; }
-        .emp-badge:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .del-btn { color: #ff4d4d; margin-right: 8px; cursor: pointer; font-weight: bold; }
+        .section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+
+        .stat-card { background: var(--white); border-radius: 15px; padding: 20px; border-top: 5px solid var(--primary-green); position: relative; }
+        .stat-card.red { border-top-color: var(--danger); }
 
         /* لوحة التحكم */
-        .admin-panel { display: none; background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed var(--primary-color); }
-        .input-group { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-        input, select { padding: 10px; border-radius: 6px; border: 1px solid #ccc; flex: 1; min-width: 200px; }
-        .btn-add { background: var(--primary-color); color: white; border: none; padding: 10px 25px; border-radius: 6px; cursor: pointer; }
+        #adminPanel { display: none; background: #f8fafc; border: 2px dashed #cbd5e0; }
+        .admin-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .input-box { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #e2e8f0; box-sizing: border-box; }
+        .full-width { grid-column: span 2; }
+        .btn-post { background: var(--primary-green); color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
 
-        /* التحدث مع الدعم */
-        .support-btn { position: fixed; bottom: 20px; left: 20px; background: #25d366; color: white; padding: 12px 20px; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px; font-weight: bold; z-index: 1000; }
+        /* عرض الأسماء والرتب */
+        .name-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .rank-tag { color: var(--gold); font-weight: bold; font-size: 0.85em; margin-left: 8px; border: 1px solid var(--gold); padding: 2px 6px; border-radius: 4px; }
+        .emp-name { color: var(--main-blue); font-weight: 500; }
+        .date-badge { font-size: 11px; color: #94a3b8; }
 
-        /* ألوان خاصة للأقسام الجديدة */
-        .bl-sector { border-right-color: var(--danger); }
-        .res-sector { border-right-color: var(--warning); }
+        .support-fab { position: fixed; bottom: 20px; left: 20px; background: #25d366; color: white; padding: 15px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000; }
     </style>
 </head>
 <body>
 
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="sidebar" id="sidebar">
-    <div style="text-align:center; padding: 20px;"><h3 style="color:var(--primary-color)">خيارات النظام</h3></div>
-    <a href="#" onclick="toggleMenu()">🏠 الصفحة الرئيسية</a>
-    <a href="#" onclick="showLogin()">🔐 تسجيل دخول الإدارة</a>
-    <a href="https://wa.me/966500000000" target="_blank">💬 الدعم الفني المباشر</a> <a href="#" onclick="location.reload()">🔄 تحديث البيانات</a>
+    <div style="text-align:center; margin-bottom: 20px;">
+        <img src="https://i.ibb.co/vzN4L0f/image.png" class="gov-logo">
+        <p>بوابة Asmar الإدارية</p>
+    </div>
+    <a href="#" onclick="toggleMenu()">🏠 الرئيسية</a>
+    <a href="#" onclick="openLogin()">🔐 دخول الآدمن</a>
+    <a href="https://wa.me/9660000000" target="_blank">💬 الدعم الفني</a>
 </div>
 
 <header>
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
-    <div class="logo">HR-ASMAR | الموارد البشرية</div>
-    <div style="width:24px"></div>
+    <div onclick="toggleMenu()" style="font-size: 24px; cursor: pointer;">☰</div>
+    <div class="hr-logo">𝓗𝓡 <span>𝓐𝓼𝓶𝓪𝓻</span></div>
+    <img src="https://i.ibb.co/vzN4L0f/image.png" class="gov-logo">
 </header>
 
 <div class="container">
-    <div id="adminArea" class="admin-panel">
-        <h3>➕ إضافة سجل جديد (بوابة Asmar)</h3>
-        <div class="input-group">
-            <input type="text" id="nameInp" placeholder="اسم الموظف أو صاحب السجل">
-            <select id="sectorInp">
+    <div id="adminPanel" class="main-card">
+        <h3 style="margin-top:0; color:var(--primary-green);">🛠️ إضافة موظف جديد برتبة</h3>
+        <div class="admin-inputs">
+            <input type="text" id="nameInp" class="input-box" placeholder="الاسم الكامل">
+            <input type="text" id="rankInp" class="input-box" placeholder="الرتبة (مثال: نقيب / دكتور)">
+            <select id="sectorInp" class="input-box full-width">
                 <option value="gov">🏛️ القطاع الحكومي</option>
                 <option value="army">🎖️ القوات المسلحة</option>
-                <option value="police">🚔 الشرطة والأمن</option>
                 <option value="medical">🏥 التحالف الطبي</option>
                 <option value="blacklist">🚫 البلاك ليست</option>
-                <option value="resigned">⏳ استقالة (فترة تهدئة)</option>
+                <option value="resigned">📄 استقالة</option>
+                <option value="cool">⏳ فترة تهدئة</option>
             </select>
-            <button class="btn-add" onclick="saveData()">إضافة الآن</button>
         </div>
+        <button class="btn-post" onclick="saveData()">إضافة السجل الآن ✅</button>
     </div>
 
-    <div id="sectorsContainer">
-        <div class="sector-card"><div class="sector-header">🏛️ القطاع الحكومي</div><div class="sector-body" id="list-gov"></div></div>
-        <div class="sector-card"><div class="sector-header">🎖️ القوات المسلحة</div><div class="sector-body" id="list-army"></div></div>
-        <div class="sector-card"><div class="sector-header">🚔 الشرطة والأمن</div><div class="sector-body" id="list-police"></div></div>
-        <div class="sector-card"><div class="sector-header">🏥 التحالف الطبي</div><div class="sector-body" id="list-medical"></div></div>
-        <div class="sector-card bl-sector"><div class="sector-header" style="color:var(--danger)">🚫 قائمة البلاك ليست</div><div class="sector-body" id="list-blacklist"></div></div>
-        <div class="sector-card res-sector"><div class="sector-header" style="color:var(--warning)">⏳ استقالة (فترة تهدئة)</div><div class="sector-body" id="list-resigned"></div></div>
+    <div class="section-grid">
+        <div class="stat-card"><h4>🏛️ القطاع الحكومي</h4><div id="list-gov"></div></div>
+        <div class="stat-card"><h4>🎖️ القوات المسلحة</h4><div id="list-army"></div></div>
+        <div class="stat-card"><h4>🏥 التحالف الطبي</h4><div id="list-medical"></div></div>
+        <div class="stat-card red"><h4>🚫 البلاك ليست</h4><div id="list-blacklist"></div></div>
+        <div class="stat-card"><h4>📄 طلبات الاستقالة</h4><div id="list-resigned"></div></div>
+        <div class="stat-card"><h4>⏳ فترة التهدئة</h4><div id="list-cool"></div></div>
     </div>
 </div>
 
-<a href="https://wa.me/966500000000" class="support-btn" target="_blank">
-    <span>تحدث مع الدعم</span> 💬
-</a>
+<a href="https://wa.me/9660000000" class="support-fab">تحدث مع الدعم 💬</a>
 
 <script>
-    // بيانات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDP8F9r4h7pzhl3FV9-eR-6uC9R4W80mE",
         authDomain: "hr-asmar.firebaseapp.com",
@@ -118,47 +130,61 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let loggedIn = false;
+    let isRoot = false;
 
-    function toggleMenu() {
-        document.getElementById('sidebar').classList.toggle('active');
-        const overlay = document.getElementById('overlay');
-        overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
-    }
+    function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
 
-    function showLogin() {
-        toggleMenu();
-        let pass = prompt("أدخل كلمة مرور الإدارة:");
-        if(pass === "asmar123") {
-            loggedIn = true;
-            document.getElementById('adminArea').style.display = 'block';
-            alert("مرحباً بك يا مدير");
-            renderData();
+    function openLogin() {
+        let p = prompt("كلمة مرور الإدارة الشاملة:");
+        if(p === "asmar123") {
+            isRoot = true;
+            document.getElementById('adminPanel').style.display = 'block';
+            alert("مرحباً بك يا مدير Asmar. تم تفعيل صلاحيات التعديل.");
+            toggleMenu();
+            render();
         }
     }
 
     function saveData() {
         const name = document.getElementById('nameInp').value;
+        const rank = document.getElementById('rankInp').value;
         const sector = document.getElementById('sectorInp').value;
-        if(name) {
-            db.ref('emps/').push({ name, sector });
+        if(name && rank) {
+            db.ref('hr_system/').push({ 
+                name: name, 
+                rank: rank, 
+                sector: sector, 
+                date: new Date().toLocaleDateString('ar-SA') 
+            });
             document.getElementById('nameInp').value = "";
+            document.getElementById('rankInp').value = "";
+        } else {
+            alert("يرجى كتابة الاسم والرتبة معاً!");
         }
     }
 
-    db.ref('emps/').on('value', (snap) => { renderData(snap.val()); });
+    db.ref('hr_system/').on('value', (s) => { render(s.val()); });
 
-    function renderData(data) {
-        const sectors = ['gov','army','police','medical','blacklist','resigned'];
+    function render(data) {
+        const sectors = ['gov','army','medical','blacklist','resigned', 'cool'];
         sectors.forEach(s => document.getElementById(`list-${s}`).innerHTML = "");
         if(!data) return;
         for(let id in data) {
             const item = data[id];
-            const badge = document.createElement('div');
-            badge.className = 'emp-badge';
-            badge.innerHTML = `${loggedIn ? `<span class="del-btn" onclick="db.ref('emps/${id}').remove()">×</span>` : ''} ${item.name}`;
+            const div = document.createElement('div');
+            div.className = 'name-row';
+            div.innerHTML = `
+                <div>
+                    <span class="rank-tag">${item.rank}</span>
+                    <span class="emp-name">${item.name}</span>
+                </div>
+                <div>
+                    <span class="date-badge">${item.date}</span>
+                    ${isRoot ? `<span onclick="db.ref('hr_system/${id}').remove()" style="color:red; cursor:pointer; margin-right:10px;">🗑️</span>` : ''}
+                </div>
+            `;
             if(document.getElementById(`list-${item.sector}`)) {
-                document.getElementById(`list-${item.sector}`).appendChild(badge);
+                document.getElementById(`list-${item.sector}`).appendChild(div);
             }
         }
     }
