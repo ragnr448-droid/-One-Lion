@@ -3,165 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - Human Resources</title>
+    <title>وزارة الموارد البشرية - المشرع المباشر</title>
     <style>
-        /* التنسيق العام المستوحى من ستايل المنتدى */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Cairo', sans-serif; /* خط عربي أنيق */
+            background-color: #1a1a1a; /* خلفية داكنة مثل المنتديات الاحترافية */
             margin: 0;
             padding: 20px;
-            color: #1c1e21;
+            color: #e0e0e0;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .container { max-width: 900px; margin: 0 auto; }
 
-        /* تنسيق الأقسام (Blocks) */
-        .block {
-            background: #fff;
+        /* --- تأثير اللمعان للرتبة --- */
+        .rank-hr {
+            display: inline-block;
+            padding: 5px 15px;
             border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            font-size: 13px;
+            font-weight: bold;
+            background: linear-gradient(270deg, #27ae60, #2ecc71, #27ae60);
+            background-size: 400% 400%;
+            color: #fff;
+            animation: moveGradient 3s infinite;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- تنسيق البلوكات --- */
+        .block {
+            background: #242526;
+            border: 1px solid #3e4042;
+            border-radius: 8px;
             margin-bottom: 20px;
             overflow: hidden;
         }
 
         .block-header {
-            background: #2c3e50;
-            color: #ffffff;
-            padding: 12px 15px;
-            margin: 0;
+            background: #3a3b3c;
+            padding: 15px;
             font-size: 18px;
+            border-bottom: 1px solid #3e4042;
+            color: #45bd62; /* أخضر الوزارة */
         }
 
-        .block-body {
-            padding: 10px;
-        }
-
-        /* تنسيق الرتبة (User Banner) */
-        .rank-hr {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            background: #27ae60; 
-            color: #ffffff;
-            margin-bottom: 15px;
-        }
-
-        /* تنسيق الأوسمة (Prefixes) */
-        .label {
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .label-red { background: #e74c3c; color: #fff; }
-        .label-yellow { background: #f1c40f; color: #333; }
-        .label-blue { background: #2980b9; color: #fff; }
-
-        /* تنسيق الصفوف داخل القسم */
+        /* --- تنسيق الروابط والأزرار --- */
         .node-row {
             display: flex;
             align-items: center;
             padding: 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #3e4042;
             text-decoration: none;
-            color: inherit;
-            transition: background 0.2s;
+            color: #e4e6eb;
+            transition: 0.3s;
         }
-        .node-row:last-child { border-bottom: none; }
-        .node-row:hover { background: #f9f9f9; }
 
-        /* تنسيق شبكة الأزرار */
+        .node-row:hover { background: #3a3b3c; transform: translateX(-5px); }
+
+        .label {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .label-red { background: #f02849; color: #fff; }
+        .label-yellow { background: #f7b928; color: #1c1e21; }
+
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding: 10px;
+            gap: 15px;
+            padding: 20px;
         }
 
         .hr-btn {
-            background-color: #4a5d7e;
-            color: #ffffff;
+            background: #4e5d7e;
+            color: #ffffff !important;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 6px;
             text-align: center;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid #2c3e50;
         }
-        .hr-btn:hover { background-color: #34495e; }
 
-        .profile-card {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: #fff;
-            border-radius: 4px;
-            margin-bottom: 20px;
+        .hr-btn:hover {
+            background: #607d8b;
+            transform: translateY(-3px);
+            border-bottom-color: #1a252f;
         }
-        .avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #ddd;
-            margin-left: 15px;
-        }
+
     </style>
 </head>
 <body>
 
 <div class="container">
 
-    <div class="block">
-        <div class="profile-card">
-            <div class="avatar"></div> <div>
-                <h3 style="margin:0">اسم المستخدم</h3>
-                <span class="rank-hr">وزارة الموارد البشرية</span>
-                <div style="font-size:12px; color: #777;">Joined: Mar 3, 2026</div>
-            </div>
-        </div>
+    <div class="block" style="text-align: center; padding: 20px;">
+        <div class="rank-hr">وزارة الموارد البشرية - مدير القسم</div>
+        <p>مرحباً بك في البوابة الرسمية للتوظيف</p>
     </div>
 
     <div class="block">
-        <h2 class="block-header">أقسام الوزارة - Human Resources Sections</h2>
+        <h2 class="block-header">الأقسام والطلبات</h2>
         <div class="block-body">
-            <div class="node-row">
-                <span class="label label-red">Important</span>
-                <div style="margin-right: 10px;">
-                    <strong>نموذج التقديم للإدارة</strong>
-                    <div style="font-size:12px; color:#888;">آخر رد: منذ دقيقتين</div>
-                </div>
-            </div>
-            <div class="node-row">
-                <span class="label label-yellow">Pending review</span>
-                <div style="margin-right: 10px;">
-                    <strong>طلبات المراجعة (مشرف)</strong>
-                    <div style="font-size:12px; color:#888;">آخر رد: يوم أمس</div>
-                </div>
-            </div>
-            <div class="node-row">
-                <span class="label label-blue">On consideration</span>
-                <div style="margin-right: 10px;">
-                    <strong>الأرشيف العام للوزارة</strong>
-                    <div style="font-size:12px; color:#888;">قسم مغلق</div>
-                </div>
-            </div>
+            <a href="https://google.com" class="node-row">
+                <span class="label label-red">هام</span>
+                <div style="margin-right: 15px;">قوانين العمل والتوظيف لعام 2026</div>
+            </a>
+            
+            <a href="mailto:admin@example.com" class="node-row">
+                <span class="label label-yellow">قيد المراجعة</span>
+                <div style="margin-right: 15px;">طلبات الترقية المقدمة مؤخراً</div>
+            </a>
         </div>
     </div>
 
     <div class="block">
-        <h2 class="block-header">روابط سريعة</h2>
+        <h2 class="block-header">لوحة التحكم السريعة</h2>
         <div class="grid-container">
-            <a href="#" class="hr-btn">تقديم طلب جديد</a>
-            <a href="#" class="hr-btn">قوانين الوزارة</a>
-            <a href="#" class="hr-btn">الملفات الرسمية</a>
-            <a href="#" class="hr-btn">تواصل مع الوزير</a>
+            <a href="https://forms.gle/XXXXX" target="_blank" class="hr-btn">تقديم طلب انضمام (Google Forms)</a>
+            <a href="rules.html" class="hr-btn">قوانين الوزارة</a>
+            <a href="archive.html" class="hr-btn">أرشيف القرارات</a>
+            <a href="https://discord.gg/yourlink" target="_blank" class="hr-btn">الدعم الفني (Discord)</a>
         </div>
     </div>
 
