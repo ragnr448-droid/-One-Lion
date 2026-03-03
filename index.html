@@ -26,9 +26,14 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: var(--primary); color: white; }
 
-        #quiz-container { display: none; background: white; padding: 20px; border-radius: 10px; width: 90%; margin: 20px auto; }
-        .question { margin-bottom: 15px; font-weight: bold; }
         .notify { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
+        
+        /* تنسيق الأزرار الجديدة */
+        .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn-action { padding: 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; color: white; }
+        .bg-red { background: #c0392b; } .bg-blue { background: #2980b9; } 
+        .bg-orange { background: #e67e22; } .bg-green { background: #27ae60; }
+        .bg-gray { background: #7f8c8d; }
     </style>
 </head>
 <body>
@@ -40,7 +45,7 @@
     <p>ولاية One Lion - إدارة شؤون الموظفين</p>
 </header>
 
-<div class="hero-card">
+<div id="hero-main" class="hero-card">
     <h3>البوابة الرقمية الرسمية</h3>
     <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
     <p>تُعنى وزارة الموارد البشرية بتنظيم بيئة العمل وتطوير الكفاءات البشرية لضمان أعلى مستويات الإنتاجية والعدالة الوظيفية داخل ولاية One Lion.</p>
@@ -66,25 +71,33 @@
 <div id="admin-main" class="admin-panel">
     <h3>لوحة التحكم: <span id="adminNameDisplay">Asmar</span></h3>
     <input type="text" id="targetName" placeholder="اسم الموظف">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <button class="btn-gold" style="background:#c0392b; color:white;" onclick="addToTable('blacklist')">إضافة بلاك ليست</button>
-        <button class="btn-gold" style="background:#2980b9; color:white;" onclick="addToTable('resignation')">استقالة 3 أيام</button>
-        <button class="btn-gold" style="background:#f39c12; color:white;" onclick="addToTable('cooldown')">تهدئة يدوية</button>
-        <button class="btn-gold" onclick="toggleSection('tables-view')">عرض الجداول</button>
+    <input type="number" id="cooldownInput" placeholder="فترة التهدئة (بالأيام) - اتركها فارغة إذا لم تكن مطلوبة">
+    
+    <div class="control-grid">
+        <button class="btn-action bg-green" onclick="addToTable('active')">إضافة موظف نشط</button>
+        <button class="btn-action bg-red" onclick="addToTable('blacklist')">إضافة بلاك ليست</button>
+        <button class="btn-action bg-blue" onclick="addToTable('resignation')">استقالة</button>
+        <button class="btn-action bg-orange" onclick="addToTable('fired')">موظف مفصول</button>
+        <button class="btn-action bg-gray" style="grid-column: span 2;" onclick="toggleSection('tables-view')">عرض الجداول والقوائم</button>
     </div>
 </div>
 
 <div id="tables-view" class="section-box">
     <h3>القوائم الإدارية</h3>
+    
+    <h4>✅ الموظفين النشطين</h4>
+    <table id="table-active"><thead><tr><th>الاسم</th><th>الحالة</th><th>إدارة</th></tr></thead><tbody></tbody></table>
+
     <h4>🚫 القائمة السوداء (Blacklist)</h4>
     <table id="table-blacklist"><thead><tr><th>الاسم</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody></tbody></table>
     
-    <h4>⏳ سجل الاستقالات والتهدئة</h4>
-    <table id="table-resignation"><thead><tr><th>الاسم</th><th>النوع</th><th>المدة المتبقية</th></tr></thead><tbody></tbody></table>
-    <button class="btn-gold" onclick="toggleSection('admin-main')" style="margin-top:10px;">العودة للتحكم</button>
+    <h4>⚠️ المفصولين والمستقيلين</h4>
+    <table id="table-fired"><thead><tr><th>الاسم</th><th>النوع</th><th>التهدئة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
+
+    <button class="btn-gold" onclick="toggleSection('admin-main')" style="margin-top:20px;">العودة للتحكم</button>
 </div>
 
-<div id="quiz-container">
+<div id="quiz-container" class="section-box">
     <h2 style="color: var(--primary);">اختبار كفاءة الموارد البشرية</h2>
     <div id="quiz-body"></div>
     <button class="btn-gold" onclick="submitQuiz()">إنهاء الاختبار ورصد النتيجة</button>
@@ -92,16 +105,11 @@
 
 <script>
     const questions = [
-        "ما هو دور المحاورين الأساسي داخل الفصيل؟",
-        "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
-        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟",
-        "ما هي مدة فترة التجربة للموظف الجديد؟",
-        "متى يحق للموظف تقديم استقالة فورية؟",
-        "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
-        "كيف يتم تقييم أداء المحاورين شهرياً؟",
-        "ما هي شروط الانضمام للجنة الانضباط؟",
-        "ما هو دور الموارد البشرية في حل النزاعات بين الموظفين؟",
-        "كم عدد ساعات العمل الرسمية المحددة من الحكومة؟"
+        "ما هو دور المحاورين الأساسي داخل الفصيل؟", "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
+        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟", "ما هي مدة فترة التجربة للموظف الجديد؟",
+        "متى يحق للموظف تقديم استقالة فورية؟", "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
+        "كيف يتم تقييم أداء المحاورين شهرياً؟", "ما هي شروط الانضمام للجنة الانضباط؟",
+        "ما هو دور الموارد البشرية في حل النزاعات بين الموظفين؟", "كم عدد ساعات العمل الرسمية المحددة من الحكومة؟"
     ];
 
     let isAdmin = false;
@@ -113,45 +121,59 @@
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('admin-main').style.display = 'block';
             showNotify("مرحباً أيها المشرف العام");
-        } else {
-            alert("كلمة المرور خاطئة!");
+        } else { alert("كلمة المرور خاطئة!"); }
+    }
+
+    function addToTable(type) {
+        const name = document.getElementById('targetName').value;
+        const cooldown = document.getElementById('cooldownInput').value;
+        if(!name) return alert("يرجى إدخال اسم الموظف");
+
+        const date = new Date().toLocaleDateString();
+
+        // نظام الحذف التلقائي من قائمة النشطين في حال الاستقالة أو الفصل
+        if(type === 'fired' || type === 'resignation' || type === 'blacklist') {
+            removeFromActive(name);
         }
+
+        if(type === 'active') {
+            const table = document.getElementById('table-active').getElementsByTagName('tbody')[0];
+            table.innerHTML += `<tr id="row-${name}"><td>${name}</td><td style="color:green">على رأس العمل</td><td><button onclick="this.parentElement.parentElement.remove()">حذف</button></td></tr>`;
+        } 
+        else if(type === 'blacklist') {
+            const table = document.getElementById('table-blacklist').getElementsByTagName('tbody')[0];
+            table.innerHTML += `<tr><td>${name}</td><td>${date}</td><td style="color:red">محظور دائم</td></tr>`;
+        } 
+        else {
+            const table = document.getElementById('table-fired').getElementsByTagName('tbody')[0];
+            const label = type === 'resignation' ? 'استقالة' : 'فصل تأديبي';
+            const days = cooldown ? cooldown + ' يوم' : 'يدوي';
+            table.innerHTML += `<tr><td>${name}</td><td>${label}</td><td>${days}</td><td>${date}</td></tr>`;
+        }
+
+        showNotify("تم تحديث السجلات بنجاح");
+        document.getElementById('targetName').value = "";
+        document.getElementById('cooldownInput').value = "";
+    }
+
+    function removeFromActive(name) {
+        const row = document.getElementById(`row-${name}`);
+        if(row) row.remove();
     }
 
     function showQuiz() {
-        document.querySelector('.hero-card').style.display = 'none';
+        document.getElementById('hero-main').style.display = 'none';
         const container = document.getElementById('quiz-body');
         container.innerHTML = "";
         questions.forEach((q, i) => {
-            container.innerHTML += `<div class='question'>${i+1}. ${q}</div><input type='text' placeholder='إجابتك...'>`;
+            container.innerHTML += `<div style="margin-bottom:10px;"><b>${i+1}. ${q}</b></div><input type='text' placeholder='إجابتك...'>`;
         });
         document.getElementById('quiz-container').style.display = 'block';
     }
 
     function checkAdminView() {
-        if(!isAdmin) {
-            alert("هذه القائمة مخصصة للإدارة فقط!");
-        } else {
-            toggleSection('tables-view');
-        }
-    }
-
-    function addToTable(type) {
-        const name = document.getElementById('targetName').value;
-        if(!name) return alert("يرجى إدخال اسم الموظف");
-
-        const date = new Date().toLocaleDateString();
-        if(type === 'blacklist') {
-            const table = document.getElementById('table-blacklist').getElementsByTagName('tbody')[0];
-            table.innerHTML += `<tr><td>${name}</td><td>${date}</td><td style="color:red">محظور دائم</td></tr>`;
-        } else {
-            const table = document.getElementById('table-resignation').getElementsByTagName('tbody')[0];
-            const label = type === 'resignation' ? 'استقالة' : 'تهدئة';
-            const days = type === 'resignation' ? '3 أيام' : 'يدوي';
-            table.innerHTML += `<tr><td>${name}</td><td>${label}</td><td>${days}</td></tr>`;
-        }
-        showNotify("تمت الإضافة للسجلات");
-        document.getElementById('targetName').value = "";
+        if(!isAdmin) alert("هذه القائمة مخصصة للإدارة فقط!");
+        else toggleSection('tables-view');
     }
 
     function toggleSection(id) {
@@ -159,17 +181,12 @@
         document.getElementById(id).style.display = 'block';
     }
 
-    function submitQuiz() {
-        alert("تم إرسال إجاباتك للمراجعة من قبل الإدارة. سيتم التواصل معك قريباً.");
-        location.reload();
-    }
-
+    function submitQuiz() { alert("تم إرسال إجاباتك للمراجعة."); location.reload(); }
     function showNotify(msg) {
         const n = document.getElementById('notify');
         n.innerText = msg; n.style.display = 'block';
         setTimeout(() => n.style.display = 'none', 3000);
     }
 </script>
-
 </body>
 </html>
