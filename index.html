@@ -3,179 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الموارد البشرية | نظام التعميد</title>
+    <title>نظام One Lion الإداري</title>
     <style>
-        :root { --primary: #0f172a; --gold: #c5a048; --bg: #f8fafc; --card: #ffffff; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        :root { --primary: #0f172a; --gold: #c5a048; --card: #ffffff; --red: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding-bottom: 80px; }
         
         .hero { background: var(--primary); color: white; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
-        .hero h1 { color: var(--gold); margin: 10px 0; }
+        .hero h1 { color: var(--gold); }
         
-        .container { max-width: 700px; margin: -20px auto 20px; padding: 0 15px; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card); padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .stat-card h3 { margin: 0; font-size: 1.8rem; }
+        .container { max-width: 800px; margin: -20px auto 20px; padding: 0 15px; }
+        .content-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-right: 5px solid var(--gold); }
+        
+        /* نظام التبويبات للفصائل */
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
+        .tab-btn { background: #334155; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
+        .tab-btn.active { background: var(--gold); color: black; font-weight: bold; }
 
-        .content-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-right: 5px solid var(--gold); }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { padding: 12px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-gold { background: var(--gold); color: white; }
+        .btn-red { background: var(--red); color: white; }
         
-        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
         .hidden { display: none; }
-        
-        /* نظام التصحيح */
-        .exam-review { background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem; }
-        .correct { color: #16a34a; font-weight: bold; }
-        .wrong { color: #dc2626; font-weight: bold; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); padding: 15px; border-top: 2px solid var(--gold); display: flex; justify-content: center; gap: 10px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; background: #e2e8f0; }
+        .blacklist-alert { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; border: 1px solid #f87171; margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="hero">
-    <h3>البوابة الرقمية الرسمية</h3>
+    <h3 style="margin:0">البوابة الرقمية الرسمية - One Lion</h3>
     <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
-    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-        <button class="btn-gold" style="width: auto;" onclick="startTest()">ابدأ اختبار الكفاءة</button>
-        <button id="admin-btn" class="btn-gold" style="width: auto; background: transparent; border: 1px solid var(--gold); color: white;" onclick="login()">لوحة التعميد (للإدارة)</button>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top:15px;">
+        <button class="btn-gold" style="width:auto" onclick="showSection('quiz')">ابدأ اختبار المحاورين</button>
+        <button class="btn-gold" style="width:auto; background:transparent; border:1px solid var(--gold)" onclick="adminLogin()">دخول الإدارة</button>
     </div>
 </div>
 
 <div class="container">
-    <div id="main-stats" class="stats-grid">
-        <div class="stat-card"><h3 id="count-pass">0</h3><p>ناجح في الاختبار</p></div>
-        <div class="stat-card"><h3>10</h3><p>عدد الأسئلة</p></div>
-        <div class="stat-card"><h3>100</h3><p>الدرجة الكلية</p></div>
-        <div class="stat-card"><h3>70</h3><p>درجة النجاح</p></div>
+    
+    <div id="quiz-section" class="content-card hidden">
+        <h2 id="q-title">اختبار توظيف المحاورين</h2>
+        <div id="quiz-body">
+            <input type="text" id="user-name" placeholder="الاسم الرباعي للمتقدم">
+            <div id="questions-container">
+                </div>
+            <button class="btn btn-gold" onclick="submitExam()">إرسال الاختبار للمراجعة</button>
+        </div>
     </div>
 
-    <div id="quiz-area" class="content-card hidden">
-        <h4 id="q-title" style="color:var(--gold)">السؤال 1</h4>
-        <p id="q-text" style="font-weight: bold;"></p>
-        <div id="options"></div>
-    </div>
-
-    <div id="admin-panel" class="hidden">
-        <h3 style="text-align: center;">📋 طلبات الانتظار والتعميد</h3>
-        <div id="pending-list"></div>
+    <div id="admin-dashboard" class="hidden">
         
-        <hr>
-        <h3 style="text-align: center;">👥 قائمة المحاورين المعتمدين</h3>
-        <div id="approved-list"></div>
-    </div>
-</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchFac('شرطة', this)">الشرطة</button>
+            <button class="tab-btn" onclick="switchFac('جيش', this)">الجيش</button>
+            <button class="tab-btn" onclick="switchFac('طبي', this)">التحالف الطبي</button>
+            <button class="tab-btn" onclick="switchFac('حكومة', this)">الحكومة</button>
+        </div>
 
-<div class="nav-bar">
-    <button class="btn-gold" style="width: auto; background: #334155; color: white;" onclick="location.reload()">الرئيسية</button>
-    <span id="role-text" style="color: var(--gold); align-self: center; font-size: 0.8rem;">رتبة الزائر</span>
+        <div class="content-card">
+            <h4>➕ تعيين موظف جديد لـ (<span id="cur-fac">الشرطة</span>)</h4>
+            <div id="bl-warning" class="hidden"></div>
+            <input type="text" id="new-emp-name" placeholder="اسم الموظف" oninput="checkBlacklist(this.value)">
+            <input type="text" id="new-emp-rank" placeholder="الرتبة">
+            <button class="btn btn-gold" onclick="addEmployee()">تثبيت الموظف</button>
+        </div>
+
+        <div class="content-card">
+            <h4>📝 طلبات التوظيف قيد التصحيح</h4>
+            <div id="review-list"></div>
+        </div>
+
+        <div class="content-card">
+            <h4>👥 قائمة موظفي <span id="cur-fac-list">الشرطة</span></h4>
+            <div id="staff-table"></div>
+        </div>
+
+        <div class="content-card" style="border-right-color: #16a34a;">
+            <h4 style="color:#16a34a">✅ قائمة الناجحين (جاهز للتعميد)</h4>
+            <div id="pass-list"></div>
+        </div>
+
+        <div class="content-card" style="border-right-color: var(--red);">
+            <h4 style="color:var(--red)">⛔ القائمة السوداء والاستقالات النشطة</h4>
+            <div id="blacklist-table"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-    let role = 'guest';
-    let score = 0;
-    let currentQ = 0;
-    let userAnswers = [];
+    let currentRole = ''; // asmar or HR
+    let activeFac = 'شرطة';
+
+    // بيانات افتراضية
+    let db = JSON.parse(localStorage.getItem('lion_system_v3')) || {
+        staff: [], exams: [], blacklist: []
+    };
 
     const questions = [
-        { q: "ما هو دور المحاور الأساسي؟", a: ["حل النزاعات بالعدل", "إعطاء باندات", "فرض الرأي"], c: 0 },
-        { q: "إذا تجاوز أحد الأطراف بالألفاظ؟", a: ["أشتمه", "أنبهه ثم اتخذ إجراء", "أغلق الجلسة فوراً"], c: 1 },
-        { q: "التعامل مع الأصدقاء في المحاورة؟", a: ["أحكم لهم", "أتنحى عن الجلسة للنزاهة", "أجاملهم"], c: 1 },
-        { q: "عند نقص الأدلة، ماذا تفعل؟", a: ["أحكم بالظن", "أطلب استكمال الأدلة", "أرفض المحاورة"], c: 1 },
-        { q: "هل يجوز السخرية من المشتكي؟", a: ["نعم", "لا، الاحترام واجب", "أحياناً"], c: 1 },
-        { q: "السرعة في إصدار الحكم؟", a: ["مطلوبة دائماً", "يجب التأني وسماع الأطراف", "ليست مهمة"], c: 1 },
-        { q: "هل يحق لك تسجيل المحاورة؟", a: ["نعم للتوثيق", "لا يمنع", "فقط بإذن المدير"], c: 0 },
-        { q: "إذا طلب الطرفين الصلح؟", a: ["أرفض وأحكم", "أشجع الصلح وأوثقه", "أتجاهلهم"], c: 1 },
-        { q: "سماع طرف واحد يكفي؟", a: ["نعم", "لا، يجب سماع الجميع", "حسب المزاج"], c: 1 },
-        { q: "الهدف من التواجد في الفريق؟", a: ["الرتبة", "خدمة السيرفر والعدل", "الشهرة"], c: 1 }
+        { id: 1, type: 'select', q: "ما هي عقوبة مخالفة (GOV-A1) السلوك المهني؟", options: ["تنبيه شفهي -> إنذار", "فصل فوري", "توبيخ"], correct: 0 },
+        { id: 2, type: 'select', q: "مخالفة (GOV-A2) النزاهة والشفافية، العقوبة في حال التكرار هي؟", options: ["إنذار", "توبيخ", "فصل"], correct: 2 },
+        { id: 3, type: 'select', q: "قانون (GOV-A4) يمنع التواجد بحالة AFK أثناء العمل؟", options: ["صح", "خطأ"], correct: 0 },
+        { id: 4, type: 'text', q: "ما هو دور المحاور الأساسي في فض النزاعات؟" },
+        { id: 5, type: 'text', q: "اقترح طريقة عملية لتطوير قسم المحاورين في One Lion؟" }
     ];
 
-    function startTest() {
-        let n = prompt("الاسم الرباعي:");
-        if(!n) return;
-        localStorage.setItem('user_n', n);
-        document.getElementById('main-stats').classList.add('hidden');
-        document.getElementById('quiz-area').classList.remove('hidden');
-        showQ();
+    function showSection(id) {
+        document.getElementById('quiz-section').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.add('hidden');
+        document.getElementById(id + '-section').classList.remove('hidden');
+        if(id === 'quiz') renderQuiz();
     }
 
-    function showQ() {
-        if(currentQ < questions.length) {
-            let q = questions[currentQ];
-            document.getElementById('q-title').innerText = `السؤال ${currentQ + 1} من 10`;
-            document.getElementById('q-text').innerText = q.q;
-            let html = "";
-            q.a.forEach((opt, i) => {
-                html += `<button class="btn-gold" style="background:#f1f5f9; color:black; margin-bottom:10px; text-align:right;" onclick="submitA(${i})">${opt}</button>`;
-            });
-            document.getElementById('options').innerHTML = html;
-        } else {
-            finish();
-        }
+    function renderQuiz() {
+        let html = "";
+        questions.forEach((q, i) => {
+            html += `<p><b>س${i+1}: ${q.q}</b></p>`;
+            if(q.type === 'select') {
+                html += `<select id="ans-${i}">${q.options.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}</select>`;
+            } else {
+                html += `<textarea id="ans-${i}" placeholder="اكتب إجابتك هنا بالتفصيل..."></textarea>`;
+            }
+        });
+        document.getElementById('questions-container').innerHTML = html;
     }
 
-    function submitA(i) {
-        userAnswers.push({q: questions[currentQ].q, user: questions[currentQ].a[i], correct: questions[currentQ].a[questions[currentQ].c], isCorrect: (i === questions[currentQ].c)});
-        if(i === questions[currentQ].c) score += 10;
-        currentQ++;
-        showQ();
+    function submitExam() {
+        const name = document.getElementById('user-name').value;
+        if(!name) return alert("يرجى إدخال اسمك");
+        
+        let userAns = [];
+        questions.forEach((q, i) => userAns.push(document.getElementById(`ans-${i}`).value));
+        
+        db.exams.push({ name, answers: userAns, status: 'pending', date: new Date().toLocaleDateString() });
+        save();
+        alert("تم إرسال اختبارك بنجاح، يرجى انتظار تصحيح المشرف.");
+        location.reload();
     }
 
-    function finish() {
-        document.getElementById('quiz-area').innerHTML = `<div style="text-align:center;"><h2>انتهى الاختبار</h2><h1>النتيجة: ${score}/100</h1><button class="btn-gold" onclick="location.reload()">العودة</button></div>`;
-        if(score >= 70) {
-            let pending = JSON.parse(localStorage.getItem('pending_hr') || "[]");
-            pending.push({name: localStorage.getItem('user_n'), score: score, answers: userAnswers});
-            localStorage.setItem('pending_hr', JSON.stringify(pending));
-        }
-    }
-
-    function login() {
-        let p = prompt("الرمز السري:");
-        if(p === 'asmar123' || p === 'HR12') {
-            role = (p === 'asmar123') ? 'asmar' : 'hr';
-            document.getElementById('role-text').innerText = (role === 'asmar') ? "المدير: أسمر" : "المساعد: HR";
-            document.getElementById('main-stats').classList.add('hidden');
-            document.getElementById('admin-panel').classList.remove('hidden');
+    function adminLogin() {
+        const pass = prompt("أدخل رمز الإدارة (asmar123 أو HR12):");
+        if(pass === 'asmar123' || pass === 'HR12') {
+            currentRole = (pass === 'asmar123') ? 'asmar' : 'HR';
+            showSection('admin');
             renderAdmin();
-        }
+        } else alert("رمز خطأ!");
     }
 
     function renderAdmin() {
-        let pending = JSON.parse(localStorage.getItem('pending_hr') || "[]");
-        let html = "";
-        pending.forEach((u, idx) => {
-            html += `<div class="content-card">
-                <b>المتقدم: ${u.name}</b> <span class="badge">الدرجة: ${u.score}</span>
-                <div class="exam-review">
-                    ${u.answers.map(a => `<p>${a.q}<br> <span class="${a.isCorrect?'correct':'wrong'}">إجابته: ${a.user}</span> (الصح: ${a.correct})</p>`).join('')}
-                </div>
-                <button class="btn-gold" style="margin-top:10px;" onclick="approve(${idx})">✅ تعميد كـ (محاور)</button>
+        document.getElementById('cur-fac').innerText = activeFac;
+        document.getElementById('cur-fac-list').innerText = activeFac;
+        
+        // عرض الاختبارات للمراجعة
+        let reviewHtml = "";
+        db.exams.filter(e => e.status === 'pending').forEach((ex, idx) => {
+            reviewHtml += `<div style="border:1px solid #ddd; padding:10px; margin-top:5px;">
+                <b>المتقدم: ${ex.name}</b><br>
+                ${ex.answers.map((a, i) => `<small>س${i+1}: ${a}</small><br>`).join('')}
+                <input type="number" id="grade-${idx}" placeholder="أعطِ درجة من 100">
+                <button onclick="gradeExam(${idx}, 'pass')">اعتماد نجاح</button>
+                <button onclick="gradeExam(${idx}, 'fail')" style="background:red; color:white">رسوب</button>
             </div>`;
         });
-        document.getElementById('pending-list').innerHTML = html || "<p style='text-align:center'>لا توجد طلبات جديدة</p>";
-        
-        // عرض المعتمدين
-        let approved = JSON.parse(localStorage.getItem('staff_final') || "[]");
-        document.getElementById('approved-list').innerHTML = approved.map(s => `<div class="content-card" style="border-right-color:green;"><b>${s.name}</b> - <span style="color:var(--gold)">محاور</span></div>`).join('');
+        document.getElementById('review-list').innerHTML = reviewHtml || "لا توجد اختبارات بانتظار التصحيح";
+
+        // عرض الموظفين
+        let staffHtml = "<table>";
+        db.staff.filter(s => s.fac === activeFac).forEach((s, i) => {
+            staffHtml += `<tr><td>${s.name}</td><td>${s.rank}</td>
+            <td><button class="btn-red" onclick="terminate('${s.name}', 'استقالة')">استقالة</button>
+            <button class="btn-red" style="background:black" onclick="terminate('${s.name}', 'فصل')">فصل</button></td></tr>`;
+        });
+        document.getElementById('staff-table').innerHTML = staffHtml;
+
+        // القائمة السوداء
+        let blHtml = "";
+        db.blacklist.forEach(b => {
+            blHtml += `<div style="color:red; font-size:0.8rem;">• ${b.name} (${b.reason}) - ينتهي بعد ${b.days} يوم</div>`;
+        });
+        document.getElementById('blacklist-table').innerHTML = blHtml || "القائمة خالية";
     }
 
-    function approve(idx) {
-        let pending = JSON.parse(localStorage.getItem('pending_hr') || "[]");
-        let approved = JSON.parse(localStorage.getItem('staff_final') || "[]");
+    function gradeExam(idx, result) {
+        const grade = document.getElementById(`grade-${idx}`).value;
+        if(!grade) return alert("ضع درجة أولاً");
         
-        approved.push({name: pending[idx].name, rank: 'محاور'});
-        pending.splice(idx, 1);
-        
-        localStorage.setItem('pending_hr', JSON.stringify(pending));
-        localStorage.setItem('staff_final', JSON.stringify(approved));
+        let ex = db.exams.filter(e => e.status === 'pending')[idx];
+        ex.status = (grade >= 70) ? 'passed' : 'failed';
+        ex.finalGrade = grade;
+        save();
         renderAdmin();
-        alert("تم تعميد الموظف بنجاح!");
     }
 
-    window.onload = () => {
-        let p = JSON.parse(localStorage.getItem('pending_hr') || "[]");
-        document.getElementById('count-pass').innerText = p.length;
+    function checkBlacklist(name) {
+        const found = db.blacklist.find(b => b.name === name);
+        const div = document.getElementById('bl-warning');
+        if(found) {
+            div.innerHTML = `⚠️ تحذير: هذا الاسم مدرج في البلاك ليست بسبب (${found.reason})`;
+            div.classList.remove('hidden');
+        } else {
+            div.classList.add('hidden');
+        }
     }
+
+    function addEmployee() {
+        const name = document.getElementById('new-emp-name').value;
+        const rank = document.getElementById('new-emp-rank').value;
+        if(db.blacklist.find(b => b.name === name)) return alert("لا يمكن إضافة موظف موجود في البلاك ليست!");
+        
+        db.staff.push({ name, rank, fac: activeFac });
+        save();
+        renderAdmin();
+    }
+
+    function terminate(name, type) {
+        let reason = prompt(`سبب الـ ${type}:`);
+        let days = (type === 'استقالة') ? 3 : prompt("مدة التهدئة بالأيام (مثلاً 10):");
+        
+        db.blacklist.push({ name, reason, days, date: new Date().toLocaleDateString() });
+        db.staff = db.staff.filter(s => s.name !== name);
+        save();
+        renderAdmin();
+    }
+
+    function switchFac(fac, btn) {
+        activeFac = fac;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderAdmin();
+    }
+
+    function save() { localStorage.setItem('lion_system_v3', JSON.stringify(db)); }
 </script>
 
 </body>
