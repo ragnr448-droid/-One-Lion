@@ -3,235 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الموارد البشرية - One Lion</title>
+    <title>وزارة الموارد البشرية - One Lion</title>
     <style>
-        :root {
-            --primary-dark: #121927;
-            --accent-gold: #c5a048;
-            --white: #ffffff;
-            --bg-light: #f4f7f6;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg-light); 
-            margin: 0; 
-            color: #333;
-        }
-
-        /* الهيدر */
-        header { 
-            background: var(--primary-dark); 
-            color: white; 
-            padding: 15px; 
-            text-align: center; 
-            border-bottom: 3px solid var(--accent-gold); 
-        }
-
-        /* البطاقة التعريفية (One Lion) */
-        .hero-card {
-            background: var(--primary-dark);
-            color: white;
-            width: 85%;
-            margin: 25px auto;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            position: relative;
-        }
-        .hero-card h3 { color: var(--accent-gold); font-size: 14px; margin: 0; }
-        .hero-card h1 { font-size: 28px; margin: 10px 0; }
-        .hero-card p { font-size: 15px; line-height: 1.6; opacity: 0.9; }
+        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
+        
+        .hero-card { background: var(--primary); color: white; width: 85%; margin: 20px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hero-card h1 { font-size: 26px; color: var(--gold); }
         
         .main-btns { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-gold { background: var(--accent-gold); color: var(--primary-dark); border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-outline { background: transparent; border: 2px solid var(--accent-gold); color: white; padding: 10px 25px; border-radius: 6px; cursor: pointer; }
+        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
+        .btn-outline { background: transparent; border: 2px solid var(--gold); color: white; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; }
 
-        /* شبكة الإحصائيات */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-            width: 90%; 
-            margin: 0 auto; 
-        }
-        .stat-box { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 8px; 
-            text-align: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-        }
-        .stat-box h2 { font-size: 30px; margin: 5px 0; }
-        .stat-box p { font-size: 13px; color: #777; margin: 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 90%; margin: 10px auto; }
+        .stat-box { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        .admin-panel, .section-box { background: white; width: 90%; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background: var(--primary); color: white; }
 
-        /* منطقة الإدارة */
-        .admin-panel {
-            background: white;
-            width: 90%;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .input-group { margin-bottom: 15px; }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-top: 5px; 
-            border: 1px solid #ddd; 
-            border-radius: 5px; 
-            box-sizing: border-box; 
-        }
-
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn-action { padding: 12px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; }
-
-        /* إشعارات */
-        #notification { 
-            display: none; 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            background: #27ae60; 
-            color: white; 
-            padding: 15px; 
-            border-radius: 8px; 
-            z-index: 1000; 
-        }
-
-        /* الصفحة الثانية */
-        #pageTwo { display: none; background: #fff; padding: 20px; border-top: 4px solid var(--accent-gold); }
+        #quiz-container { display: none; background: white; padding: 20px; border-radius: 10px; width: 90%; margin: 20px auto; }
+        .question { margin-bottom: 15px; font-weight: bold; }
+        .notify { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
     </style>
 </head>
 <body>
 
-<div id="notification">تم تنفيذ الأمر!</div>
+<div id="notify" class="notify">تم الحفظ بنجاح!</div>
 
 <header>
     <h2>وزارة الموارد البشرية</h2>
-    <p>نظام الاختبارات والرقابة القضائية</p>
+    <p>ولاية One Lion - إدارة شؤون الموظفين</p>
 </header>
 
 <div class="hero-card">
     <h3>البوابة الرقمية الرسمية</h3>
-    <h1>العدالة أساس الحكم</h1>
-    <p>تُعد وزارة الموارد البشرية في ولاية <b>One Lion</b> الركيزة الأساسية لتنظيم الكفاءات. نهدف إلى توفير بيئة عمل احترافية تضمن حقوق الموظف والمنشأة تحت مظلة القانون والعدالة المطلقة.</p>
+    <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
+    <p>تُعنى وزارة الموارد البشرية بتنظيم بيئة العمل وتطوير الكفاءات البشرية لضمان أعلى مستويات الإنتاجية والعدالة الوظيفية داخل ولاية One Lion.</p>
     <div class="main-btns">
-        <button class="btn-gold">ابدأ اختبار الكفاءة</button>
-        <button class="btn-outline">عرض الناجحين</button>
+        <button class="btn-gold" onclick="showQuiz()">ابدأ اختبار الكفاءة</button>
+        <button class="btn-outline" onclick="checkAdminView()">عرض الناجحين (للإدارة)</button>
     </div>
 </div>
 
 <div class="stats-grid">
-    <div class="stat-box"><h2>10</h2><p>عدد الأسئلة</p></div>
-    <div class="stat-box"><h2>0</h2><p>ناجح في الاختبار</p></div>
-    <div class="stat-box"><h2 style="color: var(--accent-gold);">70</h2><p>درجة النجاح</p></div>
-    <div class="stat-box"><h2>100</h2><p>الدرجة الكلية</p></div>
+    <div class="stat-box"><h3>10</h3><p>عدد الأسئلة</p></div>
+    <div class="stat-box"><h3>0</h3><p>ناجح في الاختبار</p></div>
+    <div class="stat-box"><h3 style="color:var(--gold)">70</h3><p>درجة النجاح</p></div>
+    <div class="stat-box"><h3>100</h3><p>الدرجة الكلية</p></div>
 </div>
 
-<div class="admin-panel" id="loginBox">
-    <h3>تسجيل دخول الإدارة</h3>
-    <input type="text" id="adminName" placeholder="اسم المستخدم">
-    <input type="password" id="adminPass" placeholder="كلمة المرور">
-    <button class="btn-gold" style="width:100%; margin-top:10px;" onclick="login()">دخول</button>
+<div id="login-section" class="admin-panel" style="display: block;">
+    <h3>قفل الإدارة</h3>
+    <input type="password" id="adminPass" placeholder="كلمة مرور المشرف العام">
+    <button class="btn-gold" onclick="adminLogin()">دخول الإدارة</button>
 </div>
 
-<div class="admin-panel" id="controls" style="display:none;">
-    <h3 id="welcomeTitle">لوحة التحكم</h3>
-    <div class="input-group">
-        <input type="text" id="empName" placeholder="اسم الموظف المستهدف">
+<div id="admin-main" class="admin-panel">
+    <h3>لوحة التحكم: <span id="adminNameDisplay">Asmar</span></h3>
+    <input type="text" id="targetName" placeholder="اسم الموظف">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn-gold" style="background:#c0392b; color:white;" onclick="addToTable('blacklist')">إضافة بلاك ليست</button>
+        <button class="btn-gold" style="background:#2980b9; color:white;" onclick="addToTable('resignation')">استقالة 3 أيام</button>
+        <button class="btn-gold" style="background:#f39c12; color:white;" onclick="addToTable('cooldown')">تهدئة يدوية</button>
+        <button class="btn-gold" onclick="toggleSection('tables-view')">عرض الجداول</button>
     </div>
-    <div class="action-btns">
-        <button class="btn-action" style="background:#2980b9;" onclick="handleAction('استقالة (3 أيام)')">استقالة 3 أيام</button>
-        <button class="btn-action" style="background:#f39c12;" onclick="handleAction('تهدئة يدوية')">تهدئة يدوية</button>
-        <button id="blacklistBtn" class="btn-action" style="background:#c0392b;" onclick="handleAction('BLACKLIST')">بلاك ليست</button>
-        <button class="btn-action" style="background:#7f8c8d;" onclick="togglePageTwo()">الصفحة الثانية (يدوي)</button>
-    </div>
-    <div id="timerDisplay" style="margin-top:15px; text-align:center; font-weight:bold; color:red;"></div>
 </div>
 
-<div id="pageTwo" class="admin-panel">
-    <h3>🛠️ الإدارة اليدوية - الخانات المخصصة</h3>
-    <div id="manualContent"></div>
-    <hr>
-    <div style="display:flex; gap:10px;">
-        <input type="text" id="newField" placeholder="اسم الخانة الجديدة">
-        <button class="btn-gold" onclick="addField()">إضافة</button>
-    </div>
+<div id="tables-view" class="section-box">
+    <h3>القوائم الإدارية</h3>
+    <h4>🚫 القائمة السوداء (Blacklist)</h4>
+    <table id="table-blacklist"><thead><tr><th>الاسم</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+    
+    <h4>⏳ سجل الاستقالات والتهدئة</h4>
+    <table id="table-resignation"><thead><tr><th>الاسم</th><th>النوع</th><th>المدة المتبقية</th></tr></thead><tbody></tbody></table>
+    <button class="btn-gold" onclick="toggleSection('admin-main')" style="margin-top:10px;">العودة للتحكم</button>
+</div>
+
+<div id="quiz-container">
+    <h2 style="color: var(--primary);">اختبار كفاءة الموارد البشرية</h2>
+    <div id="quiz-body"></div>
+    <button class="btn-gold" onclick="submitQuiz()">إنهاء الاختبار ورصد النتيجة</button>
 </div>
 
 <script>
-    // --- ضع رابط الـ Webhook هنا ---
-    const webhookURL = "ضع_رابط_الويب_هوك_هنا";
+    const questions = [
+        "ما هو دور المحاورين الأساسي داخل الفصيل؟",
+        "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
+        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟",
+        "ما هي مدة فترة التجربة للموظف الجديد؟",
+        "متى يحق للموظف تقديم استقالة فورية؟",
+        "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
+        "كيف يتم تقييم أداء المحاورين شهرياً؟",
+        "ما هي شروط الانضمام للجنة الانضباط؟",
+        "ما هو دور الموارد البشرية في حل النزاعات بين الموظفين؟",
+        "كم عدد ساعات العمل الرسمية المحددة من الحكومة؟"
+    ];
 
-    let currentAdmin = "";
-    let isSuperAdmin = false;
+    let isAdmin = false;
 
-    function login() {
-        const name = document.getElementById('adminName').value;
+    function adminLogin() {
         const pass = document.getElementById('adminPass').value;
-
-        if(!name) return alert("ادخل الاسم");
-
-        currentAdmin = name;
         if(pass === "asmar123") {
-            isSuperAdmin = true;
-            showNotification("مرحباً بالمشرف العام أسمر");
+            isAdmin = true;
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-main').style.display = 'block';
+            showNotify("مرحباً أيها المشرف العام");
         } else {
-            isSuperAdmin = false;
-            document.getElementById('blacklistBtn').style.display = 'none';
-            showNotification("دخول كمساعد بصلاحيات محدودة");
+            alert("كلمة المرور خاطئة!");
         }
-
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('controls').style.display = 'block';
-        document.getElementById('welcomeTitle').innerText = `المسؤول: ${name}`;
-        
-        sendDiscord(`🔓 دخول للنظام\nالمسؤول: ${name}\nالرتبة: ${isSuperAdmin ? 'مشرف عام' : 'مساعد'}`);
     }
 
-    function handleAction(type) {
-        const emp = document.getElementById('empName').value;
-        if(!emp) return alert("حدد اسم الموظف");
-
-        if(type.includes("استقالة")) {
-            document.getElementById('timerDisplay').innerText = `⏳ الموظف ${emp} في فترة استقالة (3 أيام)`;
-        }
-
-        showNotification(`تم تنفيذ: ${type}`);
-        sendDiscord(`🛠️ إجراء جديد\nبواسطة: ${currentAdmin}\nالإجراء: ${type}\nالموظف: ${emp}`);
-    }
-
-    function togglePageTwo() {
-        const p2 = document.getElementById('pageTwo');
-        p2.style.display = p2.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function addField() {
-        if(!isSuperAdmin) return alert("للمشرف العام فقط");
-        const val = document.getElementById('newField').value;
-        if(!val) return;
-
-        const container = document.getElementById('manualContent');
-        container.innerHTML += `<div style="margin-bottom:10px;"><b>${val}:</b> <input type="text" placeholder="بيانات..."></div>`;
-        document.getElementById('newField').value = "";
-        sendDiscord(`🆕 إضافة خانة يدوية: ${val}`);
-    }
-
-    function sendDiscord(msg) {
-        if(webhookURL.includes("ضع_رابط")) return;
-        fetch(webhookURL, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ content: `**[نظام One Lion]**\n${msg}\n------------------` })
+    function showQuiz() {
+        document.querySelector('.hero-card').style.display = 'none';
+        const container = document.getElementById('quiz-body');
+        container.innerHTML = "";
+        questions.forEach((q, i) => {
+            container.innerHTML += `<div class='question'>${i+1}. ${q}</div><input type='text' placeholder='إجابتك...'>`;
         });
+        document.getElementById('quiz-container').style.display = 'block';
     }
 
-    function showNotification(txt) {
-        const n = document.getElementById('notification');
-        n.innerText = txt; n.style.display = 'block';
+    function checkAdminView() {
+        if(!isAdmin) {
+            alert("هذه القائمة مخصصة للإدارة فقط!");
+        } else {
+            toggleSection('tables-view');
+        }
+    }
+
+    function addToTable(type) {
+        const name = document.getElementById('targetName').value;
+        if(!name) return alert("يرجى إدخال اسم الموظف");
+
+        const date = new Date().toLocaleDateString();
+        if(type === 'blacklist') {
+            const table = document.getElementById('table-blacklist').getElementsByTagName('tbody')[0];
+            table.innerHTML += `<tr><td>${name}</td><td>${date}</td><td style="color:red">محظور دائم</td></tr>`;
+        } else {
+            const table = document.getElementById('table-resignation').getElementsByTagName('tbody')[0];
+            const label = type === 'resignation' ? 'استقالة' : 'تهدئة';
+            const days = type === 'resignation' ? '3 أيام' : 'يدوي';
+            table.innerHTML += `<tr><td>${name}</td><td>${label}</td><td>${days}</td></tr>`;
+        }
+        showNotify("تمت الإضافة للسجلات");
+        document.getElementById('targetName').value = "";
+    }
+
+    function toggleSection(id) {
+        document.querySelectorAll('.admin-panel, .section-box, .hero-card').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function submitQuiz() {
+        alert("تم إرسال إجاباتك للمراجعة من قبل الإدارة. سيتم التواصل معك قريباً.");
+        location.reload();
+    }
+
+    function showNotify(msg) {
+        const n = document.getElementById('notify');
+        n.innerText = msg; n.style.display = 'block';
         setTimeout(() => n.style.display = 'none', 3000);
     }
 </script>
