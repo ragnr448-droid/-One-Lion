@@ -3,236 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية</title>
+    <title>وزارة الموارد البشرية - حكومة One Lion</title>
     <style>
-        :root { --primary: #0f172a; --gold: #c5a048; --card: #ffffff; --red: #ef4444; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; padding-bottom: 80px; }
+        :root { --primary: #0f172a; --gold: #c5a048; --bg: #f8fafc; --red: #ef4444; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 100px; color: #1e293b; }
         
-        .hero { background: var(--primary); color: white; padding: 40px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
-        .hero h1 { color: var(--gold); }
+        /* الهيدر الرسمي المحدث */
+        .hero { background: var(--primary); color: white; padding: 50px 20px; text-align: center; border-bottom: 5px solid var(--gold); }
+        .hero h1 { color: var(--gold); font-size: 2rem; margin: 10px 0; letter-spacing: 1px; }
+        .hero h2 { font-size: 1.2rem; opacity: 0.9; font-weight: normal; margin-bottom: 25px; }
         
-        .container { max-width: 800px; margin: -20px auto 20px; padding: 0 15px; }
-        .content-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-right: 5px solid var(--gold); }
+        .container { max-width: 850px; margin: -40px auto 20px; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-right: 6px solid var(--gold); }
         
-        /* نظام التبويبات للفصائل */
-        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
-        .tab-btn { background: #334155; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; font-size: 0.8rem; }
-        .tab-btn.active { background: var(--gold); color: black; font-weight: bold; }
+        /* أزرار التنقل بين الدواوين */
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .tab-btn { background: #334155; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 0.85rem; }
+        .tab-btn.active { background: var(--gold); color: black; }
 
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { padding: 12px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
-        .btn-gold { background: var(--gold); color: white; }
-        .btn-red { background: var(--red); color: white; }
-        
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-gold { background: var(--gold); color: var(--primary); width: 100%; }
+        .btn-admin-access { background: transparent; border: 1px solid var(--gold); color: white; margin-top: 10px; }
+
         .hidden { display: none; }
-        .blacklist-alert { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; border: 1px solid #f87171; margin-bottom: 10px; font-weight: bold; }
+        .alert-danger { background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 10px; border: 1px solid #f87171; margin-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #edf2f7; }
+        th { background: #f8fafc; color: var(--primary); font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <div class="hero">
-    <h3 style="margin:0">البوابة الرقمية الرسمية - One Lion</h3>
-    <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
-    <div style="display: flex; justify-content: center; gap: 10px; margin-top:15px;">
-        <button class="btn-gold" style="width:auto" onclick="showSection('quiz')">ابدأ اختبار المحاورين</button>
-        <button class="btn-gold" style="width:auto; background:transparent; border:1px solid var(--gold)" onclick="adminLogin()">دخول الإدارة</button>
+    <h2>وزارة الموارد البشرية</h2>
+    <h1>حكومة ولاية One Lion</h1>
+    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+        <button class="btn btn-gold" style="width:auto;" onclick="toggleSection('quiz')">تقديم اختبار الكفاءة</button>
+        <button class="btn btn-admin-access" onclick="handleLogin()">دخول بوابة الإدارة</button>
     </div>
 </div>
 
 <div class="container">
     
-    <div id="quiz-section" class="content-card hidden">
-        <h2 id="q-title">اختبار توظيف المحاورين</h2>
-        <div id="quiz-body">
-            <input type="text" id="user-name" placeholder="الاسم الرباعي للمتقدم">
-            <div id="questions-container">
-                </div>
-            <button class="btn btn-gold" onclick="submitExam()">إرسال الاختبار للمراجعة</button>
+    <div id="quiz-ui" class="card hidden">
+        <h3 style="color: var(--primary)">📝 نموذج اختبار المحاورين</h3>
+        <input type="text" id="app-name" placeholder="الاسم الرباعي للمتقدم">
+        
+        <div class="quiz-item">
+            <p><b>1. ما هو دور المحاور الأساسي في فض النزاعات وخدمة المواطنين؟</b></p>
+            <textarea id="q1" rows="3" placeholder="اشرح رؤيتك..."></textarea>
         </div>
+        
+        <div class="quiz-item">
+            <p><b>2. ما هي مقترحاتك لتطوير قسم المحاورين في الولاية؟</b></p>
+            <textarea id="q2" rows="3" placeholder="اكتب أفكار التطوير..."></textarea>
+        </div>
+
+        <div class="quiz-item">
+            <p><b>3. كيفية التعامل مع مخالفة (GOV-A1) السلوك المهني؟</b></p>
+            <select id="q3">
+                <option value="تنبيه شفهي -> إنذار">تنبيه شفهي -> إنذار</option>
+                <option value="فصل مباشر">فصل مباشر</option>
+                <option value="تجاهل المخالفة">تجاهل المخالفة</option>
+            </select>
+        </div>
+        <button class="btn btn-gold" onclick="submitToAdmin()">إرسال الطلب للمراجعة</button>
     </div>
 
-    <div id="admin-dashboard" class="hidden">
+    <div id="admin-ui" class="hidden">
         
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchFac('شرطة', this)">الشرطة</button>
-            <button class="tab-btn" onclick="switchFac('جيش', this)">الجيش</button>
-            <button class="tab-btn" onclick="switchFac('طبي', this)">التحالف الطبي</button>
-            <button class="tab-btn" onclick="switchFac('حكومة', this)">الحكومة</button>
+            <button class="tab-btn active" onclick="changeFac('شرطة', this)">ديوان الشرطة</button>
+            <button class="tab-btn" onclick="changeFac('جيش', this)">ديوان الجيش</button>
+            <button class="tab-btn" onclick="changeFac('طبي', this)">التحالف الطبي</button>
+            <button class="tab-btn" onclick="changeFac('حكومة', this)">ديوان الحكومة</button>
         </div>
 
-        <div class="content-card">
-            <h4>➕ تعيين موظف جديد لـ (<span id="cur-fac">الشرطة</span>)</h4>
-            <div id="bl-warning" class="hidden"></div>
-            <input type="text" id="new-emp-name" placeholder="اسم الموظف" oninput="checkBlacklist(this.value)">
-            <input type="text" id="new-emp-rank" placeholder="الرتبة">
-            <button class="btn btn-gold" onclick="addEmployee()">تثبيت الموظف</button>
+        <div class="card">
+            <h4>➕ تعيين كادر جديد لـ (<span id="active-fac-label">الشرطة</span>)</h4>
+            <div id="bl-warning-box" class="alert-danger hidden">⚠️ تنبيه: الاسم مدرج في القائمة السوداء / التهدئة.</div>
+            <input type="text" id="hire-name" placeholder="اسم الموظف" oninput="liveBLCheck(this.value)">
+            <input type="text" id="hire-rank" placeholder="الرتبة الوظيفية">
+            <button class="btn btn-gold" onclick="processHiring()">تثبيت الموظف رسمياً</button>
         </div>
 
-        <div class="content-card">
-            <h4>📝 طلبات التوظيف قيد التصحيح</h4>
-            <div id="review-list"></div>
+        <div class="card">
+            <h4>📋 طلبات التوظيف الواردة</h4>
+            <div id="exam-review-container"></div>
         </div>
 
-        <div class="content-card">
-            <h4>👥 قائمة موظفي <span id="cur-fac-list">الشرطة</span></h4>
-            <div id="staff-table"></div>
+        <div class="card">
+            <h4>👥 الكادر الوظيفي الحالي</h4>
+            <div id="staff-table-display"></div>
         </div>
 
-        <div class="content-card" style="border-right-color: #16a34a;">
-            <h4 style="color:#16a34a">✅ قائمة الناجحين (جاهز للتعميد)</h4>
-            <div id="pass-list"></div>
-        </div>
-
-        <div class="content-card" style="border-right-color: var(--red);">
-            <h4 style="color:var(--red)">⛔ القائمة السوداء والاستقالات النشطة</h4>
-            <div id="blacklist-table"></div>
+        <div class="card" style="border-right-color: var(--red);">
+            <h4 style="color:var(--red)">⛔ سجل الإيقاف والكولد داون</h4>
+            <div id="blacklist-display"></div>
         </div>
     </div>
 </div>
 
 <script>
-    let currentRole = ''; // asmar or HR
-    let activeFac = 'شرطة';
+    let loggedRole = ''; 
+    let currentFac = 'شرطة';
 
-    // بيانات افتراضية
-    let db = JSON.parse(localStorage.getItem('lion_system_v3')) || {
+    // مخزن البيانات المحلي
+    let storage = JSON.parse(localStorage.getItem('hr_government_v5')) || {
         staff: [], exams: [], blacklist: []
     };
 
-    const questions = [
-        { id: 1, type: 'select', q: "ما هي عقوبة مخالفة (GOV-A1) السلوك المهني؟", options: ["تنبيه شفهي -> إنذار", "فصل فوري", "توبيخ"], correct: 0 },
-        { id: 2, type: 'select', q: "مخالفة (GOV-A2) النزاهة والشفافية، العقوبة في حال التكرار هي؟", options: ["إنذار", "توبيخ", "فصل"], correct: 2 },
-        { id: 3, type: 'select', q: "قانون (GOV-A4) يمنع التواجد بحالة AFK أثناء العمل؟", options: ["صح", "خطأ"], correct: 0 },
-        { id: 4, type: 'text', q: "ما هو دور المحاور الأساسي في فض النزاعات؟" },
-        { id: 5, type: 'text', q: "اقترح طريقة عملية لتطوير قسم المحاورين في One Lion؟" }
-    ];
-
-    function showSection(id) {
-        document.getElementById('quiz-section').classList.add('hidden');
-        document.getElementById('admin-dashboard').classList.add('hidden');
-        document.getElementById(id + '-section').classList.remove('hidden');
-        if(id === 'quiz') renderQuiz();
+    function toggleSection(id) {
+        document.getElementById('quiz-ui').classList.add('hidden');
+        document.getElementById('admin-ui').classList.add('hidden');
+        document.getElementById(id + '-ui').classList.remove('hidden');
     }
 
-    function renderQuiz() {
-        let html = "";
-        questions.forEach((q, i) => {
-            html += `<p><b>س${i+1}: ${q.q}</b></p>`;
-            if(q.type === 'select') {
-                html += `<select id="ans-${i}">${q.options.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}</select>`;
-            } else {
-                html += `<textarea id="ans-${i}" placeholder="اكتب إجابتك هنا بالتفصيل..."></textarea>`;
-            }
-        });
-        document.getElementById('questions-container').innerHTML = html;
-    }
-
-    function submitExam() {
-        const name = document.getElementById('user-name').value;
-        if(!name) return alert("يرجى إدخال اسمك");
-        
-        let userAns = [];
-        questions.forEach((q, i) => userAns.push(document.getElementById(`ans-${i}`).value));
-        
-        db.exams.push({ name, answers: userAns, status: 'pending', date: new Date().toLocaleDateString() });
-        save();
-        alert("تم إرسال اختبارك بنجاح، يرجى انتظار تصحيح المشرف.");
-        location.reload();
-    }
-
-    function adminLogin() {
-        const pass = prompt("أدخل رمز الإدارة (asmar123 أو HR12):");
-        if(pass === 'asmar123' || pass === 'HR12') {
-            currentRole = (pass === 'asmar123') ? 'asmar' : 'HR';
-            showSection('admin');
-            renderAdmin();
-        } else alert("رمز خطأ!");
-    }
-
-    function renderAdmin() {
-        document.getElementById('cur-fac').innerText = activeFac;
-        document.getElementById('cur-fac-list').innerText = activeFac;
-        
-        // عرض الاختبارات للمراجعة
-        let reviewHtml = "";
-        db.exams.filter(e => e.status === 'pending').forEach((ex, idx) => {
-            reviewHtml += `<div style="border:1px solid #ddd; padding:10px; margin-top:5px;">
-                <b>المتقدم: ${ex.name}</b><br>
-                ${ex.answers.map((a, i) => `<small>س${i+1}: ${a}</small><br>`).join('')}
-                <input type="number" id="grade-${idx}" placeholder="أعطِ درجة من 100">
-                <button onclick="gradeExam(${idx}, 'pass')">اعتماد نجاح</button>
-                <button onclick="gradeExam(${idx}, 'fail')" style="background:red; color:white">رسوب</button>
-            </div>`;
-        });
-        document.getElementById('review-list').innerHTML = reviewHtml || "لا توجد اختبارات بانتظار التصحيح";
-
-        // عرض الموظفين
-        let staffHtml = "<table>";
-        db.staff.filter(s => s.fac === activeFac).forEach((s, i) => {
-            staffHtml += `<tr><td>${s.name}</td><td>${s.rank}</td>
-            <td><button class="btn-red" onclick="terminate('${s.name}', 'استقالة')">استقالة</button>
-            <button class="btn-red" style="background:black" onclick="terminate('${s.name}', 'فصل')">فصل</button></td></tr>`;
-        });
-        document.getElementById('staff-table').innerHTML = staffHtml;
-
-        // القائمة السوداء
-        let blHtml = "";
-        db.blacklist.forEach(b => {
-            blHtml += `<div style="color:red; font-size:0.8rem;">• ${b.name} (${b.reason}) - ينتهي بعد ${b.days} يوم</div>`;
-        });
-        document.getElementById('blacklist-table').innerHTML = blHtml || "القائمة خالية";
-    }
-
-    function gradeExam(idx, result) {
-        const grade = document.getElementById(`grade-${idx}`).value;
-        if(!grade) return alert("ضع درجة أولاً");
-        
-        let ex = db.exams.filter(e => e.status === 'pending')[idx];
-        ex.status = (grade >= 70) ? 'passed' : 'failed';
-        ex.finalGrade = grade;
-        save();
-        renderAdmin();
-    }
-
-    function checkBlacklist(name) {
-        const found = db.blacklist.find(b => b.name === name);
-        const div = document.getElementById('bl-warning');
-        if(found) {
-            div.innerHTML = `⚠️ تحذير: هذا الاسم مدرج في البلاك ليست بسبب (${found.reason})`;
-            div.classList.remove('hidden');
+    function handleLogin() {
+        let p = prompt("أدخل كود الدخول المصرح به:");
+        if(p === 'asmar123') {
+            loggedRole = 'admin';
+            toggleSection('admin');
+            renderPanel();
+        } else if(p === 'HR12') {
+            loggedRole = 'hr';
+            toggleSection('admin');
+            renderPanel();
         } else {
-            div.classList.add('hidden');
+            alert("فشل المصادقة: الكود غير صحيح.");
         }
     }
 
-    function addEmployee() {
-        const name = document.getElementById('new-emp-name').value;
-        const rank = document.getElementById('new-emp-rank').value;
-        if(db.blacklist.find(b => b.name === name)) return alert("لا يمكن إضافة موظف موجود في البلاك ليست!");
+    function submitToAdmin() {
+        let name = document.getElementById('app-name').value;
+        if(!name) return alert("الرجاء إدخال الاسم الرباعي.");
         
-        db.staff.push({ name, rank, fac: activeFac });
-        save();
-        renderAdmin();
+        storage.exams.push({
+            name,
+            answers: [document.getElementById('q1').value, document.getElementById('q2').value, document.getElementById('q3').value],
+            status: 'pending'
+        });
+        saveData();
+        alert("تم إرسال طلبك. سيقوم المشرف بمراجعته قريباً.");
+        location.reload();
     }
 
-    function terminate(name, type) {
-        let reason = prompt(`سبب الـ ${type}:`);
-        let days = (type === 'استقالة') ? 3 : prompt("مدة التهدئة بالأيام (مثلاً 10):");
+    function renderPanel() {
+        document.getElementById('active-fac-label').innerText = currentFac;
         
-        db.blacklist.push({ name, reason, days, date: new Date().toLocaleDateString() });
-        db.staff = db.staff.filter(s => s.name !== name);
-        save();
-        renderAdmin();
+        // عرض طلبات الاختبار للمراجعة
+        let examHtml = "";
+        storage.exams.filter(e => e.status === 'pending').forEach((ex, idx) => {
+            examHtml += `<div style="border:1px solid #eee; padding:15px; margin-bottom:10px; border-radius:8px;">
+                <b>المتقدم: ${ex.name}</b><br>
+                <small>دور المحاور: ${ex.answers[0]}</small><br>
+                <small>تطوير القسم: ${ex.answers[1]}</small><br>
+                <button class="btn" style="background:green; color:white; width:auto; font-size:11px;" onclick="judgeExam(${idx}, 'passed')">تعميد (ناجح)</button>
+                <button class="btn" style="background:red; color:white; width:auto; font-size:11px;" onclick="judgeExam(${idx}, 'failed')">رفض (راسب)</button>
+            </div>`;
+        });
+        document.getElementById('exam-review-container').innerHTML = examHtml || "<p>لا توجد طلبات معلقة حالياً.</p>";
+
+        // عرض الموظفين حسب الفصيل
+        let sTable = "<table><tr><th>الاسم</th><th>الرتبة</th><th>التحكم</th></tr>";
+        storage.staff.filter(s => s.fac === currentFac).forEach(s => {
+            sTable += `<tr><td>${s.name}</td><td>${s.rank}</td>
+            <td>
+                <button class="btn" style="background:#f97316; color:white; font-size:10px;" onclick="actionKick('${s.name}', 'استقالة')">استقالة</button>
+                <button class="btn" style="background:black; color:white; font-size:10px;" onclick="actionKick('${s.name}', 'فصل')">فصل</button>
+            </td></tr>`;
+        });
+        document.getElementById('staff-table-display').innerHTML = sTable + "</table>";
+
+        // عرض البلاك ليست
+        document.getElementById('blacklist-display').innerHTML = storage.blacklist.map(b => 
+            `<div style="font-size:11px; margin-bottom:5px;">🚫 ${b.name} - السبب: ${b.reason} (${b.days} أيام)</div>`
+        ).join('');
     }
 
-    function switchFac(fac, btn) {
-        activeFac = fac;
+    function judgeExam(idx, status) {
+        if(loggedRole !== 'admin') return alert("هذه الصلاحية لمدير الموقع فقط.");
+        let exam = storage.exams.filter(e => e.status === 'pending')[idx];
+        exam.status = status;
+        saveData();
+        renderPanel();
+    }
+
+    function liveBLCheck(name) {
+        let isBl = storage.blacklist.find(b => b.name === name);
+        document.getElementById('bl-warning-box').classList.toggle('hidden', !isBl);
+    }
+
+    function processHiring() {
+        let n = document.getElementById('hire-name').value;
+        let r = document.getElementById('hire-rank').value;
+        if(storage.blacklist.find(b => b.name === n)) return alert("لا يمكن توظيف شخص في القائمة السوداء.");
+        
+        storage.staff.push({ name: n, rank: r, fac: currentFac });
+        saveData();
+        renderPanel();
+    }
+
+    function actionKick(name, type) {
+        if(loggedRole !== 'admin') return alert("الصلاحية للمدير فقط.");
+        let days = (type === 'استقالة') ? 3 : prompt("حدد أيام التهدئة (كولد داون):", "4");
+        let reason = prompt("سبب الإجراء:");
+        
+        storage.blacklist.push({ name, reason, days, type });
+        storage.staff = storage.staff.filter(s => s.name !== name);
+        saveData();
+        renderPanel();
+    }
+
+    function changeFac(f, btn) {
+        currentFac = f;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderAdmin();
+        renderPanel();
     }
 
-    function save() { localStorage.setItem('lion_system_v3', JSON.stringify(db)); }
+    function saveData() { localStorage.setItem('hr_government_v5', JSON.stringify(storage)); }
 </script>
 
 </body>
