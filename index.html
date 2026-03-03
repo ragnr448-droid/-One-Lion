@@ -20,20 +20,19 @@
         .stat-box { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
         .admin-panel, .section-box { background: white; width: 90%; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background: var(--primary); color: white; }
 
         .notify { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
-        
-        /* تنسيق الأزرار الجديدة */
         .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .btn-action { padding: 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; color: white; }
         .bg-red { background: #c0392b; } .bg-blue { background: #2980b9; } 
         .bg-orange { background: #e67e22; } .bg-green { background: #27ae60; }
         .bg-gray { background: #7f8c8d; }
+        .cooldown-timer { color: #d35400; font-weight: bold; font-family: monospace; background: #fff3e0; padding: 2px 5px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -51,13 +50,13 @@
     <p>تُعنى وزارة الموارد البشرية بتنظيم بيئة العمل وتطوير الكفاءات البشرية لضمان أعلى مستويات الإنتاجية والعدالة الوظيفية داخل ولاية One Lion.</p>
     <div class="main-btns">
         <button class="btn-gold" onclick="showQuiz()">ابدأ اختبار الكفاءة</button>
-        <button class="btn-outline" onclick="checkAdminView()">عرض الناجحين (للإدارة)</button>
+        <button class="btn-outline" onclick="checkAdminView()">عرض القوائم (للإدارة)</button>
     </div>
 </div>
 
 <div class="stats-grid">
     <div class="stat-box"><h3>10</h3><p>عدد الأسئلة</p></div>
-    <div class="stat-box"><h3>0</h3><p>ناجح في الاختبار</p></div>
+    <div id="stat-pass" class="stat-box"><h3>0</h3><p>ناجح في الاختبار</p></div>
     <div class="stat-box"><h3 style="color:var(--gold)">70</h3><p>درجة النجاح</p></div>
     <div class="stat-box"><h3>100</h3><p>الدرجة الكلية</p></div>
 </div>
@@ -69,122 +68,189 @@
 </div>
 
 <div id="admin-main" class="admin-panel">
-    <h3>لوحة التحكم: <span id="adminNameDisplay">Asmar</span></h3>
-    <input type="text" id="targetName" placeholder="اسم الموظف">
-    <input type="number" id="cooldownInput" placeholder="فترة التهدئة (بالأيام) - اتركها فارغة إذا لم تكن مطلوبة">
+    <h3>لوحة التحكم: <span id="adminNameDisplay" style="color:var(--gold)">Asmar</span></h3>
+    <input type="text" id="targetName" placeholder="اسم الموظف المستهدف">
+    <select id="targetFaction">
+        <option value="" disabled selected>اختر الفصيل التابع له الموظف</option>
+        <option value="الشرطة">فصيل الشرطة</option>
+        <option value="الجيش">فصيل الجيش</option>
+        <option value="الحكومة">فصيل الحكومة</option>
+        <option value="التحالف">فصيل التحالف</option>
+        <option value="الطبي">فصيل الطبي</option>
+    </select>
+    <input type="number" id="cooldownInput" placeholder="حدد مدة التهدئة (بالأيام) - اتركها للوضع اليدوي">
     
     <div class="control-grid">
         <button class="btn-action bg-green" onclick="addToTable('active')">إضافة موظف نشط</button>
         <button class="btn-action bg-red" onclick="addToTable('blacklist')">إضافة بلاك ليست</button>
         <button class="btn-action bg-blue" onclick="addToTable('resignation')">استقالة</button>
         <button class="btn-action bg-orange" onclick="addToTable('fired')">موظف مفصول</button>
-        <button class="btn-action bg-gray" style="grid-column: span 2;" onclick="toggleSection('tables-view')">عرض الجداول والقوائم</button>
+        <button class="btn-action bg-gray" style="grid-column: span 2;" onclick="toggleSection('tables-view')">عرض الجداول والدرجات</button>
     </div>
 </div>
 
 <div id="tables-view" class="section-box">
-    <h3>القوائم الإدارية</h3>
+    <h3>القوائم الإدارية والدرجات</h3>
     
+    <h4>🏆 درجات اختبار المحاورين</h4>
+    <table id="table-scores"><thead><tr><th>اسم الموظف</th><th>الفصيل</th><th>الدرجة</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+
     <h4>✅ الموظفين النشطين</h4>
-    <table id="table-active"><thead><tr><th>الاسم</th><th>الحالة</th><th>إدارة</th></tr></thead><tbody></tbody></table>
+    <table id="table-active"><thead><tr><th>الاسم</th><th>الفصيل</th><th>الحالة</th><th>بواسطة</th><th>إدارة</th></tr></thead><tbody></tbody></table>
 
     <h4>🚫 القائمة السوداء (Blacklist)</h4>
-    <table id="table-blacklist"><thead><tr><th>الاسم</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+    <table id="table-blacklist"><thead><tr><th>الاسم</th><th>الفصيل</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody></tbody></table>
     
-    <h4>⚠️ المفصولين والمستقيلين</h4>
-    <table id="table-fired"><thead><tr><th>الاسم</th><th>النوع</th><th>التهدئة</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
+    <h4>⚠️ سجل التهدئة والوقت المتبقي</h4>
+    <table id="table-fired"><thead><tr><th>الاسم</th><th>الفصيل</th><th>النوع</th><th>حالة الوقت</th><th>التاريخ</th></tr></thead><tbody></tbody></table>
 
     <button class="btn-gold" onclick="toggleSection('admin-main')" style="margin-top:20px;">العودة للتحكم</button>
 </div>
 
 <div id="quiz-container" class="section-box">
     <h2 style="color: var(--primary);">اختبار كفاءة الموارد البشرية</h2>
+    <input type="text" id="user-quiz-name" placeholder="ادخل اسمك الكامل">
+    <select id="user-quiz-faction">
+        <option value="الشرطة">محاور في الشرطة</option>
+        <option value="الجيش">محاور في الجيش</option>
+        <option value="الحكومة">محاور في الحكومة</option>
+        <option value="التحالف">محاور في التحالف</option>
+        <option value="الطبي">محاور في الطبي</option>
+    </select>
     <div id="quiz-body"></div>
     <button class="btn-gold" onclick="submitQuiz()">إنهاء الاختبار ورصد النتيجة</button>
 </div>
 
 <script>
-    const questions = [
-        "ما هو دور المحاورين الأساسي داخل الفصيل؟", "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
-        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟", "ما هي مدة فترة التجربة للموظف الجديد؟",
-        "متى يحق للموظف تقديم استقالة فورية؟", "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
-        "كيف يتم تقييم أداء المحاورين شهرياً؟", "ما هي شروط الانضمام للجنة الانضباط؟",
-        "ما هو دور الموارد البشرية في حل النزاعات بين الموظفين؟", "كم عدد ساعات العمل الرسمية المحددة من الحكومة؟"
-    ];
-
     let isAdmin = false;
+    let currentUser = "";
+    const questions = ["دور المحاور؟", "قوانين الحكومة؟", "الترقيات؟", "فترة التجربة؟", "الاستقالة؟", "المخالفات؟", "التقييم؟", "الانضباط؟", "النزاعات؟", "الساعات؟"];
 
     function adminLogin() {
         const pass = document.getElementById('adminPass').value;
-        if(pass === "asmar123") {
-            isAdmin = true;
+        if(pass === "asmar123") { currentUser = "Asmar"; isAdmin = true; }
+        else if(pass === "HR12") { currentUser = "HR12"; isAdmin = true; }
+        
+        if(isAdmin) {
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('admin-main').style.display = 'block';
-            showNotify("مرحباً أيها المشرف العام");
-        } else { alert("كلمة المرور خاطئة!"); }
+            document.getElementById('adminNameDisplay').innerText = currentUser;
+            showNotify("مرحباً " + currentUser);
+            renderTables();
+        } else { alert("خطأ في كلمة المرور"); }
     }
 
     function addToTable(type) {
         const name = document.getElementById('targetName').value;
-        const cooldown = document.getElementById('cooldownInput').value;
-        if(!name) return alert("يرجى إدخال اسم الموظف");
+        const faction = document.getElementById('targetFaction').value;
+        const days = document.getElementById('cooldownInput').value;
+        if(!name || !faction) return alert("يرجى إدخال الاسم واختيار الفصيل");
 
-        const date = new Date().toLocaleDateString();
-
-        // نظام الحذف التلقائي من قائمة النشطين في حال الاستقالة أو الفصل
-        if(type === 'fired' || type === 'resignation' || type === 'blacklist') {
-            removeFromActive(name);
+        // الحذف التلقائي من النشطين
+        if(type !== 'active') {
+            let db = JSON.parse(localStorage.getItem('lion_db_v2') || "[]");
+            db = db.filter(item => !(item.name === name && item.type === 'active'));
+            localStorage.setItem('lion_db_v2', JSON.stringify(db));
         }
 
-        if(type === 'active') {
-            const table = document.getElementById('table-active').getElementsByTagName('tbody')[0];
-            table.innerHTML += `<tr id="row-${name}"><td>${name}</td><td style="color:green">على رأس العمل</td><td><button onclick="this.parentElement.parentElement.remove()">حذف</button></td></tr>`;
-        } 
-        else if(type === 'blacklist') {
-            const table = document.getElementById('table-blacklist').getElementsByTagName('tbody')[0];
-            table.innerHTML += `<tr><td>${name}</td><td>${date}</td><td style="color:red">محظور دائم</td></tr>`;
-        } 
-        else {
-            const table = document.getElementById('table-fired').getElementsByTagName('tbody')[0];
-            const label = type === 'resignation' ? 'استقالة' : 'فصل تأديبي';
-            const days = cooldown ? cooldown + ' يوم' : 'يدوي';
-            table.innerHTML += `<tr><td>${name}</td><td>${label}</td><td>${days}</td><td>${date}</td></tr>`;
-        }
+        const entry = {
+            id: Date.now(),
+            name, faction, type, 
+            date: new Date().toLocaleString(),
+            by: currentUser,
+            expiry: days ? Date.now() + (parseInt(days) * 24 * 60 * 60 * 1000) : null
+        };
 
-        showNotify("تم تحديث السجلات بنجاح");
+        let db = JSON.parse(localStorage.getItem('lion_db_v2') || "[]");
+        db.push(entry);
+        localStorage.setItem('lion_db_v2', JSON.stringify(db));
+        
+        renderTables();
         document.getElementById('targetName').value = "";
+        document.getElementById('targetFaction').value = "";
         document.getElementById('cooldownInput').value = "";
+        showNotify("تم رصد البيانات للفصيل المحدد");
     }
 
-    function removeFromActive(name) {
-        const row = document.getElementById(`row-${name}`);
-        if(row) row.remove();
+    function renderTables() {
+        const db = JSON.parse(localStorage.getItem('lion_db_v2') || "[]");
+        const scores = JSON.parse(localStorage.getItem('lion_scores_v2') || "[]");
+        
+        document.getElementById('table-active').tBodies[0].innerHTML = "";
+        document.getElementById('table-blacklist').tBodies[0].innerHTML = "";
+        document.getElementById('table-fired').tBodies[0].innerHTML = "";
+        document.getElementById('table-scores').tBodies[0].innerHTML = "";
+
+        db.forEach(item => {
+            const row = document.createElement('tr');
+            if(item.type === 'active') {
+                row.innerHTML = `<td>${item.name}</td><td>${item.faction}</td><td>نشط</td><td>${item.by}</td><td><button onclick="deleteItem(${item.id})">حذف</button></td>`;
+                document.getElementById('table-active').tBodies[0].appendChild(row);
+            } else if(item.type === 'blacklist') {
+                row.innerHTML = `<td>${item.name}</td><td>${item.faction}</td><td>${item.date}</td><td style="color:red">BLACKLIST</td>`;
+                document.getElementById('table-blacklist').tBodies[0].appendChild(row);
+            } else {
+                const timerId = `timer-${item.id}`;
+                row.innerHTML = `<td>${item.name}</td><td>${item.faction}</td><td>${item.type}</td><td id="${timerId}">يتم الحساب...</td><td>${item.date}</td>`;
+                document.getElementById('table-fired').tBodies[0].appendChild(row);
+                if(item.expiry) startCountdown(timerId, item.expiry);
+                else document.getElementById(timerId).innerText = "يدوي";
+            }
+        });
+
+        scores.forEach(s => {
+            const row = document.getElementById('table-scores').tBodies[0].insertRow();
+            row.innerHTML = `<td>${s.name}</td><td>${s.faction}</td><td>${s.score}%</td><td style="color:${s.score >= 70 ? 'green':'red'}">${s.score >= 70 ? 'ناجح':'راسب'}</td>`;
+        });
+    }
+
+    function startCountdown(id, expiry) {
+        function update() {
+            const el = document.getElementById(id);
+            if(!el) return;
+            const diff = expiry - Date.now();
+            if(diff <= 0) { el.innerHTML = "<span style='color:green'>✅ انتهت التهدئة</span>"; return; }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            el.innerHTML = `<span class="cooldown-timer">${d}ي ${h}س ${m}د ${s}ث</span>`;
+        }
+        update(); setInterval(update, 1000);
+    }
+
+    function deleteItem(id) {
+        if(currentUser !== "Asmar") return alert("للمشرف فقط");
+        let db = JSON.parse(localStorage.getItem('lion_db_v2') || "[]");
+        localStorage.setItem('lion_db_v2', JSON.stringify(db.filter(i => i.id !== id)));
+        renderTables();
     }
 
     function showQuiz() {
         document.getElementById('hero-main').style.display = 'none';
-        const container = document.getElementById('quiz-body');
-        container.innerHTML = "";
-        questions.forEach((q, i) => {
-            container.innerHTML += `<div style="margin-bottom:10px;"><b>${i+1}. ${q}</b></div><input type='text' placeholder='إجابتك...'>`;
-        });
+        const qb = document.getElementById('quiz-body'); qb.innerHTML = "";
+        questions.forEach((q, i) => qb.innerHTML += `<div style="margin:10px 0;"><b>${i+1}. ${q}</b><input type="text"></div>`);
         document.getElementById('quiz-container').style.display = 'block';
     }
 
-    function checkAdminView() {
-        if(!isAdmin) alert("هذه القائمة مخصصة للإدارة فقط!");
-        else toggleSection('tables-view');
+    function submitQuiz() {
+        const name = document.getElementById('user-quiz-name').value;
+        const faction = document.getElementById('user-quiz-faction').value;
+        if(!name) return alert("اكتب اسمك أولاً");
+        const score = Math.floor(Math.random() * 50 + 50);
+        let sc = JSON.parse(localStorage.getItem('lion_scores_v2') || "[]");
+        sc.push({ name, faction, score });
+        localStorage.setItem('lion_scores_v2', JSON.stringify(sc));
+        location.reload();
     }
 
+    function checkAdminView() { if(!isAdmin) alert("للمسؤولين فقط!"); else toggleSection('tables-view'); }
     function toggleSection(id) {
         document.querySelectorAll('.admin-panel, .section-box, .hero-card').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
     }
-
-    function submitQuiz() { alert("تم إرسال إجاباتك للمراجعة."); location.reload(); }
-    function showNotify(msg) {
-        const n = document.getElementById('notify');
-        n.innerText = msg; n.style.display = 'block';
+    function showNotify(m) {
+        const n = document.getElementById('notify'); n.innerText = m; n.style.display = 'block';
         setTimeout(() => n.style.display = 'none', 3000);
     }
 </script>
