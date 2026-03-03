@@ -3,240 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR One Lion - Smart Dashboard</title>
+    <title>نظام السيادة - ONE LION MULTI-FACTION</title>
     <style>
-        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --light: #f4f7f6; --success: #27ae60; --danger: #c0392b; --warning: #e67e22; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light); margin: 0; padding-bottom: 70px; }
+        :root { 
+            --primary: #0a0e14; --gold: #c5a048; --bg: #f4f6f9;
+            --hr-color: #d4af37; --gov-color: #2980b9; --police-color: #2c3e50; 
+            --army-color: #27ae60; --medical-color: #e74c3c;
+        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        header { background: linear-gradient(135deg, var(--primary), #1a2536); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
         
-        /* تصميم لوحة الإحصائيات */
-        .stats-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--gold); }
-        .stat-card h4 { margin: 0; color: #7f8c8d; font-size: 13px; }
-        .stat-card div { font-size: 22px; font-weight: bold; margin-top: 5px; color: var(--primary); }
-        .stat-card.alert { border-bottom-color: var(--warning); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; max-width: 900px; margin: 0 auto; }
+        .stat-card { background: white; padding: 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 3px solid var(--gold); }
+        .stat-card h4 { margin: 0; font-size: 11px; color: #7f8c8d; }
+        .stat-card .value { font-size: 18px; font-weight: bold; margin-top: 5px; }
 
-        /* التنسيقات العامة */
-        header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
+        .page { display: none; padding: 15px; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         .active-page { display: block; }
-        .app-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin: 5px 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #eee; padding: 10px; text-align: center; }
-        th { background: var(--primary); color: white; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--gold); }
-        .nav-item { color: white; font-size: 12px; cursor: pointer; opacity: 0.7; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-right: 5px solid var(--gold); }
+        .btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-gold { background: var(--gold); color: var(--primary); }
+
+        /* أوسمة الفصائل */
+        .badge { padding: 5px 10px; border-radius: 5px; color: white; font-size: 11px; font-weight: bold; display: inline-block; min-width: 85px; }
+        .b-hr { background: var(--hr-color); color: black; }
+        .b-gov { background: var(--gov-color); }
+        .b-police { background: var(--police-color); }
+        .b-army { background: var(--army-color); }
+        .b-med { background: var(--medical-color); }
+        .b-fail { background: #95a5a6; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 10px; overflow: hidden; }
+        th { background: var(--primary); color: var(--gold); padding: 12px; font-size: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 13px; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 15px 0; border-top: 3px solid var(--gold); z-index: 1000; }
+        .nav-item { color: white; font-size: 12px; cursor: pointer; opacity: 0.7; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <h3>نظام أسد الموارد البشرية</h3>
-    <small>الرقابة الذكية والإحصائيات</small>
+    <div style="font-size: 12px; letter-spacing: 3px; color: var(--gold);">وزارة الموارد البشرية</div>
+    <h2 style="margin: 5px 0;">نظام "ONE LION" الشامل للفصائل</h2>
 </header>
 
-<div id="page-admin" class="page">
-    <div class="stats-container">
-        <div class="stat-card">
-            <h4>إجمالي الموظفين</h4>
-            <div id="stat-total-emp">0</div>
-        </div>
-        <div class="stat-card alert" id="wait-card">
-            <h4>قيد الانتظار</h4>
-            <div id="stat-pending" style="color:var(--warning)">0</div>
-        </div>
-        <div class="stat-card">
-            <h4>نسبة النجاح</h4>
-            <div id="stat-pass-rate" style="color:var(--success)">0%</div>
-        </div>
-        <div class="stat-card">
-            <h4>القطاع النشط</h4>
-            <div id="stat-top-faction" style="font-size: 14px;">-</div>
-        </div>
-    </div>
-
-    <div class="app-container">
-        <h3 id="adminNameDisplay">لوحة التحكم</h3>
-        <div id="asmar-tools" style="display:none; margin-bottom: 20px;">
-            <button class="btn-gold" onclick="alert('ميزة الفورم تحت التطوير')">⚙️ إدارة النماذج</button>
-        </div>
-        
-        <h4>📥 طلبات تحتاج تصحيح</h4>
-        <div id="pending-list" style="overflow-x:auto;"></div>
+<div id="stats-area" style="display: none;">
+    <div class="stats-grid">
+        <div class="stat-card"><h4>إجمالي القوة</h4><div class="value" id="s-total">0</div></div>
+        <div class="stat-card"><h4>بانتظار المراجعة</h4><div class="value" id="s-wait" style="color:var(--medical-color)">0</div></div>
+        <div class="stat-card"><h4>فصيل الحكومة</h4><div class="value" id="s-gov" style="color:var(--gov-color)">0</div></div>
+        <div class="stat-card"><h4>التحالف الطبي</h4><div class="value" id="s-med" style="color:var(--medical-color)">0</div></div>
     </div>
 </div>
 
 <div id="page-home" class="page active-page">
-    <div class="app-container" style="text-align: center; background: var(--primary); color: white;">
-        <h2>بوابة الاستقطاب</h2>
-        <p>ابدأ رحلتك المهنية معنا الآن</p>
-        <button class="btn-gold" onclick="navTo('page-quiz')">بدء الاختبار الآن</button>
-        <button class="btn-gold" style="background:transparent; border:1px solid var(--gold); color:white;" onclick="handleAdminAccess()">دخول المسؤولين</button>
-    </div>
-</div>
-
-<div id="page-tables" class="page">
-    <div class="app-container">
-        <h3>📊 النتائج الرسمية</h3>
-        <table id="table-all">
-            <thead>
-                <tr><th>الاسم</th><th>الفصيل</th><th>الدرجة</th><th>الحالة</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
-
-<div id="page-login" class="page">
-    <div class="app-container">
-        <h3>قفل الإدارة</h3>
-        <input type="password" id="adminPass" placeholder="رمز الدخول">
-        <button class="btn-gold" onclick="adminLogin()">دخول</button>
+    <div class="card" style="text-align: center; background: #0a0e14; color: white;">
+        <h3>مرحباً بك في البوابة الوطنية</h3>
+        <p>يرجى اختيار الفصيل الذي تود الانضمام إليه وملء الاستمارة.</p>
+        <button class="btn btn-gold" onclick="navTo('page-quiz')">بدء استمارة التوظيف</button>
+        <button class="btn btn-gold" style="background:transparent; color:white; border:1px solid var(--gold); margin-top:10px;" onclick="handleAdminAccess()">بوابة المسؤولين</button>
     </div>
 </div>
 
 <div id="page-quiz" class="page">
-    <div class="app-container">
-        <h3>استمارة التوظيف</h3>
-        <input type="text" id="q-name" placeholder="الاسم الكامل">
+    <div class="card">
+        <h3>📝 طلب انضمام جديد</h3>
+        <input type="text" id="q-name" placeholder="الاسم الرباعي">
         <select id="q-faction">
+            <option value="">-- اختر الفصيل المستهدف --</option>
+            <option value="الحكومة">الحكومة</option>
             <option value="الشرطة">الشرطة</option>
             <option value="الجيش">الجيش</option>
+            <option value="التحالف الطبي">التحالف الطبي</option>
+            <option value="المحاورين">فريق المحاورين (HR)</option>
         </select>
-        <textarea id="q-ans1" placeholder="لماذا تريد الانضمام؟"></textarea>
-        <textarea id="q-ans2" placeholder="اشرح مهام رتبتك؟"></textarea>
-        <button class="btn-gold" onclick="submitQuiz()">إرسال الطلب</button>
+        <textarea id="q-ans" placeholder="تحدث عن خبراتك ومهامك في هذا الفصيل..."></textarea>
+        <button class="btn btn-gold" onclick="submitQuiz()">إرسال الطلب</button>
     </div>
 </div>
 
-<nav class="nav-bar" id="main-nav" style="display:none;">
-    <div class="nav-item" onclick="navTo('page-home')">🏠 الرئيسية</div>
-    <div class="nav-item" onclick="navTo('page-admin')">📊 الإحصائيات</div>
-    <div class="nav-item" onclick="navTo('page-tables')">📋 السجلات</div>
+<div id="page-admin" class="page">
+    <div class="card">
+        <h3>لوحة القيادة: <span id="admin-name" style="color:var(--gold)"></span></h3>
+        <button id="asmar-reset" class="btn" style="background:red; color:white; width:auto; font-size:10px; display:none;" onclick="resetSystem()">تصفير شامل</button>
+        <h4>📂 الطلبات المعلقة</h4>
+        <div id="pending-container"></div>
+    </div>
+</div>
+
+<div id="page-tables" class="page">
+    <div class="card">
+        <h3>📊 السجل العام للفصائل</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr><th>الاسم</th><th>الفصيل</th><th>الرتبة</th><th>الدرجة</th></tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="page-login" class="page">
+    <div class="card" style="max-width: 400px; margin: auto;">
+        <h3 style="text-align: center;">🔐 منطقة محظورة</h3>
+        <input type="password" id="adminPass" placeholder="رمز الدخول">
+        <button class="btn btn-gold" onclick="adminLogin()">دخول</button>
+    </div>
+</div>
+
+<nav class="nav-bar" id="bottom-nav" style="display:none;">
+    <div class="nav-item" onclick="navTo('page-home')">🏠<br>الرئيسية</div>
+    <div class="nav-item" onclick="navTo('page-admin')">⚙️<br>الإدارة <span id="wait-count" style="color:red">0</span></div>
+    <div class="nav-item" onclick="navTo('page-tables')">📊<br>السجلات</div>
 </nav>
 
 <script>
-    let currentUser = localStorage.getItem('loggedUser');
+    let currentUser = localStorage.getItem('lion_user');
 
-    window.onload = function() {
-        updateStats();
-        if(currentUser) showAdminInterface(currentUser);
-    };
+    window.onload = () => { if(currentUser) setupAdmin(currentUser); updateStats(); };
 
     function navTo(p) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.getElementById(p).classList.add('active-page');
-        if(p === 'page-admin') { renderPending(); updateStats(); }
+        if(p === 'page-admin') renderPending();
         if(p === 'page-tables') renderResults();
     }
 
-    function handleAdminAccess() {
-        if(currentUser) navTo('page-admin');
-        else navTo('page-login');
-    }
+    function handleAdminAccess() { if(currentUser) navTo('page-admin'); else navTo('page-login'); }
 
     function adminLogin() {
         const pass = document.getElementById('adminPass').value;
         let user = (pass === "asmar123") ? "Asmar" : (pass === "HR12") ? "HR12" : "";
-        if(user) {
-            localStorage.setItem('loggedUser', user);
-            currentUser = user;
-            showAdminInterface(user);
-        } else alert("خطأ!");
+        if(user) { localStorage.setItem('lion_user', user); currentUser = user; setupAdmin(user); } else alert("خطأ!");
     }
 
-    function showAdminInterface(user) {
-        document.getElementById('adminNameDisplay').innerText = "مرحباً: " + user;
-        document.getElementById('main-nav').style.display = 'flex';
-        if(user === 'Asmar') document.getElementById('asmar-tools').style.display = 'block';
-        navTo('page-admin');
-    }
-
-    // --- نظام الإحصائيات الذكية ---
-    function updateStats() {
-        const results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
-        
-        // 1. إجمالي الموظفين (الناجحين فقط)
-        const successful = results.filter(r => r.status === 'ناجح');
-        document.getElementById('stat-total-emp').innerText = successful.length;
-
-        // 2. قيد الانتظار
-        document.getElementById('stat-pending').innerText = pending.length;
-        document.getElementById('wait-card').style.display = pending.length > 0 ? 'block' : 'block';
-
-        // 3. نسبة النجاح
-        const totalGraded = results.length;
-        const rate = totalGraded > 0 ? Math.round((successful.length / totalGraded) * 100) : 0;
-        document.getElementById('stat-pass-rate').innerText = rate + "%";
-
-        // 4. الفصيل الأكثر نشاطاً
-        const counts = successful.reduce((acc, curr) => {
-            acc[curr.faction] = (acc[curr.faction] || 0) + 1;
-            return acc;
-        }, {});
-        const top = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b, "-");
-        document.getElementById('stat-top-faction').innerText = top;
+    function setupAdmin(user) {
+        document.getElementById('admin-name').innerText = user;
+        document.getElementById('bottom-nav').style.display = 'flex';
+        document.getElementById('stats-area').style.display = 'block';
+        if(user === 'Asmar') document.getElementById('asmar-reset').style.display = 'block';
+        navTo('page-admin'); updateStats();
     }
 
     function submitQuiz() {
         const name = document.getElementById('q-name').value;
         const faction = document.getElementById('q-faction').value;
-        const answers = [document.getElementById('q-ans1').value, document.getElementById('q-ans2').value];
-        if(!name || !answers[0]) return alert("أكمل البيانات");
+        const ans = document.getElementById('q-ans').value;
+        if(!name || !faction) return alert("أكمل البيانات!");
 
         let pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
-        pending.push({ id: Date.now(), name, faction, answers });
+        pending.push({ id: Date.now(), name, faction, ans });
         localStorage.setItem('lion_pending', JSON.stringify(pending));
-        alert("تم الإرسال للمراجعة");
-        location.reload();
+        alert("تم الإرسال!"); location.reload();
     }
 
     function renderPending() {
         const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
-        const div = document.getElementById('pending-list');
-        if(pending.length === 0) { div.innerHTML = "لا توجد طلبات معلقة"; return; }
+        const container = document.getElementById('pending-container');
+        if(pending.length === 0) { container.innerHTML = "لا يوجد طلبات حالياً."; return; }
 
-        let html = `<table><tr><th>الاسم</th><th>إجراء</th></tr>`;
+        let html = `<table><tr><th>الاسم</th><th>الفصيل</th><th>إجراء</th></tr>`;
         pending.forEach(p => {
-            html += `<tr><td>${p.name}</td><td><button onclick="correctForm(${p.id})">تصحيح</button></td></tr>`;
+            html += `<tr><td>${p.name}</td><td>${p.faction}</td><td><button onclick="review('${p.id}')">تصحيح</button></td></tr>`;
         });
-        div.innerHTML = html + "</table>";
+        container.innerHTML = html + `</table>`;
+        document.getElementById('wait-count').innerText = pending.length;
     }
 
-    function correctForm(id) {
-        const score = prompt("أدخل درجة الموظف (0-100):");
-        if(score === null) return;
-        const status = score >= 70 ? "ناجح" : "راسب";
+    function review(id) {
+        const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
+        const req = pending.find(x => x.id == id);
+        const score = prompt(`مراجعة طلب: ${req.name}\nالفصيل: ${req.faction}\n\nضع الدرجة (0-100):`);
         
-        let pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
+        if(!score) return;
+        const s = parseInt(score);
+        let rank = "مرفوض"; let badgeClass = "b-fail";
+
+        if(s >= 70) {
+            if(req.faction === "الحكومة") {
+                rank = s >= 90 ? "وزير" : s >= 80 ? "مستشار" : "وكيل";
+                badgeClass = "b-gov";
+            } else if(req.faction === "الشرطة") {
+                rank = s >= 90 ? "لواء" : s >= 80 ? "عميد" : "عقيد";
+                badgeClass = "b-police";
+            } else if(req.faction === "الجيش") {
+                rank = s >= 90 ? "فريق" : s >= 80 ? "عميد عسكري" : "مقدم";
+                badgeClass = "b-army";
+            } else if(req.faction === "التحالف الطبي") {
+                rank = s >= 90 ? "دكتور استشاري" : s >= 80 ? "طبيب أخصائي" : "ممارس صحي";
+                badgeClass = "b-med";
+            } else if(req.faction === "المحاورين") {
+                rank = s >= 90 ? "مدير HR" : s >= 80 ? "مشرف محاورين" : "منسق إداري";
+                badgeClass = "b-hr";
+            }
+        }
+
         let results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        
-        const item = pending.find(p => p.id === id);
-        results.push({ ...item, score, status });
-        
+        results.push({ ...req, score: s, rank, badgeClass });
         localStorage.setItem('lion_results', JSON.stringify(results));
-        localStorage.setItem('lion_pending', JSON.stringify(pending.filter(p => p.id !== id)));
-        
-        updateStats();
-        renderPending();
-        alert("تم الاعتماد كـ " + status);
+        localStorage.setItem('lion_pending', JSON.stringify(pending.filter(x => x.id != id)));
+        updateStats(); renderPending();
     }
 
     function renderResults() {
         const results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        const body = document.getElementById('table-all').tBodies[0];
-        body.innerHTML = results.map(r => `
+        document.getElementById('table-body').innerHTML = results.map(r => `
             <tr>
-                <td>${r.name}</td>
+                <td><b>${r.name}</b></td>
                 <td>${r.faction}</td>
+                <td><span class="badge ${r.badgeClass}">${r.rank}</span></td>
                 <td>${r.score}</td>
-                <td style="color:${r.status==='ناجح'?'green':'red'}">${r.status}</td>
             </tr>
         `).join('');
     }
+
+    function updateStats() {
+        const results = JSON.parse(localStorage.getItem('lion_results') || "[]");
+        const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
+        const success = results.filter(r => r.score >= 70);
+        
+        document.getElementById('s-total').innerText = success.length;
+        document.getElementById('s-wait').innerText = pending.length;
+        document.getElementById('wait-count').innerText = pending.length;
+        document.getElementById('s-gov').innerText = success.filter(r => r.faction === "الحكومة").length;
+        document.getElementById('s-med').innerText = success.filter(r => r.faction === "التحالف الطبي").length;
+    }
+
+    function resetSystem() { if(confirm("سيتم مسح كافة البيانات!")) { localStorage.clear(); location.reload(); } }
 </script>
 
 </body>
