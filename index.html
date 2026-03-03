@@ -3,127 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام السيادة - ONE LION MULTI-FACTION</title>
+    <title>نظام ONE LION - النسخة الإدارية الكاملة</title>
     <style>
         :root { 
-            --primary: #0a0e14; --gold: #c5a048; --bg: #f4f6f9;
-            --hr-color: #d4af37; --gov-color: #2980b9; --police-color: #2c3e50; 
-            --army-color: #27ae60; --medical-color: #e74c3c;
+            --primary: #0a0e14; --gold: #c5a048; --bg: #f4f7f6;
+            --gov: #1a5276; --police: #1b2631; --med: #c0392b; --hr: #d4af37;
         }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
         header { background: linear-gradient(135deg, var(--primary), #1a2536); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; max-width: 900px; margin: 0 auto; }
-        .stat-card { background: white; padding: 12px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-top: 3px solid var(--gold); }
-        .stat-card h4 { margin: 0; font-size: 11px; color: #7f8c8d; }
-        .stat-card .value { font-size: 18px; font-weight: bold; margin-top: 5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 15px; max-width: 900px; margin: 0 auto; }
+        .stat-card { background: white; padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-top: 3px solid var(--gold); }
+        .stat-card .value { font-size: 18px; font-weight: bold; }
 
-        .page { display: none; padding: 15px; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .page { display: none; padding: 15px; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.4s ease; }
         .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border-right: 5px solid var(--gold); }
-        .btn { padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border-right: 5px solid var(--gold); }
+        .btn { padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 8px; }
         .btn-gold { background: var(--gold); color: var(--primary); }
+        .btn-red { background: #c0392b; color: white; }
 
-        /* أوسمة الفصائل */
-        .badge { padding: 5px 10px; border-radius: 5px; color: white; font-size: 11px; font-weight: bold; display: inline-block; min-width: 85px; }
-        .b-hr { background: var(--hr-color); color: black; }
-        .b-gov { background: var(--gov-color); }
-        .b-police { background: var(--police-color); }
-        .b-army { background: var(--army-color); }
-        .b-med { background: var(--medical-color); }
-        .b-fail { background: #95a5a6; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 10px; overflow: hidden; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; background: white; }
         th { background: var(--primary); color: var(--gold); padding: 12px; font-size: 12px; }
         td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 13px; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 15px 0; border-top: 3px solid var(--gold); z-index: 1000; }
-        .nav-item { color: white; font-size: 12px; cursor: pointer; opacity: 0.7; text-align: center; }
+        /* تنسيق مراجعة الاختبار للمشرف */
+        .review-box { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px; text-align: right; }
+        .review-q { color: #777; font-size: 12px; margin-bottom: 5px; }
+        .review-a { color: var(--primary); font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 15px 0; border-top: 3px solid var(--gold); }
+        .nav-item { color: white; font-size: 12px; cursor: pointer; opacity: 0.6; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-size: 12px; letter-spacing: 3px; color: var(--gold);">وزارة الموارد البشرية</div>
-    <h2 style="margin: 5px 0;">نظام "ONE LION" الشامل للفصائل</h2>
+    <div style="font-size: 11px; letter-spacing: 2px; color: var(--gold);">نظام القيادة الموحد</div>
+    <h2>ONE LION - مراجعة الاختبارات</h2>
 </header>
 
 <div id="stats-area" style="display: none;">
     <div class="stats-grid">
-        <div class="stat-card"><h4>إجمالي القوة</h4><div class="value" id="s-total">0</div></div>
-        <div class="stat-card"><h4>بانتظار المراجعة</h4><div class="value" id="s-wait" style="color:var(--medical-color)">0</div></div>
-        <div class="stat-card"><h4>فصيل الحكومة</h4><div class="value" id="s-gov" style="color:var(--gov-color)">0</div></div>
-        <div class="stat-card"><h4>التحالف الطبي</h4><div class="value" id="s-med" style="color:var(--medical-color)">0</div></div>
+        <div class="stat-card"><h4>الموظفين</h4><div class="value" id="s-total">0</div></div>
+        <div class="stat-card"><h4>المستقيلين</h4><div class="value" id="s-res">0</div></div>
+        <div class="stat-card"><h4>المفصولين</h4><div class="value" id="s-fired" style="color:red">0</div></div>
     </div>
 </div>
 
 <div id="page-home" class="page active-page">
-    <div class="card" style="text-align: center; background: #0a0e14; color: white;">
-        <h3>مرحباً بك في البوابة الوطنية</h3>
-        <p>يرجى اختيار الفصيل الذي تود الانضمام إليه وملء الاستمارة.</p>
-        <button class="btn btn-gold" onclick="navTo('page-quiz')">بدء استمارة التوظيف</button>
-        <button class="btn btn-gold" style="background:transparent; color:white; border:1px solid var(--gold); margin-top:10px;" onclick="handleAdminAccess()">بوابة المسؤولين</button>
+    <div class="card" style="text-align: center; background: var(--primary); color: white;">
+        <h3>بوابة التوظيف</h3>
+        <button class="btn btn-gold" onclick="navTo('page-quiz')">بدء الاختبار</button>
+        <button class="btn btn-gold" style="background:transparent; border:1px solid var(--gold); color:white;" onclick="handleAdminAccess()">دخول المسؤولين</button>
     </div>
 </div>
 
 <div id="page-quiz" class="page">
     <div class="card">
-        <h3>📝 طلب انضمام جديد</h3>
-        <input type="text" id="q-name" placeholder="الاسم الرباعي">
-        <select id="q-faction">
-            <option value="">-- اختر الفصيل المستهدف --</option>
+        <h3>📝 اختبار الفصائل</h3>
+        <input type="text" id="q-name" placeholder="الاسم الكامل">
+        <select id="q-faction" onchange="updateQuestions()">
+            <option value="">-- اختر الفصيل --</option>
             <option value="الحكومة">الحكومة</option>
             <option value="الشرطة">الشرطة</option>
-            <option value="الجيش">الجيش</option>
             <option value="التحالف الطبي">التحالف الطبي</option>
-            <option value="المحاورين">فريق المحاورين (HR)</option>
+            <option value="المحاورين">المحاورين (HR)</option>
         </select>
-        <textarea id="q-ans" placeholder="تحدث عن خبراتك ومهامك في هذا الفصيل..."></textarea>
-        <button class="btn btn-gold" onclick="submitQuiz()">إرسال الطلب</button>
+        <div id="dynamic-questions"></div>
+        <button class="btn btn-gold" id="submit-btn" style="display:none; margin-top:10px;" onclick="submitQuiz()">إرسال</button>
     </div>
 </div>
 
 <div id="page-admin" class="page">
     <div class="card">
-        <h3>لوحة القيادة: <span id="admin-name" style="color:var(--gold)"></span></h3>
-        <button id="asmar-reset" class="btn" style="background:red; color:white; width:auto; font-size:10px; display:none;" onclick="resetSystem()">تصفير شامل</button>
-        <h4>📂 الطلبات المعلقة</h4>
+        <h3>مرحباً <span id="admin-name" style="color:var(--gold)"></span></h3>
+        <div id="asmar-tools" style="display:none;"><button class="btn btn-red" style="width:auto; font-size:10px;" onclick="resetSystem()">تصفير</button></div>
+        <h4>📂 طلبات بانتظار التقييم</h4>
         <div id="pending-container"></div>
     </div>
 </div>
 
+<div id="review-modal" class="page" style="background: white; border: 2px solid var(--gold); border-radius: 15px; padding: 20px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; width: 90%; max-width: 500px; box-shadow: 0 0 50px rgba(0,0,0,0.5);">
+    <h3 id="rev-title">مراجعة الاختبار</h3>
+    <div id="rev-content" class="review-box"></div>
+    <input type="number" id="rev-score" placeholder="ضع الدرجة من 100">
+    <button class="btn btn-gold" onclick="confirmReview()">اعتماد النتيجة</button>
+    <button class="btn btn-red" onclick="closeReview()">إغلاق</button>
+</div>
+
 <div id="page-tables" class="page">
     <div class="card">
-        <h3>📊 السجل العام للفصائل</h3>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr><th>الاسم</th><th>الفصيل</th><th>الرتبة</th><th>الدرجة</th></tr>
-                </thead>
-                <tbody id="table-body"></tbody>
-            </table>
-        </div>
+        <h3>📊 السجل العام</h3>
+        <div style="overflow-x:auto;"><table id="table-results"><thead><tr><th>الاسم</th><th>الفصيل</th><th>الرتبة</th><th>إجراء</th></tr></thead><tbody id="res-body"></tbody></table></div>
     </div>
 </div>
 
 <div id="page-login" class="page">
-    <div class="card" style="max-width: 400px; margin: auto;">
-        <h3 style="text-align: center;">🔐 منطقة محظورة</h3>
-        <input type="password" id="adminPass" placeholder="رمز الدخول">
-        <button class="btn btn-gold" onclick="adminLogin()">دخول</button>
-    </div>
+    <div class="card" style="max-width:300px; margin:auto;"><input type="password" id="adminPass" placeholder="رمز الدخول"><button class="btn btn-gold" onclick="adminLogin()">دخول</button></div>
 </div>
 
 <nav class="nav-bar" id="bottom-nav" style="display:none;">
     <div class="nav-item" onclick="navTo('page-home')">🏠<br>الرئيسية</div>
     <div class="nav-item" onclick="navTo('page-admin')">⚙️<br>الإدارة <span id="wait-count" style="color:red">0</span></div>
-    <div class="nav-item" onclick="navTo('page-tables')">📊<br>السجلات</div>
+    <div class="nav-item" onclick="navTo('page-tables')">📋<br>السجلات</div>
 </nav>
 
 <script>
     let currentUser = localStorage.getItem('lion_user');
+    let currentReviewId = null;
+
+    const questionsMap = {
+        "الحكومة": ["كيف تتعامل مع الأزمات السياسية؟", "ما هو مفهومك لخدمة المواطن؟"],
+        "الشرطة": ["متى يحق لك استخدام القوة؟", "كيف تتصرف في حال وجود تبليغ مشبوه؟"],
+        "التحالف الطبي": ["ما هي أولوياتك في الطوارئ؟", "كيف تتعامل مع مريض يرفض العلاج؟"],
+        "المحاورين": ["ما هي معايير اختيار الموظف؟", "كيف تحل نزاعاً بين موظفين؟"]
+    };
 
     window.onload = () => { if(currentUser) setupAdmin(currentUser); updateStats(); };
 
@@ -146,18 +144,28 @@
         document.getElementById('admin-name').innerText = user;
         document.getElementById('bottom-nav').style.display = 'flex';
         document.getElementById('stats-area').style.display = 'block';
-        if(user === 'Asmar') document.getElementById('asmar-reset').style.display = 'block';
+        if(user === 'Asmar') document.getElementById('asmar-tools').style.display = 'block';
         navTo('page-admin'); updateStats();
+    }
+
+    function updateQuestions() {
+        const f = document.getElementById('q-faction').value;
+        const container = document.getElementById('dynamic-questions');
+        const btn = document.getElementById('submit-btn');
+        if(!f) { container.innerHTML = ""; btn.style.display = "none"; return; }
+        
+        container.innerHTML = questionsMap[f].map((q, i) => `<label>${q}</label><textarea id="ans${i}"></textarea>`).join('');
+        btn.style.display = "block";
     }
 
     function submitQuiz() {
         const name = document.getElementById('q-name').value;
         const faction = document.getElementById('q-faction').value;
-        const ans = document.getElementById('q-ans').value;
-        if(!name || !faction) return alert("أكمل البيانات!");
+        if(!name || !faction) return alert("أكمل البيانات");
 
+        const answers = questionsMap[faction].map((_, i) => document.getElementById(`ans${i}`).value);
         let pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
-        pending.push({ id: Date.now(), name, faction, ans });
+        pending.push({ id: Date.now(), name, faction, questions: questionsMap[faction], answers });
         localStorage.setItem('lion_pending', JSON.stringify(pending));
         alert("تم الإرسال!"); location.reload();
     }
@@ -165,77 +173,77 @@
     function renderPending() {
         const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
         const container = document.getElementById('pending-container');
-        if(pending.length === 0) { container.innerHTML = "لا يوجد طلبات حالياً."; return; }
-
-        let html = `<table><tr><th>الاسم</th><th>الفصيل</th><th>إجراء</th></tr>`;
-        pending.forEach(p => {
-            html += `<tr><td>${p.name}</td><td>${p.faction}</td><td><button onclick="review('${p.id}')">تصحيح</button></td></tr>`;
-        });
-        container.innerHTML = html + `</table>`;
+        container.innerHTML = `<table><tr><th>الاسم</th><th>الفصيل</th><th>إجراء</th></tr>` + 
+            pending.map(p => `<tr><td>${p.name}</td><td>${p.faction}</td><td><button onclick="openReview('${p.id}')">مراجعة الاختبار</button></td></tr>`).join('') + `</table>`;
         document.getElementById('wait-count').innerText = pending.length;
     }
 
-    function review(id) {
+    function openReview(id) {
+        currentReviewId = id;
         const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
         const req = pending.find(x => x.id == id);
-        const score = prompt(`مراجعة طلب: ${req.name}\nالفصيل: ${req.faction}\n\nضع الدرجة (0-100):`);
+        document.getElementById('rev-title').innerText = `اختبار: ${req.name}`;
         
-        if(!score) return;
+        let content = "";
+        req.questions.forEach((q, i) => {
+            content += `<div class="review-q">السؤال: ${q}</div><div class="review-a">${req.answers[i] || 'لا توجد إجابة'}</div>`;
+        });
+        
+        document.getElementById('rev-content').innerHTML = content;
+        document.getElementById('review-modal').classList.add('active-page');
+    }
+
+    function closeReview() { document.getElementById('review-modal').classList.remove('active-page'); }
+
+    function confirmReview() {
+        const score = document.getElementById('rev-score').value;
+        if(!score) return alert("ضع الدرجة!");
+        
+        const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
+        const req = pending.find(x => x.id == currentReviewId);
         const s = parseInt(score);
-        let rank = "مرفوض"; let badgeClass = "b-fail";
+        let rank = "راسب";
 
         if(s >= 70) {
-            if(req.faction === "الحكومة") {
-                rank = s >= 90 ? "وزير" : s >= 80 ? "مستشار" : "وكيل";
-                badgeClass = "b-gov";
-            } else if(req.faction === "الشرطة") {
-                rank = s >= 90 ? "لواء" : s >= 80 ? "عميد" : "عقيد";
-                badgeClass = "b-police";
-            } else if(req.faction === "الجيش") {
-                rank = s >= 90 ? "فريق" : s >= 80 ? "عميد عسكري" : "مقدم";
-                badgeClass = "b-army";
-            } else if(req.faction === "التحالف الطبي") {
-                rank = s >= 90 ? "دكتور استشاري" : s >= 80 ? "طبيب أخصائي" : "ممارس صحي";
-                badgeClass = "b-med";
-            } else if(req.faction === "المحاورين") {
-                rank = s >= 90 ? "مدير HR" : s >= 80 ? "مشرف محاورين" : "منسق إداري";
-                badgeClass = "b-hr";
-            }
+            if(req.faction === "الحكومة") rank = s >= 90 ? "وزير" : "مستشار";
+            else if(req.faction === "الشرطة") rank = s >= 90 ? "لواء" : "عميد";
+            else if(req.faction === "التحالف الطبي") rank = s >= 90 ? "استشاري" : "طبيب";
+            else rank = s >= 90 ? "مدير HR" : "مشرف";
         }
 
         let results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        results.push({ ...req, score: s, rank, badgeClass });
+        results.push({ name: req.name, faction: req.faction, rank, score: s });
         localStorage.setItem('lion_results', JSON.stringify(results));
-        localStorage.setItem('lion_pending', JSON.stringify(pending.filter(x => x.id != id)));
-        updateStats(); renderPending();
+        localStorage.setItem('lion_pending', JSON.stringify(pending.filter(x => x.id != currentReviewId)));
+        
+        closeReview(); updateStats(); renderPending();
+    }
+
+    function terminate(name, type) {
+        const reason = prompt(`سبب ${type}:`);
+        if(!reason) return;
+        let archive = JSON.parse(localStorage.getItem('lion_archive') || "[]");
+        archive.push({ name, type, reason });
+        localStorage.setItem('lion_archive', JSON.stringify(archive));
+        let results = JSON.parse(localStorage.getItem('lion_results') || "[]");
+        localStorage.setItem('lion_results', JSON.stringify(results.filter(x => x.name !== name)));
+        updateStats(); renderResults();
     }
 
     function renderResults() {
-        const results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        document.getElementById('table-body').innerHTML = results.map(r => `
-            <tr>
-                <td><b>${r.name}</b></td>
-                <td>${r.faction}</td>
-                <td><span class="badge ${r.badgeClass}">${r.rank}</span></td>
-                <td>${r.score}</td>
-            </tr>
-        `).join('');
+        const res = JSON.parse(localStorage.getItem('lion_results') || "[]");
+        document.getElementById('res-body').innerHTML = res.map(r => `<tr><td>${r.name}</td><td>${r.faction}</td><td>${r.rank}</td><td><button onclick="terminate('${r.name}', 'استقالة')">استقالة</button> <button onclick="terminate('${r.name}', 'فصل')" style="background:red; color:white;">فصل</button></td></tr>`).join('');
     }
 
     function updateStats() {
-        const results = JSON.parse(localStorage.getItem('lion_results') || "[]");
-        const pending = JSON.parse(localStorage.getItem('lion_pending') || "[]");
-        const success = results.filter(r => r.score >= 70);
-        
-        document.getElementById('s-total').innerText = success.length;
-        document.getElementById('s-wait').innerText = pending.length;
-        document.getElementById('wait-count').innerText = pending.length;
-        document.getElementById('s-gov').innerText = success.filter(r => r.faction === "الحكومة").length;
-        document.getElementById('s-med').innerText = success.filter(r => r.faction === "التحالف الطبي").length;
+        const res = JSON.parse(localStorage.getItem('lion_results') || "[]");
+        const arch = JSON.parse(localStorage.getItem('lion_archive') || "[]");
+        document.getElementById('s-total').innerText = res.length;
+        document.getElementById('s-res').innerText = arch.filter(x => x.type === 'استقالة').length;
+        document.getElementById('s-fired').innerText = arch.filter(x => x.type === 'فصل').length;
     }
 
-    function resetSystem() { if(confirm("سيتم مسح كافة البيانات!")) { localStorage.clear(); location.reload(); } }
+    function resetSystem() { if(confirm("مسح الكل؟")) { localStorage.clear(); location.reload(); } }
 </script>
-
 </body>
 </html>
