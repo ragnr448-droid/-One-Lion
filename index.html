@@ -3,238 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية | حكومة One Lion</title>
+    <title>وزارة الموارد البشرية - Human Resources</title>
     <style>
-        :root {
-            --bg-dark: #111827;
-            --card-navy: #1e293b;
-            --gold: #c5a048;
-            --gold-hover: #e2b659;
-            --white: #ffffff;
-            --text-gray: #64748b;
-        }
-
+        /* التنسيق العام المستوحى من ستايل المنتدى */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8fafc;
+            background-color: #f0f2f5;
             margin: 0;
-            padding-bottom: 50px;
-            color: #1e293b;
+            padding: 20px;
+            color: #1c1e21;
         }
 
-        /* الجزء العلوي (مطابق للصورة تماماً) */
-        .hero-section {
-            background-color: var(--bg-dark);
-            color: var(--white);
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--gold);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .hero-section h3 { font-size: 1.1rem; font-weight: normal; margin-bottom: 15px; }
-        .hero-section h1 { color: var(--gold); font-size: 2.2rem; margin-bottom: 25px; line-height: 1.4; }
-        .hero-section p { font-size: 0.95rem; opacity: 0.8; max-width: 600px; margin: 0 auto 40px; line-height: 1.8; }
+        /* تنسيق الأقسام (Blocks) */
+        .block {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
 
-        .hero-btns { display: flex; justify-content: center; gap: 15px; }
-        .btn-gold { background: var(--gold); color: var(--bg-dark); border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--white); padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .block-header {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 12px 15px;
+            margin: 0;
+            font-size: 18px;
+        }
 
-        /* شبكة الإحصائيات (البطاقات البيضاء) */
-        .container { max-width: 900px; margin: -40px auto 20px; padding: 0 15px; }
-        .stats-grid {
+        .block-body {
+            padding: 10px;
+        }
+
+        /* تنسيق الرتبة (User Banner) */
+        .rank-hr {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #27ae60; 
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        /* تنسيق الأوسمة (Prefixes) */
+        .label {
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .label-red { background: #e74c3c; color: #fff; }
+        .label-yellow { background: #f1c40f; color: #333; }
+        .label-blue { background: #2980b9; color: #fff; }
+
+        /* تنسيق الصفوف داخل القسم */
+        .node-row {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+        }
+        .node-row:last-child { border-bottom: none; }
+        .node-row:hover { background: #f9f9f9; }
+
+        /* تنسيق شبكة الأزرار */
+        .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
         }
 
-        .stat-card {
-            background: var(--white);
-            padding: 40px 20px;
-            border-radius: 15px;
+        .hr-btn {
+            background-color: #4a5d7e;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
         }
+        .hr-btn:hover { background-color: #34495e; }
 
-        .stat-card h2 { font-size: 2.5rem; margin: 0; color: var(--bg-dark); }
-        .stat-card p { color: var(--text-gray); font-weight: bold; margin-top: 10px; }
-
-        /* نظام التبويبات والدواوين */
-        .tab-section { background: white; padding: 20px; border-radius: 15px; margin-top: 20px; border-right: 6px solid var(--gold); }
-        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .tab-btn { background: #e2e8f0; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
-        .tab-btn.active { background: var(--gold); color: black; }
-
-        .hidden { display: none; }
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        /* البلاك ليست */
-        .bl-alert { background: #fee2e2; color: #991b1b; padding: 15px; border-radius: 10px; border: 1px solid #f87171; margin-bottom: 15px; font-weight: bold; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .profile-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ddd;
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body>
 
-<div class="hero-section">
-    <h3>البوابة الرقمية الرسمية</h3>
-    <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
-    <p>تُعنى وزارة الموارد البشرية بتنظيم بيئة العمل وتطوير الكفاءات البشرية لضمان أعلى مستويات الإنتاجية والعدالة الوظيفية داخل ولاية One Lion.</p>
-    
-    <div class="hero-btns">
-        <button class="btn-gold" onclick="startQuiz()">ابدأ اختبار الكفاءة</button>
-        <button class="btn-outline" onclick="adminAccess()">عرض الناجحين (للإدارة)</button>
-    </div>
-</div>
-
 <div class="container">
-    <div id="home-stats" class="stats-grid">
-        <div class="stat-card"><h2 id="pass-count">0</h2><p>ناجح في الاختبار</p></div>
-        <div class="stat-card"><h2>10</h2><p>عدد الأسئلة</p></div>
-        <div class="stat-card"><h2>100</h2><p>الدرجة الكلية</p></div>
-        <div class="stat-card"><h2>70</h2><p>درجة النجاح</p></div>
-    </div>
 
-    <div id="quiz-box" class="tab-section hidden">
-        <h3 id="q-title" style="color:var(--gold)">جاري التحميل...</h3>
-        <div id="q-body"></div>
-    </div>
-
-    <div id="admin-box" class="hidden">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="setFac('شرطة', this)">ديوان الشرطة</button>
-            <button class="tab-btn" onclick="setFac('جيش', this)">ديوان الجيش</button>
-            <button class="tab-btn" onclick="setFac('طبي', this)">التحالف الطبي</button>
-            <button class="tab-btn" onclick="setFac('حكومة', this)">ديوان الحكومة</button>
-        </div>
-
-        <div class="tab-section">
-            <h4>➕ تعيين جديد (<span id="cur-fac">الشرطة</span>)</h4>
-            <div id="bl-warning" class="bl-alert hidden">⚠️ هذا الاسم محظور حالياً!</div>
-            <input type="text" id="new-name" placeholder="اسم الموظف" oninput="checkBL(this.value)">
-            <input type="text" id="new-rank" placeholder="الرتبة">
-            <button class="btn-gold" style="width:100%" onclick="hire()">تثبيت الموظف</button>
-        </div>
-
-        <div class="tab-section">
-            <h4>📝 طلبات قيد التصحيح</h4>
-            <div id="exams-to-grade"></div>
-        </div>
-
-        <div class="tab-section">
-            <h4>👥 الكادر الحالي</h4>
-            <div id="staff-table"></div>
+    <div class="block">
+        <div class="profile-card">
+            <div class="avatar"></div> <div>
+                <h3 style="margin:0">اسم المستخدم</h3>
+                <span class="rank-hr">وزارة الموارد البشرية</span>
+                <div style="font-size:12px; color: #777;">Joined: Mar 3, 2026</div>
+            </div>
         </div>
     </div>
+
+    <div class="block">
+        <h2 class="block-header">أقسام الوزارة - Human Resources Sections</h2>
+        <div class="block-body">
+            <div class="node-row">
+                <span class="label label-red">Important</span>
+                <div style="margin-right: 10px;">
+                    <strong>نموذج التقديم للإدارة</strong>
+                    <div style="font-size:12px; color:#888;">آخر رد: منذ دقيقتين</div>
+                </div>
+            </div>
+            <div class="node-row">
+                <span class="label label-yellow">Pending review</span>
+                <div style="margin-right: 10px;">
+                    <strong>طلبات المراجعة (مشرف)</strong>
+                    <div style="font-size:12px; color:#888;">آخر رد: يوم أمس</div>
+                </div>
+            </div>
+            <div class="node-row">
+                <span class="label label-blue">On consideration</span>
+                <div style="margin-right: 10px;">
+                    <strong>الأرشيف العام للوزارة</strong>
+                    <div style="font-size:12px; color:#888;">قسم مغلق</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block">
+        <h2 class="block-header">روابط سريعة</h2>
+        <div class="grid-container">
+            <a href="#" class="hr-btn">تقديم طلب جديد</a>
+            <a href="#" class="hr-btn">قوانين الوزارة</a>
+            <a href="#" class="hr-btn">الملفات الرسمية</a>
+            <a href="#" class="hr-btn">تواصل مع الوزير</a>
+        </div>
+    </div>
+
 </div>
 
-<script>
-    let role = 'guest';
-    let currentFac = 'شرطة';
-    let db = JSON.parse(localStorage.getItem('hr_v6')) || { staff: [], exams: [], bl: [] };
-
-    // أسئلة القوانين المقبوسة من صورك
-    const questions = [
-        { q: "ما هي عقوبة مخالفة السلوك المهني (GOV-A1)؟", a: ["تنبيه شفهي -> إنذار", "فصل فوري", "توبيخ"], c: 0 },
-        { q: "هل يحظر منح امتيازات خاصة دون سبب RP واضح (GOV-A7)؟", a: ["صح", "خطأ"], c: 0 },
-        { q: "ما هو دور المحاور في تطوير القسم؟ (سؤال مقالي)", type: 'text' },
-        { q: "كيف تتعامل مع استخدام السلطة لأغراض غير رسمية (GOV-A8)؟", a: ["إنذار -> توبيخ", "فصل فوراً", "تجاهل"], c: 0 }
-    ];
-
-    function startQuiz() {
-        let name = prompt("الاسم الرباعي:");
-        if(!name) return;
-        sessionStorage.setItem('applicant', name);
-        document.getElementById('home-stats').classList.add('hidden');
-        document.getElementById('quiz-box').classList.remove('hidden');
-        renderQuiz();
-    }
-
-    function renderQuiz() {
-        let html = "";
-        questions.forEach((q, i) => {
-            html += `<p><b>${i+1}. ${q.q}</b></p>`;
-            if(q.type === 'text') html += `<textarea id="ans-${i}"></textarea>`;
-            else html += `<select id="ans-${i}">${q.a.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}</select>`;
-        });
-        html += `<button class="btn-gold" onclick="sendExam()">إرسال الطلب</button>`;
-        document.getElementById('q-body').innerHTML = html;
-        document.getElementById('q-title').innerText = "نموذج اختبار المحاورين";
-    }
-
-    function sendExam() {
-        let answers = questions.map((_, i) => document.getElementById(`ans-${i}`).value);
-        db.exams.push({ name: sessionStorage.getItem('applicant'), answers, status: 'pending' });
-        save();
-        alert("تم الإرسال للمشرف.");
-        location.reload();
-    }
-
-    function adminAccess() {
-        let p = prompt("الكود السري:");
-        if(p === 'asmar123' || p === 'HR12') {
-            role = (p === 'asmar123') ? 'admin' : 'hr';
-            document.getElementById('home-stats').classList.add('hidden');
-            document.getElementById('admin-box').classList.remove('hidden');
-            renderAdmin();
-        }
-    }
-
-    function renderAdmin() {
-        document.getElementById('cur-fac').innerText = currentFac;
-        
-        // تصحيح
-        let exHtml = "";
-        db.exams.filter(e => e.status === 'pending').forEach((ex, idx) => {
-            exHtml += `<div style="border-bottom:1px solid #ddd; padding:10px;">
-                <b>المتقدم: ${ex.name}</b><br>
-                <button onclick="grade(${idx}, 'pass')">نجاح (تعميد)</button>
-                <button onclick="grade(${idx}, 'fail')" style="color:red">رسوب</button>
-            </div>`;
-        });
-        document.getElementById('exams-to-grade').innerHTML = exHtml || "لا يوجد طلبات.";
-
-        // موظفين
-        let sTable = "<table><tr><th>الاسم</th><th>الرتبة</th><th>تحكم</th></tr>";
-        db.staff.filter(s => s.fac === currentFac).forEach(s => {
-            sTable += `<tr><td>${s.name}</td><td>${s.rank}</td>
-            <td><button onclick="fire('${s.name}', 'استقالة')">استقالة</button>
-            <button onclick="fire('${s.name}', 'فصل')" style="background:black; color:white">فصل</button></td></tr>`;
-        });
-        document.getElementById('staff-list').innerHTML = sTable + "</table>";
-    }
-
-    function checkBL(n) {
-        let found = db.bl.find(b => b.name === n);
-        document.getElementById('bl-warning').classList.toggle('hidden', !found);
-    }
-
-    function hire() {
-        let n = document.getElementById('new-name').value;
-        let r = document.getElementById('new-rank').value;
-        if(db.bl.find(b => b.name === n)) return alert("الاسم في البلاك ليست!");
-        db.staff.push({ name: n, rank: r, fac: currentFac });
-        save(); renderAdmin();
-    }
-
-    function fire(name, type) {
-        if(role !== 'admin') return alert("للمدير فقط!");
-        let days = (type === 'استقالة') ? 3 : prompt("أيام التهدئة:", "5");
-        db.bl.push({ name, days });
-        db.staff = db.staff.filter(s => s.name !== name);
-        save(); renderAdmin();
-    }
-
-    function setFac(f, btn) {
-        currentFac = f;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderAdmin();
-    }
-
-    function save() { localStorage.setItem('hr_v6', JSON.stringify(db)); }
-    window.onload = () => { document.getElementById('pass-count').innerText = db.exams.filter(e => e.status === 'pass').length; };
-</script>
 </body>
 </html>
