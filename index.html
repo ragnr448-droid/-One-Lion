@@ -3,185 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الموارد البشرية - One Lion</title>
+    <title>نظام المحاورين - الموارد البشرية</title>
     <style>
-        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
+        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
+        header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
         
-        .hero-card { background: var(--primary); color: white; width: 90%; margin: 20px auto; padding: 35px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .hero-card h1 { color: var(--gold); margin: 0 0 10px 0; font-size: 24px; }
+        .hero-card { background: var(--primary); color: white; width: 85%; margin: 20px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .hero-card h1 { font-size: 26px; color: var(--gold); margin-bottom: 10px; }
         
-        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
         .btn-gold:hover { opacity: 0.8; }
-        
-        .admin-section { display: none; width: 92%; margin: 20px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        
-        .grid-factions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 20px; }
-        .faction-card { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-        .faction-card:hover { border-color: var(--gold); background: #fffdf5; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th, td { padding: 12px; border: 1px solid #eee; text-align: center; }
+        .admin-panel, .section-box { background: white; width: 92%; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
         th { background: var(--primary); color: white; }
 
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .bg-red { background: #fee2e2; color: #dc2626; }
-        .bg-blue { background: #e0f2fe; color: #0284c7; }
-
-        #login-overlay { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: white; padding: 30px; border-radius: 15px; width: 300px; text-align: center; }
+        .notify { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
+        .quiz-q { font-weight: bold; color: var(--primary); margin-top: 15px; display: block; }
     </style>
 </head>
 <body>
 
-<div id="login-overlay">
-    <div class="login-card">
-        <h2 style="color: var(--primary)">تسجيل الدخول</h2>
-        <input type="text" id="user" placeholder="اسم المستخدم">
-        <input type="password" id="pass" placeholder="كلمة المرور">
-        <button class="btn-gold" onclick="login()">دخول</button>
-        <p style="font-size: 11px; color: #777; margin-top: 10px;">نظام One Lion - المحمي</p>
-    </div>
-</div>
+<div id="notify" class="notify">تم الحفظ بنجاح!</div>
 
 <header>
-    <h2>وزارة الموارد البشرية</h2>
-    <p>بوابة الإشراف والرقابة الفصائلية</p>
+    <h2>نظام إدارة المحاورين</h2>
+    <p>وزارة الموارد البشرية - One Lion</p>
 </header>
 
-<div class="hero-card" id="welcome-msg">
+<div id="main-hero" class="hero-card">
     <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
-    <p>أهلاً بك <span id="admin-name" style="color: var(--gold); font-weight: bold;"></span>. يمكنك الآن إدارة الاستقالات والقوائم السوداء لجميع الفصائل بضغطة زر واحدة.</p>
-    <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn-gold" onclick="showView('action-area')">إضافة إجراء</button>
-        <button class="btn-gold" style="background: white; border: 2px solid var(--gold);" onclick="showView('tables-area')">عرض السجلات</button>
+    <p>هذه البوابة مخصصة لاختبارات كفاءة **المحاورين** داخل الفصائل لضمان جودة الأداء والانضباط الإداري.</p>
+    <div style="display: flex; gap: 10px;">
+        <button class="btn-gold" onclick="showQuiz()">ابدأ اختبار المحاورين</button>
+        <button class="btn-gold" style="background:white; border:2px solid var(--gold);" onclick="checkAdminView()">لوحة الإدارة</button>
     </div>
 </div>
 
-<div id="action-area" class="admin-section">
-    <h3>إضافة سجل جديد</h3>
-    <input type="text" id="target-name" placeholder="اسم الموظف الثلاثي">
-    <select id="target-faction">
+<div id="login-section" class="admin-panel">
+    <h3>تسجيل الدخول (أسمر / مساعد)</h3>
+    <input type="password" id="adminPass" placeholder="كلمة المرور">
+    <button class="btn-gold" onclick="adminLogin()">دخول</button>
+</div>
+
+<div id="admin-main" class="admin-panel">
+    <h3>مرحباً: <span id="adminNameDisplay"></span></h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn-gold" style="background:#2c3e50; color:white;" onclick="toggleSection('tables-view')">الجدول الموحد</button>
+        <button class="btn-gold" style="background:#2c3e50; color:white;" onclick="loadReviews()">مراجعة الاختبارات</button>
+    </div>
+    <hr>
+    <h4>إضافة إجراء جديد:</h4>
+    <input type="text" id="targetName" placeholder="اسم المحاور">
+    <select id="targetFaction">
         <option value="الشرطة">فصيل الشرطة</option>
         <option value="الجيش">فصيل الجيش</option>
         <option value="التحالف">فصيل التحالف</option>
         <option value="الطبي">الفصيل الطبي</option>
         <option value="الحكومة">فصيل الحكومة</option>
     </select>
-    <select id="action-type">
-        <option value="استقالة (3 أيام)">استقالة 3 أيام</option>
-        <option value="تهدئة يدوية">تهدئة يدوية</option>
-        <option value="بلاك ليست" id="opt-bl">بلاك ليست (حظر دائم)</option>
+    <select id="actionType">
+        <option value="بلاك ليست">بلاك ليست</option>
+        <option value="استقالة">استقالة 3 أيام</option>
+        <option value="تهدئة">تهدئة يدوية</option>
     </select>
-    <button class="btn-gold" onclick="saveRecord()">تأكيد العملية ورصدها</button>
+    <button class="btn-gold" onclick="saveToDB()">رصد الإجراء</button>
+    <button onclick="logout()" style="margin-top:20px; background:none; border:none; color:red; cursor:pointer;">تسجيل خروج</button>
 </div>
 
-<div id="tables-area" class="admin-section">
-    <h3>القوائم المنفصلة للفصائل</h3>
-    <div class="grid-factions">
-        <div class="faction-card" onclick="filterTable('الشرطة')">🛡️ الشرطة</div>
-        <div class="faction-card" onclick="filterTable('الجيش')">⚔️ الجيش</div>
-        <div class="faction-card" onclick="filterTable('التحالف')">🤝 التحالف</div>
-        <div class="faction-card" onclick="filterTable('الطبي')">🚑 الطبي</div>
-        <div class="faction-card" onclick="filterTable('الحكومة')">⚖️ الحكومة</div>
-        <div class="faction-card" onclick="filterTable('الكل')" style="background: var(--gold); color: white;">عرض الكل</div>
-    </div>
-
-    <table id="main-table">
+<div id="reviews-view" class="section-box">
+    <h3>إجابات اختبارات المحاورين</h3>
+    <table id="reviewsTable">
         <thead>
             <tr>
-                <th>الموظف</th>
+                <th>المحاور</th>
                 <th>الفصيل</th>
-                <th>الإجراء</th>
-                <th>بواسطة</th>
                 <th>التاريخ</th>
+                <th>الإجابات</th>
+                <th>حذف</th>
             </tr>
         </thead>
-        <tbody id="table-body">
-            </tbody>
+        <tbody id="reviews-body"></tbody>
     </table>
+    <button class="btn-gold" style="margin-top:15px;" onclick="toggleSection('admin-main')">العودة</button>
+</div>
+
+<div id="tables-view" class="section-box">
+    <h3>سجل الرقابة الموحد</h3>
+    <table id="unifiedTable">
+        <thead>
+            <tr>
+                <th>المحاور</th>
+                <th>الفصيل</th>
+                <th>الإجراء</th>
+                <th>التاريخ</th>
+                <th>بواسطة</th>
+                <th>حذف</th>
+            </tr>
+        </thead>
+        <tbody id="db-body"></tbody>
+    </table>
+    <button class="btn-gold" style="margin-top:15px;" onclick="toggleSection('admin-main')">العودة</button>
+</div>
+
+<div id="quiz-container" class="admin-panel">
+    <h2>اختبار كفاءة المحاورين</h2>
+    <div style="background:#eee; padding:15px; border-radius:8px;">
+        <input type="text" id="q-name" placeholder="اسمك الكامل">
+        <select id="q-faction">
+            <option value="الشرطة">محاور في فصيل الشرطة</option>
+            <option value="الجيش">محاور في فصيل الجيش</option>
+            <option value="التحالف">محاور في فصيل التحالف</option>
+            <option value="الطبي">محاور في الفصيل الطبي</option>
+            <option value="الحكومة">محاور في فصيل الحكومة</option>
+        </select>
+    </div>
+    <div id="quiz-questions"></div>
+    <button class="btn-gold" style="margin-top:20px;" onclick="submitQuiz()">إرسال الإجابات للمراجعة</button>
 </div>
 
 <script>
-    // نظام حفظ الجلسة
+    let userRole = "";
+    const questions = [
+        "ما هو دور المحاورين الأساسي داخل الفصيل؟",
+        "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
+        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟",
+        "ما هي مدة فترة التجربة للموظف الجديد؟",
+        "متى يحق للموظف تقديم استقالة فورية؟",
+        "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
+        "كيف يتم تقييم أداء المحاورين شهرياً؟",
+        "ما هي شروط الانضباط الأساسية؟",
+        "ما هو دورك في حل النزاعات؟",
+        "كم عدد ساعات العمل الرسمية؟"
+    ];
+
     window.onload = () => {
-        const session = sessionStorage.getItem("hr_auth");
-        if (session) {
-            applyLogin(JSON.parse(session));
-        }
+        const session = localStorage.getItem("lion_auth");
+        if(session) loginEffect(session);
+        loadTableData();
     };
 
-    function login() {
-        const user = document.getElementById('user').value;
-        const pass = document.getElementById('pass').value;
-
-        let authData = null;
-        if (user === "Asmar" && pass === "asmar123") {
-            authData = { name: "Asmar", role: "super" };
-        } else if (user === "HR12" && pass === "HR12") {
-            authData = { name: "HR12", role: "assistant" };
-        }
-
-        if (authData) {
-            sessionStorage.setItem("hr_auth", JSON.stringify(authData));
-            applyLogin(authData);
-        } else {
-            alert("بيانات الدخول غير صحيحة");
-        }
+    function adminLogin() {
+        const p = document.getElementById('adminPass').value;
+        if(p === "asmar123") loginEffect("المشرف أسمر");
+        else if(p === "HR12") loginEffect("المساعد HR12");
+        else alert("خطأ!");
     }
 
-    function applyLogin(data) {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('admin-name').innerText = data.name;
-        document.getElementById('welcome-msg').style.display = 'block';
-        
-        // إخفاء البلاك ليست عن المساعد
-        if (data.role === "assistant") {
-            document.getElementById('opt-bl').style.display = 'none';
-        }
+    function loginEffect(role) {
+        userRole = role;
+        localStorage.setItem("lion_auth", role);
+        toggleSection('admin-main');
+        document.getElementById('adminNameDisplay').innerText = role;
     }
 
-    function showView(id) {
-        document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        window.scrollTo(0, document.body.scrollHeight);
-    }
+    function logout() { localStorage.removeItem("lion_auth"); location.reload(); }
 
-    function saveRecord() {
-        const name = document.getElementById('target-name').value;
-        const faction = document.getElementById('target-faction').value;
-        const type = document.getElementById('action-type').value;
-        const admin = JSON.parse(sessionStorage.getItem("hr_auth")).name;
-        const date = new Date().toLocaleDateString('ar-EG');
-
-        if (!name) return alert("اكتب اسم الموظف!");
-
-        const table = document.getElementById('table-body');
-        const row = `<tr>
-            <td><b>${name}</b></td>
-            <td>${faction}</td>
-            <td><span class="status-badge ${type === 'بلاك ليست' ? 'bg-red' : 'bg-blue'}">${type}</span></td>
-            <td>${admin}</td>
-            <td>${date}</td>
-        </tr>`;
-        
-        table.innerHTML = row + table.innerHTML;
-        alert("تم تسجيل البيانات في قائمة " + faction);
-        document.getElementById('target-name').value = "";
-        showView('tables-area');
-    }
-
-    function filterTable(faction) {
-        const rows = document.querySelectorAll('#table-body tr');
-        rows.forEach(row => {
-            if (faction === 'الكل') {
-                row.style.display = '';
-            } else {
-                row.cells[1].innerText === faction ? row.style.display = '' : row.style.display = 'none';
-            }
+    function showQuiz() {
+        const container = document.getElementById('quiz-questions');
+        container.innerHTML = "";
+        questions.forEach((q, i) => {
+            container.innerHTML += `<span class="quiz-q">${i+1}. ${q}</span><textarea id="ans-${i}" placeholder="اكتب إجابتك هنا..."></textarea>`;
         });
+        toggleSection('quiz-container');
+    }
+
+    function submitQuiz() {
+        const name = document.getElementById('q-name').value;
+        const faction = document.getElementById('q-faction').value;
+        if(!name) return alert("اكتب اسمك أولاً");
+
+        let answers = [];
+        for(let i=0; i<10; i++) answers.push(document.getElementById(`ans-${i}`).value);
+
+        const record = { id: Date.now(), name, faction, answers, date: new Date().toLocaleDateString('ar-EG') };
+        let reviews = JSON.parse(localStorage.getItem("lion_reviews") || "[]");
+        reviews.push(record);
+        localStorage.setItem("lion_reviews", JSON.stringify(reviews));
+
+        alert("شكراً لك.. تم إرسال إجاباتك للمراجعة الإدارية.");
+        location.reload();
+    }
+
+    function loadReviews() {
+        toggleSection('reviews-view');
+        const reviews = JSON.parse(localStorage.getItem("lion_reviews") || "[]");
+        const tbody = document.getElementById('reviews-body');
+        tbody.innerHTML = "";
+        reviews.reverse().forEach(r => {
+            tbody.innerHTML += `<tr>
+                <td>${r.name}</td>
+                <td>${r.faction}</td>
+                <td>${r.date}</td>
+                <td><button onclick="viewAns(${r.id})">قراءة الإجابات</button></td>
+                <td><button onclick="deleteRev(${r.id})" style="color:red">✖</button></td>
+            </tr>`;
+        });
+    }
+
+    function viewAns(id) {
+        const reviews = JSON.parse(localStorage.getItem("lion_reviews") || "[]");
+        const r = reviews.find(x => x.id === id);
+        let text = `إجابات المحاور: ${r.name}\n\n`;
+        r.answers.forEach((a, i) => text += `${i+1}. ${a}\n`);
+        alert(text);
+    }
+
+    function saveToDB() {
+        const name = document.getElementById('targetName').value;
+        const faction = document.getElementById('targetFaction').value;
+        const type = document.getElementById('actionType').value;
+        if(!name) return;
+
+        const record = { id: Date.now(), name, faction, type, by: userRole, date: new Date().toLocaleDateString('ar-EG') };
+        let data = JSON.parse(localStorage.getItem("lion_data") || "[]");
+        data.push(record);
+        localStorage.setItem("lion_data", JSON.stringify(data));
+        loadTableData();
+        showNotify("تم الرصد!");
+    }
+
+    function loadTableData() {
+        const data = JSON.parse(localStorage.getItem("lion_data") || "[]");
+        const tbody = document.getElementById('db-body');
+        tbody.innerHTML = "";
+        data.reverse().forEach(item => {
+            tbody.innerHTML += `<tr>
+                <td>${item.name}</td><td>${item.faction}</td><td>${item.type}</td><td>${item.date}</td><td>${item.by}</td>
+                <td><button onclick="deleteData(${item.id})" style="color:red">✖</button></td>
+            </tr>`;
+        });
+    }
+
+    function deleteData(id) {
+        if(userRole.includes("HR12")) return alert("صلاحية الحذف للمشرف فقط");
+        let data = JSON.parse(localStorage.getItem("lion_data") || "[]");
+        localStorage.setItem("lion_data", JSON.stringify(data.filter(x => x.id !== id)));
+        loadTableData();
+    }
+
+    function deleteRev(id) {
+        let reviews = JSON.parse(localStorage.getItem("lion_reviews") || "[]");
+        localStorage.setItem("lion_reviews", JSON.stringify(reviews.filter(x => x.id !== id)));
+        loadReviews();
+    }
+
+    function toggleSection(id) {
+        document.querySelectorAll('.admin-panel, .section-box, .hero-card').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function checkAdminView() {
+        if(localStorage.getItem("lion_auth")) toggleSection('admin-main');
+        else toggleSection('login-section');
+    }
+
+    function showNotify(m) {
+        const n = document.getElementById('notify'); n.innerText = m; n.style.display = 'block';
+        setTimeout(() => n.style.display = 'none', 3000);
     }
 </script>
 
