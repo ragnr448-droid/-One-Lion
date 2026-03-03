@@ -3,286 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية | النسخة المطورة</title>
+    <title>نظام الموارد البشرية | الإصدار الإداري</title>
     <style>
-        :root { --primary: #0f172a; --gold: #c5a048; --bg: #f1f5f9; --red: #dc2626; --green: #16a34a; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding-bottom: 90px; color: #1e293b; }
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); position: sticky; top: 0; z-index: 100; }
-        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; border-right: 5px solid var(--gold); }
+        :root {
+            --primary: #0f172a; --gold: #c5a048; --bg: #0b0f19;
+            --card: #1e293b; --red: #ef4444; --green: #22c55e; --blue: #3b82f6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding-bottom: 100px; }
+        .header { background: var(--primary); padding: 20px; text-align: center; border-bottom: 3px solid var(--gold); }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
         
+        .faction-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .tab-btn { background: var(--card); border: 1px solid var(--gold); color: white; padding: 12px; cursor: pointer; border-radius: 8px; font-size: 0.9rem; }
+        .tab-btn.active { background: var(--gold); color: var(--primary); font-weight: bold; }
+
+        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 20px; border-right: 4px solid var(--gold); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #263248; border-radius: 10px; overflow: hidden; font-size: 0.85rem; }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #334155; }
+        th { background: var(--primary); color: var(--gold); }
+
+        .btn { padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 0.75rem; transition: 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        .btn-resigned { background: #f97316; color: white; } 
+        .btn-fired { background: var(--red); color: white; }
+        .btn-add { background: var(--blue); color: white; width: 100%; padding: 12px; margin-top: 10px; font-size: 1rem; }
+
+        input { background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 5px; width: 100%; box-sizing: border-box; }
         .hidden { display: none; }
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        
-        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e1; box-sizing: border-box; font-size: 1rem; }
-        .btn { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-gold { background: var(--gold); color: white; }
-        .btn-red { background: var(--red); color: white; }
-        .btn-blue { background: #2563eb; color: white; }
-        .btn-nav { background: #334155; color: white; font-size: 0.8rem; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 12px 0; border-top: 3px solid var(--gold); }
-        .nav-item { color: white; cursor: pointer; text-align: center; font-size: 0.75rem; opacity: 0.7; }
-        .active-nav { opacity: 1; color: var(--gold); font-weight: bold; }
-
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
-        th { background: #e2e8f0; padding: 12px; font-size: 0.9rem; }
-        td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; font-size: 0.85rem; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
-        .badge-timer { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; }
+        .cd-tag { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid var(--red); }
     </style>
 </head>
 <body>
 
-<header>
-    <h2 style="margin:0;">وزارة الموارد البشرية</h2>
-    <div id="user-role-display" style="color: var(--gold); font-size: 0.85rem; margin-top:5px;">جاري التحقق...</div>
-</header>
-
-<div class="container">
-
-    <div id="page-exam" class="page">
-        <div class="card">
-            <h3>📝 تقديم استمارة انضمام</h3>
-            <input type="text" id="game-name" placeholder="الاسم الرباعي داخل اللعبة">
-            <select id="exam-faction">
-                <option value="الشرطة">ديوان الشرطة</option>
-                <option value="الجيش">ديوان الجيش</option>
-                <option value="الطب">التحالف الطبي</option>
-                <option value="الحكومة">ديوان الحكومة</option>
-            </select>
-            <textarea id="ans" rows="3" placeholder="لماذا تود الانضمام لهذا الفصيل؟"></textarea>
-            <button class="btn btn-gold" style="width:100%" onclick="sendExam()">إرسال الاستمارة</button>
-        </div>
-    </div>
-
-    <div id="page-admin" class="page hidden">
-        <div class="card" style="background: #fffbeb;">
-            <h3>➕ تعيين موظف (صلاحية إدارية)</h3>
-            <input type="text" id="new-st-name" placeholder="اسم الموظف">
-            <select id="new-st-faction">
-                <option value="الشرطة">ديوان الشرطة</option>
-                <option value="الجيش">ديوان الجيش</option>
-                <option value="الطب">التحالف الطبي</option>
-                <option value="الحكومة">ديوان الحكومة</option>
-            </select>
-            <input type="text" id="new-st-rank" placeholder="الرتبة">
-            <button class="btn btn-gold" style="width:100%" onclick="addNewStaff()">تثبيت في النظام</button>
-        </div>
-
-        <div id="asmar-radar" class="card hidden">
-            <h3 style="color:var(--red)">📡 رادار التعميد (أسمر فقط)</h3>
-            <div id="radar-list"></div>
-            <hr>
-            <button class="btn btn-red" style="width:100%" onclick="fullReset()">تصفير قاعدة البيانات بالكامل</button>
-        </div>
-    </div>
-
-    <div id="page-records" class="page hidden">
-        <div class="grid-buttons">
-            <button class="btn btn-nav" onclick="showSubPage('staff-list')">الموظفين</button>
-            <button class="btn btn-nav" onclick="showSubPage('resigned-list')">استقالات</button>
-            <button class="btn btn-nav" onclick="showSubPage('fired-list')">المفصولين</button>
-        </div>
-        <button class="btn btn-red" style="width:100%; margin-bottom:15px;" onclick="showSubPage('blacklist-list')">🚫 قائمة البلاك ليست</button>
-
-        <div id="sub-staff-list" class="sub-page">
-            <div class="card">
-                <h3>👥 الموظفين النشطين</h3>
-                <div id="staff-table-container"></div>
-            </div>
-        </div>
-
-        <div id="sub-resigned-list" class="sub-page hidden">
-            <div class="card">
-                <h3>📄 سجل الاستقالات</h3>
-                <table id="res-table"><thead><tr><th>الاسم</th><th>السبب</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div id="sub-fired-list" class="sub-page hidden">
-            <div class="card">
-                <h3>🔥 قائمة المفصولين (كولد داون)</h3>
-                <table id="fired-table"><thead><tr><th>الاسم</th><th>السبب</th><th>المدة المتبقية</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-
-        <div id="sub-blacklist-list" class="sub-page hidden">
-            <div class="card" style="border-right-color: black;">
-                <h3 style="color:red">🚫 القائمة السوداء (Blacklist)</h3>
-                <table id="bl-table"><thead><tr><th>الاسم</th><th>المخالفة</th><th>الدليل</th></tr></thead><tbody></tbody></table>
-            </div>
-        </div>
-    </div>
+<div class="header">
+    <h2 style="margin:0; color: var(--gold);">نظام الرقابة والتوظيف</h2>
+    <div id="role-tag" style="margin-top:5px; font-size: 0.8rem; color: #94a3b8;">رتبة الزائر: عرض فقط</div>
 </div>
 
-<nav class="nav-bar">
-    <div class="nav-item active-nav" id="n-exam" onclick="navTo('page-exam')">📝<br>التقديم</div>
-    <div id="nav-records" class="nav-item hidden" onclick="navTo('page-records')">📂<br>السجلات</div>
-    <div id="nav-admin" class="nav-item hidden" onclick="navTo('page-admin')">⚙️<br>الإدارة</div>
-    <div class="nav-item" onclick="loginAsmar()">🔑</div>
-</nav>
+<div class="container">
+    
+    <div class="card">
+        <h3>⚖️ لائحة القوانين (PDF)</h3>
+        <div style="background: #f1f5f9; color: #1e293b; padding: 15px; border-radius: 8px; font-size: 0.9rem;">
+            <b>• الاستقالة:</b> تمنع من التوظيف في أي فصيل لمدة 3 أيام تلقائياً.<br>
+            <b>• الفصل:</b> يتم تحديد المدة من قبل المدير (كولد داون لا يقل عن 4 أيام).
+        </div>
+    </div>
+
+    <div class="faction-tabs">
+        <button class="tab-btn active" onclick="switchFaction('شرطة', this)">ديوان الشرطة</button>
+        <button class="tab-btn" onclick="switchFaction('جيش', this)">ديوان الجيش</button>
+        <button class="tab-btn" onclick="switchFaction('طبي', this)">التحالف الطبي</button>
+        <button class="tab-btn" onclick="switchFaction('حكومة', this)">ديوان الحكومة</button>
+    </div>
+
+    <div id="add-staff-section" class="card hidden">
+        <h4 id="action-title">➕ إضافة موظف إلى <span id="current-fac">الشرطة</span></h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="text" id="in-name" placeholder="اسم الموظف الرباعي">
+            <input type="text" id="in-rank" placeholder="الرتبة الوظيفية">
+        </div>
+        <button class="btn btn-add" onclick="addNewStaff()">تثبيت الموظف في النظام</button>
+    </div>
+
+    <div class="card">
+        <h3>👥 القوة العاملة الحالية</h3>
+        <div id="table-output"></div>
+    </div>
+
+    <div class="card" style="border-right-color: var(--red);">
+        <h3 style="color:var(--red)">⏳ سجل الكولد داون النشط</h3>
+        <table id="cd-table">
+            <thead><tr><th>الاسم</th><th>السبب</th><th>المتبقي</th><th>الفصيل</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+
+<div style="position:fixed; bottom:0; width:100%; background:var(--primary); padding:15px; display:flex; justify-content:center; gap:10px; border-top: 2px solid var(--gold);">
+    <button class="btn" style="background:#334155; color:white;" onclick="login('assistant')">🔑 مساعد (HR12)</button>
+    <button class="btn" style="background:var(--gold); color:black;" onclick="login('asmar')">👑 المدير (asmar123)</button>
+    <button class="btn" style="background:white; color:black;" onclick="location.reload()">🔄 تحديث</button>
+</div>
 
 <script>
-    let currentRole = 'Guest';
-    const myId = localStorage.getItem('did_final') || 'ID-' + Math.floor(Math.random()*99999);
-    localStorage.setItem('did_final', myId);
+    let currentFac = 'شرطة';
+    let userRole = 'guest'; // guest, assistant, asmar
 
-    function syncSystem() {
-        const auths = JSON.parse(localStorage.getItem('auth_db') || "{}");
-        if(auths[myId]) currentRole = auths[myId];
-        if(localStorage.getItem('asmar_active') === 'true') currentRole = 'Asmar';
+    let data = JSON.parse(localStorage.getItem('mega_hr_system')) || { staff: [], cooldowns: [] };
 
-        if(currentRole !== 'Guest') {
-            document.getElementById('nav-records').classList.remove('hidden');
-            document.getElementById('user-role-display').innerText = `الرتبة: ${currentRole === 'Asmar' ? 'المشرف العام (أسمر)' : (currentRole === 'Admin' ? 'مساعد مشرف' : 'موظف')}`;
+    function login(type) {
+        let pass = prompt("أدخل كلمة المرور الخاصة بك:");
+        if(type === 'assistant' && pass === 'HR12') {
+            userRole = 'assistant';
+            alert("مرحباً بك أيها المساعد. مسموح لك بإضافة الموظفين فقط.");
+        } else if(type === 'asmar' && pass === 'asmar123') {
+            userRole = 'asmar';
+            alert("مرحباً بك يا مدير (أسمر). كامل الصلاحيات متاحة.");
+        } else {
+            return alert("كلمة المرور خاطئة!");
         }
-
-        if(currentRole === 'Asmar' || currentRole === 'Admin') {
-            document.getElementById('nav-admin').classList.remove('hidden');
-            if(currentRole === 'Asmar') document.getElementById('asmar-radar').classList.remove('hidden');
-        }
-        renderData();
+        updateUI();
     }
 
-    // إرسال استمارة
-    function sendExam() {
-        const name = document.getElementById('game-name').value;
-        const faction = document.getElementById('exam-faction').value;
-        const ans = document.getElementById('ans').value;
-        if(!name || !ans) return alert("يرجى ملء كافة البيانات");
-
-        let exams = JSON.parse(localStorage.getItem('exams_db') || "[]");
-        exams.push({id: myId, name, faction, ans});
-        localStorage.setItem('exams_db', JSON.stringify(exams));
-        alert("تم إرسال استمارتك بنجاح.. بانتظار المراجعة.");
+    function updateUI() {
+        const tag = document.getElementById('role-tag');
+        const addSection = document.getElementById('add-staff-section');
+        
+        if(userRole === 'assistant') {
+            tag.innerText = "الرتبة: مساعد (صلاحية إضافة)";
+            tag.style.color = "var(--blue)";
+            addSection.classList.remove('hidden');
+        } else if(userRole === 'asmar') {
+            tag.innerText = "الرتبة: المدير العام (أسمر)";
+            tag.style.color = "var(--gold)";
+            addSection.classList.remove('hidden');
+        }
+        render();
     }
 
-    // وظائف التحكم بالموظفين
-    function processAction(name, actionType) {
-        const reason = prompt(`سبب ${actionType === 'fire' ? 'الفصل' : (actionType === 'bl' ? 'البلاك ليست' : 'الاستقالة')}:`);
-        if(!reason) return;
-
-        let db = JSON.parse(localStorage.getItem('staff_db') || "[]");
-        const staffMember = db.find(x => x.name === name);
-
-        if(actionType === 'fire') {
-            const days = prompt("تحديد فترة التهدئة (كولد داون) بالأيام:", "7");
-            const expiry = new Date().getTime() + (parseInt(days) * 24 * 60 * 60 * 1000);
-            let fired = JSON.parse(localStorage.getItem('fired_db') || "[]");
-            fired.push({name, reason, expiry});
-            localStorage.setItem('fired_db', JSON.stringify(fired));
-        } 
-        else if(actionType === 'resigned') {
-            let res = JSON.parse(localStorage.getItem('resigned_db') || "[]");
-            res.push({name, reason});
-            localStorage.setItem('resigned_db', JSON.stringify(res));
-        }
-        else if(actionType === 'bl') {
-            const proof = prompt("أرفق رابط فيديو الدليل أو المخالفة:");
-            let bl = JSON.parse(localStorage.getItem('bl_db') || "[]");
-            bl.push({name, reason, proof});
-            localStorage.setItem('bl_db', JSON.stringify(bl));
-        }
-
-        localStorage.setItem('staff_db', JSON.stringify(db.filter(x => x.name !== name)));
-        renderData();
+    function switchFaction(f, btn) {
+        currentFac = f;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('current-fac').innerText = btn.innerText;
+        render();
     }
 
-    function renderData() {
-        const staff = JSON.parse(localStorage.getItem('staff_db') || "[]");
-        const resigned = JSON.parse(localStorage.getItem('resigned_db') || "[]");
-        const fired = JSON.parse(localStorage.getItem('fired_db') || "[]");
-        const bl = JSON.parse(localStorage.getItem('bl_db') || "[]");
+    function addNewStaff() {
+        const name = document.getElementById('in-name').value;
+        const rank = document.getElementById('in-rank').value;
+        
+        // منع إضافة شخص في كولد داون
+        const blocked = data.cooldowns.find(c => c.name === name && (c.expiry > Date.now()));
+        if(blocked) return alert("هذا الشخص لا يزال في فترة الكولد داون!");
 
-        // عرض الموظفين
-        let staffHtml = `<table><tr><th>الاسم</th><th>الفصيل</th><th>الرتبة</th>${(currentRole==='Asmar'||currentRole==='Admin')?'<th>إجراءات الإدارة</th>':''}</tr>`;
-        staff.forEach(s => {
-            staffHtml += `<tr><td>${s.name}</td><td>${s.faction}</td><td>${s.rank}</td>
-            ${(currentRole==='Asmar'||currentRole==='Admin')? `<td>
-                <button class="btn-red" style="font-size:10px" onclick="processAction('${s.name}','fire')">فصل</button>
-                <button class="btn-blue" style="font-size:10px" onclick="processAction('${s.name}','resigned')">استقالة</button>
-                <button class="btn-gold" style="font-size:10px; background:black" onclick="processAction('${s.name}','bl')">BL</button>
+        if(!name || !rank) return alert("يرجى إكمال البيانات");
+        data.staff.push({ name, rank, faction: currentFac });
+        save();
+        document.getElementById('in-name').value = "";
+    }
+
+    function terminate(name, type) {
+        if(userRole !== 'asmar') return alert("هذه الصلاحية للمدير (أسمر) فقط!");
+        
+        let days = 3;
+        let reason = "استقالة";
+
+        if(type === 'fired') {
+            days = parseInt(prompt("حدد أيام الكولد داون (يجب أن تكون 4 أو أكثر):", "4"));
+            if(isNaN(days) || days < 4) return alert("يجب إدخال 4 أيام على الأقل للفصل.");
+            reason = "فصل تأديبي";
+        }
+
+        const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+        data.cooldowns.push({ name, reason, expiry, faction: currentFac });
+        data.staff = data.staff.filter(s => s.name !== name);
+        save();
+    }
+
+    function render() {
+        // جدول الموظفين
+        let h = `<table><thead><tr><th>الاسم</th><th>الرتبة</th>${userRole==='asmar'?'<th>التحكم</th>':''}</tr></thead><tbody>`;
+        data.staff.filter(s => s.faction === currentFac).forEach(s => {
+            h += `<tr><td>${s.name}</td><td><span class="badge" style="background:#475569">${s.rank}</span></td>
+            ${userRole==='asmar' ? `<td>
+                <button class="btn btn-resigned" onclick="terminate('${s.name}','res')">استقالة</button>
+                <button class="btn btn-fired" onclick="terminate('${s.name}','fired')">فصل</button>
             </td>` : ''}</tr>`;
         });
-        document.getElementById('staff-table-container').innerHTML = staffHtml + `</table>`;
+        document.getElementById('table-output').innerHTML = h + "</tbody></table>";
 
-        // عرض الاستقالات
-        document.querySelector('#res-table tbody').innerHTML = resigned.map(r => `<tr><td>${r.name}</td><td>${r.reason}</td></tr>`).join('');
-
-        // عرض البلاك ليست
-        document.querySelector('#bl-table tbody').innerHTML = bl.map(b => `<tr><td>${b.name}</td><td>${b.reason}</td><td><a href="${b.proof}" target="_blank">مشاهدة الدليل</a></td></tr>`).join('');
-
-        // عرض المفصولين مع عداد تنازلي
-        updateFiredTable(fired);
-        
-        // رادار أسمر
-        if(currentRole === 'Asmar') {
-            const exams = JSON.parse(localStorage.getItem('exams_db') || "[]");
-            document.getElementById('radar-list').innerHTML = exams.map(ex => `
-                <div style="padding:10px; border-bottom:1px solid #eee;">
-                    <b>${ex.name}</b> (${ex.faction}) <br> <small>${ex.ans}</small><br>
-                    <button onclick="approve('${ex.id}', '${ex.name}', 'Admin')">تعيين مساعد</button>
-                    <button onclick="approve('${ex.id}', '${ex.name}', 'Staff')">تعيين موظف</button>
-                </div>
-            `).join('');
-        }
+        // جدول الكولد داون
+        let cHtml = "";
+        data.cooldowns.forEach(c => {
+            const rem = Math.ceil((c.expiry - Date.now()) / (1000 * 60 * 60 * 24));
+            if(rem > 0) {
+                cHtml += `<tr><td>${c.name}</td><td>${c.reason}</td><td><span class="badge cd-tag">${rem} يوم</span></td><td>${c.faction}</td></tr>`;
+            }
+        });
+        document.querySelector('#cd-table tbody').innerHTML = cHtml;
     }
 
-    function updateFiredTable(fired) {
-        const now = new Date().getTime();
-        document.querySelector('#fired-table tbody').innerHTML = fired.map(f => {
-            const diff = f.expiry - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const status = diff > 0 ? `${days} يوم و ${hours} ساعة` : 'منتهي ✅';
-            return `<tr><td>${f.name}</td><td>${f.reason}</td><td><span class="badge badge-timer">${status}</span></td></tr>`;
-        }).join('');
+    function save() {
+        localStorage.setItem('mega_hr_system', JSON.stringify(data));
+        render();
     }
 
-    // إضافة موظف يدوي
-    function addNewStaff() {
-        const name = document.getElementById('new-st-name').value;
-        const faction = document.getElementById('new-st-faction').value;
-        const rank = document.getElementById('new-st-rank').value;
-        if(!name) return;
-        let db = JSON.parse(localStorage.getItem('staff_db') || "[]");
-        db.push({name, faction, rank});
-        localStorage.setItem('staff_db', JSON.stringify(db));
-        alert("تم التثبيت");
-        renderData();
-    }
-
-    function approve(id, name, role) {
-        let auths = JSON.parse(localStorage.getItem('auth_db') || "{}");
-        auths[id] = role;
-        localStorage.setItem('auth_db', JSON.stringify(auths));
-        let exams = JSON.parse(localStorage.getItem('exams_db') || "[]");
-        localStorage.setItem('exams_db', JSON.stringify(exams.filter(x => x.id !== id)));
-        syncSystem();
-        alert("تم التعميد بنجاح.");
-    }
-
-    function loginAsmar() { if(prompt("رمز دخول المشرف العام:") === "asmar123") { localStorage.setItem('asmar_active', 'true'); location.reload(); } }
-    
-    function navTo(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-        document.getElementById(pageId).classList.remove('hidden');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
-        if(pageId === 'page-exam') document.getElementById('n-exam').classList.add('active-nav');
-        if(pageId === 'page-records') document.getElementById('nav-records').classList.add('active-nav');
-        if(pageId === 'page-admin') document.getElementById('nav-admin').classList.add('active-nav');
-    }
-
-    function showSubPage(subId) {
-        document.querySelectorAll('.sub-page').forEach(s => s.classList.add('hidden'));
-        document.getElementById('sub-' + subId).classList.remove('hidden');
-    }
-
-    function fullReset() { if(confirm("هل أنت متأكد؟ سيتم مسح كل شيء!") && prompt("اكتب 'تصفير' للتأكيد") === "تصفير") { localStorage.clear(); location.reload(); } }
-
-    window.onload = syncSystem;
-    setInterval(renderData, 60000); // تحديث العداد كل دقيقة
+    window.onload = render;
 </script>
 
 </body>
