@@ -3,141 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - المشرع المباشر</title>
+    <title>نظام اختبارات القبول | وزارة الموارد البشرية</title>
     <style>
-        body {
-            font-family: 'Cairo', sans-serif; /* خط عربي أنيق */
-            background-color: #1a1a1a; /* خلفية داكنة مثل المنتديات الاحترافية */
-            margin: 0;
-            padding: 20px;
-            color: #e0e0e0;
-        }
+        :root { --primary: #0f172a; --gold: #c5a048; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 3px solid var(--gold); }
+        
+        /* حالة الوصول */
+        .locked { display: none; } /* الأقسام المقفلة للزوار */
+        .unlocked { display: block; } /* الأقسام المفتوحة للجميع مثل الاختبار */
 
-        .container { max-width: 900px; margin: 0 auto; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-gold { background: var(--gold); color: white; width: 100%; }
+        .btn-red { background: #ef4444; color: white; }
 
-        /* --- تأثير اللمعان للرتبة --- */
-        .rank-hr {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: bold;
-            background: linear-gradient(270deg, #27ae60, #2ecc71, #27ae60);
-            background-size: 400% 400%;
-            color: #fff;
-            animation: moveGradient 3s infinite;
-            border: 1px solid rgba(255,255,255,0.2);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        @keyframes moveGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* --- تنسيق البلوكات --- */
-        .block {
-            background: #242526;
-            border: 1px solid #3e4042;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .block-header {
-            background: #3a3b3c;
-            padding: 15px;
-            font-size: 18px;
-            border-bottom: 1px solid #3e4042;
-            color: #45bd62; /* أخضر الوزارة */
-        }
-
-        /* --- تنسيق الروابط والأزرار --- */
-        .node-row {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #3e4042;
-            text-decoration: none;
-            color: #e4e6eb;
-            transition: 0.3s;
-        }
-
-        .node-row:hover { background: #3a3b3c; transform: translateX(-5px); }
-
-        .label {
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .label-red { background: #f02849; color: #fff; }
-        .label-yellow { background: #f7b928; color: #1c1e21; }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px;
-        }
-
-        .hr-btn {
-            background: #4e5d7e;
-            color: #ffffff !important;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid #2c3e50;
-        }
-
-        .hr-btn:hover {
-            background: #607d8b;
-            transform: translateY(-3px);
-            border-bottom-color: #1a252f;
-        }
-
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid var(--gold); }
+        .nav-item { color: white; cursor: pointer; font-size: 0.8rem; text-align: center; opacity: 0.7; }
+        .active-nav { opacity: 1; color: var(--gold); }
+        
+        .exam-item { background: #f1f5f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-right: 5px solid var(--gold); }
+        .admin-only { display: none; }
     </style>
 </head>
 <body>
 
+<header>
+    <h2>وزارة الموارد البشرية</h2>
+    <p id="access-msg" style="font-size: 0.8rem; color: var(--gold);">نظام الاختبارات متاح الآن للجميع</p>
+</header>
+
 <div class="container">
 
-    <div class="block" style="text-align: center; padding: 20px;">
-        <div class="rank-hr">وزارة الموارد البشرية - مدير القسم</div>
-        <p>مرحباً بك في البوابة الرسمية للتوظيف</p>
-    </div>
-
-    <div class="block">
-        <h2 class="block-header">الأقسام والطلبات</h2>
-        <div class="block-body">
-            <a href="https://google.com" class="node-row">
-                <span class="label label-red">هام</span>
-                <div style="margin-right: 15px;">قوانين العمل والتوظيف لعام 2026</div>
-            </a>
-            
-            <a href="mailto:admin@example.com" class="node-row">
-                <span class="label label-yellow">قيد المراجعة</span>
-                <div style="margin-right: 15px;">طلبات الترقية المقدمة مؤخراً</div>
-            </a>
+    <div id="page-exam" class="page unlocked active">
+        <div class="card">
+            <h3>📝 استمارة اختبار موظف جديد</h3>
+            <p style="font-size: 0.8rem; color: #666;">معرف جهازك: <span id="my-id-display"></span></p>
+            <input type="text" id="ex-name" placeholder="الاسم الكامل">
+            <label>1. كيف تتعامل مع الحالات الطارئة؟</label>
+            <textarea id="ex-q1" rows="3"></textarea>
+            <label>2. ما هي مهاراتك التي تفيد الوزارة؟</label>
+            <textarea id="ex-q2" rows="3"></textarea>
+            <button class="btn btn-gold" onclick="sendExam()">إرسال الاختبار للمراجعة</button>
         </div>
     </div>
 
-    <div class="block">
-        <h2 class="block-header">لوحة التحكم السريعة</h2>
-        <div class="grid-container">
-            <a href="https://forms.gle/XXXXX" target="_blank" class="hr-btn">تقديم طلب انضمام (Google Forms)</a>
-            <a href="rules.html" class="hr-btn">قوانين الوزارة</a>
-            <a href="archive.html" class="hr-btn">أرشيف القرارات</a>
-            <a href="https://discord.gg/yourlink" target="_blank" class="hr-btn">الدعم الفني (Discord)</a>
+    <div id="page-factions" class="page locked">
+        <div class="card">
+            <h3>🏢 دواوين الوزارة المعتمدة</h3>
+            <div id="factions-data">
+                <p>يتم تحميل بيانات الموظفين...</p>
+            </div>
         </div>
+    </div>
+
+    <div id="page-admin" class="page admin-only">
+        <div class="card">
+            <h3>🔍 مراجعة اختبارات المتقدمين</h3>
+            <div id="review-list">لا يوجد اختبارات بانتظار المراجعة.</div>
+        </div>
+        <button class="btn btn-red" style="width:100%" onclick="fullReset()">تصفير شامل للنظام</button>
     </div>
 
 </div>
 
+<nav class="nav-bar">
+    <div class="nav-item active-nav" onclick="navTo('page-exam')">📝<br>الاختبار</div>
+    <div class="nav-item" onclick="navTo('page-factions')">🏢<br>الدواوين</div>
+    <div class="nav-item admin-only" id="admin-nav" onclick="navTo('page-admin')">⚙️<br>الإدارة</div>
+    <div class="nav-item" onclick="adminLogin()">🔑<br>دخول أسمر</div>
+</nav>
+
+<script>
+    const myId = localStorage.getItem('did') || 'ID-' + Math.floor(Math.random()*9999);
+    localStorage.setItem('did', myId);
+    document.getElementById('my-id-display').innerText = myId;
+
+    let role = localStorage.getItem('role') || 'Guest'; // Guest, Staff, Asmar
+
+    // التحقق من الصلاحيات وتحديث الواجهة
+    function syncAccess() {
+        const auths = JSON.parse(localStorage.getItem('auth_list') || "{}");
+        if(auths[myId]) role = auths[myId]; // (Staff or Asmar)
+        if(localStorage.getItem('isAsmar') === 'true') role = 'Asmar';
+
+        if(role === 'Asmar' || role === 'Staff') {
+            document.querySelectorAll('.locked').forEach(el => el.style.display = 'block');
+            document.getElementById('access-msg').innerText = `مرحباً بك: ${role === 'Asmar' ? 'المشرف العام' : 'موظف معتمد'}`;
+        }
+        
+        if(role === 'Asmar') {
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+            renderExamsForReview();
+        }
+    }
+
+    // إرسال الاختبار (متاح للزائر)
+    function sendExam() {
+        const name = document.getElementById('ex-name').value;
+        const q1 = document.getElementById('ex-q1').value;
+        if(!name || !q1) return alert("الرجاء إكمال بيانات الاختبار");
+
+        let exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
+        exams.push({
+            id: myId,
+            name: name,
+            answers: [q1, document.getElementById('ex-q2').value],
+            date: new Date().toLocaleString()
+        });
+        localStorage.setItem('pending_exams', JSON.stringify(exams));
+        alert("تم إرسال اختبارك بنجاح! انتظر مراجعة أسمر لتعميد جهازك.");
+    }
+
+    // عرض الاختبارات للمشرف (أسمر)
+    function renderExamsForReview() {
+        const exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
+        const list = document.getElementById('review-list');
+        if(exams.length === 0) { list.innerHTML = "لا يوجد اختبارات حالياً."; return; }
+
+        list.innerHTML = exams.map(ex => `
+            <div class="exam-item">
+                <b>المتقدم: ${ex.name}</b> <small>(${ex.id})</small><br>
+                <p>إجابة 1: ${ex.answers[0]}</p>
+                <p>إجابة 2: ${ex.answers[1]}</p>
+                <button class="btn btn-gold" style="width:auto; padding:5px 10px;" onclick="approveExam('${ex.id}', '${ex.name}')">قبول وتعميد كـ موظف ✅</button>
+            </div>
+        `).join('');
+    }
+
+    // قبول الموظف وتعميده فوراً
+    function approveExam(deviceId, name) {
+        let auths = JSON.parse(localStorage.getItem('auth_list') || "{}");
+        auths[deviceId] = 'Staff'; // منحه رتبة موظف
+        localStorage.setItem('auth_list', JSON.stringify(auths));
+
+        // إضافة الموظف لديوان HR تلقائياً
+        let staff = JSON.parse(localStorage.getItem('staff_db') || "[]");
+        staff.push({ name: name, faction: 'المحاورين', rank: 'موظف مستجد' });
+        localStorage.setItem('staff_db', JSON.stringify(staff));
+
+        // حذف الاختبار من قائمة الانتظار
+        let exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
+        localStorage.setItem('pending_exams', JSON.stringify(exams.filter(e => e.id !== deviceId)));
+
+        alert(`تم قبول ${name} وتفعيله كـ موظف مشاهد في النظام.`);
+        renderExamsForReview();
+    }
+
+    function navTo(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        document.getElementById(pageId).style.display = 'block';
+    }
+
+    function adminLogin() {
+        if(prompt("رمز المشرف العام:") === "asmar123") {
+            localStorage.setItem('isAsmar', 'true');
+            location.reload();
+        }
+    }
+
+    function logout() { localStorage.clear(); location.reload(); }
+    function fullReset() { if(confirm("حذف شامل؟")) { localStorage.clear(); location.reload(); } }
+
+    window.onload = syncAccess;
+</script>
 </body>
 </html>
