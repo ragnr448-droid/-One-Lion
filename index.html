@@ -3,171 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - One Lion</title>
+    <title>نظام الموارد البشرية - One Lion</title>
     <style>
-        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
-        header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
+        :root { --primary: #121927; --gold: #c5a048; --white: #ffffff; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
+        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
         
-        .hero-card { background: var(--primary); color: white; width: 85%; margin: 20px auto; padding: 30px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .hero-card h1 { font-size: 26px; color: var(--gold); }
+        .hero-card { background: var(--primary); color: white; width: 90%; margin: 20px auto; padding: 35px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .hero-card h1 { color: var(--gold); margin: 0 0 10px 0; font-size: 24px; }
         
-        .main-btns { display: flex; gap: 15px; margin-top: 20px; }
-        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
-        .btn-outline { background: transparent; border: 2px solid var(--gold); color: white; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; }
+        .btn-gold { background: var(--gold); color: var(--primary); border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-gold:hover { opacity: 0.8; }
+        
+        .admin-section { display: none; width: 92%; margin: 20px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        .grid-factions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 20px; }
+        .faction-card { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .faction-card:hover { border-color: var(--gold); background: #fffdf5; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 90%; margin: 10px auto; }
-        .stat-box { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        
-        .admin-panel, .section-box { background: white; width: 90%; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th, td { padding: 12px; border: 1px solid #eee; text-align: center; }
         th { background: var(--primary); color: white; }
 
-        #quiz-container { display: none; background: white; padding: 20px; border-radius: 10px; width: 90%; margin: 20px auto; }
-        .question { margin-bottom: 15px; font-weight: bold; }
-        .notify { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: #27ae60; color: white; padding: 10px 20px; border-radius: 5px; display: none; z-index: 1000; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .bg-red { background: #fee2e2; color: #dc2626; }
+        .bg-blue { background: #e0f2fe; color: #0284c7; }
+
+        #login-overlay { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: white; padding: 30px; border-radius: 15px; width: 300px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div id="notify" class="notify">تم الحفظ بنجاح!</div>
+<div id="login-overlay">
+    <div class="login-card">
+        <h2 style="color: var(--primary)">تسجيل الدخول</h2>
+        <input type="text" id="user" placeholder="اسم المستخدم">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+        <button class="btn-gold" onclick="login()">دخول</button>
+        <p style="font-size: 11px; color: #777; margin-top: 10px;">نظام One Lion - المحمي</p>
+    </div>
+</div>
 
 <header>
     <h2>وزارة الموارد البشرية</h2>
-    <p>ولاية One Lion - إدارة شؤون الموظفين</p>
+    <p>بوابة الإشراف والرقابة الفصائلية</p>
 </header>
 
-<div class="hero-card">
-    <h3>البوابة الرقمية الرسمية</h3>
+<div class="hero-card" id="welcome-msg">
     <h1>الاستثمار في الإنسان.. بناء للمستقبل</h1>
-    <p>تُعنى وزارة الموارد البشرية بتنظيم بيئة العمل وتطوير الكفاءات البشرية لضمان أعلى مستويات الإنتاجية والعدالة الوظيفية داخل ولاية One Lion.</p>
-    <div class="main-btns">
-        <button class="btn-gold" onclick="showQuiz()">ابدأ اختبار الكفاءة</button>
-        <button class="btn-outline" onclick="checkAdminView()">عرض الناجحين (للإدارة)</button>
+    <p>أهلاً بك <span id="admin-name" style="color: var(--gold); font-weight: bold;"></span>. يمكنك الآن إدارة الاستقالات والقوائم السوداء لجميع الفصائل بضغطة زر واحدة.</p>
+    <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn-gold" onclick="showView('action-area')">إضافة إجراء</button>
+        <button class="btn-gold" style="background: white; border: 2px solid var(--gold);" onclick="showView('tables-area')">عرض السجلات</button>
     </div>
 </div>
 
-<div class="stats-grid">
-    <div class="stat-box"><h3>10</h3><p>عدد الأسئلة</p></div>
-    <div class="stat-box"><h3>0</h3><p>ناجح في الاختبار</p></div>
-    <div class="stat-box"><h3 style="color:var(--gold)">70</h3><p>درجة النجاح</p></div>
-    <div class="stat-box"><h3>100</h3><p>الدرجة الكلية</p></div>
+<div id="action-area" class="admin-section">
+    <h3>إضافة سجل جديد</h3>
+    <input type="text" id="target-name" placeholder="اسم الموظف الثلاثي">
+    <select id="target-faction">
+        <option value="الشرطة">فصيل الشرطة</option>
+        <option value="الجيش">فصيل الجيش</option>
+        <option value="التحالف">فصيل التحالف</option>
+        <option value="الطبي">الفصيل الطبي</option>
+        <option value="الحكومة">فصيل الحكومة</option>
+    </select>
+    <select id="action-type">
+        <option value="استقالة (3 أيام)">استقالة 3 أيام</option>
+        <option value="تهدئة يدوية">تهدئة يدوية</option>
+        <option value="بلاك ليست" id="opt-bl">بلاك ليست (حظر دائم)</option>
+    </select>
+    <button class="btn-gold" onclick="saveRecord()">تأكيد العملية ورصدها</button>
 </div>
 
-<div id="login-section" class="admin-panel" style="display: block;">
-    <h3>قفل الإدارة</h3>
-    <input type="password" id="adminPass" placeholder="كلمة مرور المشرف العام">
-    <button class="btn-gold" onclick="adminLogin()">دخول الإدارة</button>
-</div>
-
-<div id="admin-main" class="admin-panel">
-    <h3>لوحة التحكم: <span id="adminNameDisplay">Asmar</span></h3>
-    <input type="text" id="targetName" placeholder="اسم الموظف">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <button class="btn-gold" style="background:#c0392b; color:white;" onclick="addToTable('blacklist')">إضافة بلاك ليست</button>
-        <button class="btn-gold" style="background:#2980b9; color:white;" onclick="addToTable('resignation')">استقالة 3 أيام</button>
-        <button class="btn-gold" style="background:#f39c12; color:white;" onclick="addToTable('cooldown')">تهدئة يدوية</button>
-        <button class="btn-gold" onclick="toggleSection('tables-view')">عرض الجداول</button>
+<div id="tables-area" class="admin-section">
+    <h3>القوائم المنفصلة للفصائل</h3>
+    <div class="grid-factions">
+        <div class="faction-card" onclick="filterTable('الشرطة')">🛡️ الشرطة</div>
+        <div class="faction-card" onclick="filterTable('الجيش')">⚔️ الجيش</div>
+        <div class="faction-card" onclick="filterTable('التحالف')">🤝 التحالف</div>
+        <div class="faction-card" onclick="filterTable('الطبي')">🚑 الطبي</div>
+        <div class="faction-card" onclick="filterTable('الحكومة')">⚖️ الحكومة</div>
+        <div class="faction-card" onclick="filterTable('الكل')" style="background: var(--gold); color: white;">عرض الكل</div>
     </div>
-</div>
 
-<div id="tables-view" class="section-box">
-    <h3>القوائم الإدارية</h3>
-    <h4>🚫 القائمة السوداء (Blacklist)</h4>
-    <table id="table-blacklist"><thead><tr><th>الاسم</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody></tbody></table>
-    
-    <h4>⏳ سجل الاستقالات والتهدئة</h4>
-    <table id="table-resignation"><thead><tr><th>الاسم</th><th>النوع</th><th>المدة المتبقية</th></tr></thead><tbody></tbody></table>
-    <button class="btn-gold" onclick="toggleSection('admin-main')" style="margin-top:10px;">العودة للتحكم</button>
-</div>
-
-<div id="quiz-container">
-    <h2 style="color: var(--primary);">اختبار كفاءة الموارد البشرية</h2>
-    <div id="quiz-body"></div>
-    <button class="btn-gold" onclick="submitQuiz()">إنهاء الاختبار ورصد النتيجة</button>
+    <table id="main-table">
+        <thead>
+            <tr>
+                <th>الموظف</th>
+                <th>الفصيل</th>
+                <th>الإجراء</th>
+                <th>بواسطة</th>
+                <th>التاريخ</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            </tbody>
+    </table>
 </div>
 
 <script>
-    const questions = [
-        "ما هو دور المحاورين الأساسي داخل الفصيل؟",
-        "كم عدد القوانين التي تخص فصيل الحكومة في الدستور؟",
-        "كيف يتم التعامل مع طلبات الترقية المتأخرة؟",
-        "ما هي مدة فترة التجربة للموظف الجديد؟",
-        "متى يحق للموظف تقديم استقالة فورية؟",
-        "ما هو الإجراء المتبع عند مخالفة اللائحة الداخلية؟",
-        "كيف يتم تقييم أداء المحاورين شهرياً؟",
-        "ما هي شروط الانضمام للجنة الانضباط؟",
-        "ما هو دور الموارد البشرية في حل النزاعات بين الموظفين؟",
-        "كم عدد ساعات العمل الرسمية المحددة من الحكومة؟"
-    ];
+    // نظام حفظ الجلسة
+    window.onload = () => {
+        const session = sessionStorage.getItem("hr_auth");
+        if (session) {
+            applyLogin(JSON.parse(session));
+        }
+    };
 
-    let isAdmin = false;
+    function login() {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
 
-    function adminLogin() {
-        const pass = document.getElementById('adminPass').value;
-        if(pass === "asmar123") {
-            isAdmin = true;
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('admin-main').style.display = 'block';
-            showNotify("مرحباً أيها المشرف العام");
+        let authData = null;
+        if (user === "Asmar" && pass === "asmar123") {
+            authData = { name: "Asmar", role: "super" };
+        } else if (user === "HR12" && pass === "HR12") {
+            authData = { name: "HR12", role: "assistant" };
+        }
+
+        if (authData) {
+            sessionStorage.setItem("hr_auth", JSON.stringify(authData));
+            applyLogin(authData);
         } else {
-            alert("كلمة المرور خاطئة!");
+            alert("بيانات الدخول غير صحيحة");
         }
     }
 
-    function showQuiz() {
-        document.querySelector('.hero-card').style.display = 'none';
-        const container = document.getElementById('quiz-body');
-        container.innerHTML = "";
-        questions.forEach((q, i) => {
-            container.innerHTML += `<div class='question'>${i+1}. ${q}</div><input type='text' placeholder='إجابتك...'>`;
-        });
-        document.getElementById('quiz-container').style.display = 'block';
-    }
-
-    function checkAdminView() {
-        if(!isAdmin) {
-            alert("هذه القائمة مخصصة للإدارة فقط!");
-        } else {
-            toggleSection('tables-view');
+    function applyLogin(data) {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('admin-name').innerText = data.name;
+        document.getElementById('welcome-msg').style.display = 'block';
+        
+        // إخفاء البلاك ليست عن المساعد
+        if (data.role === "assistant") {
+            document.getElementById('opt-bl').style.display = 'none';
         }
     }
 
-    function addToTable(type) {
-        const name = document.getElementById('targetName').value;
-        if(!name) return alert("يرجى إدخال اسم الموظف");
-
-        const date = new Date().toLocaleDateString();
-        if(type === 'blacklist') {
-            const table = document.getElementById('table-blacklist').getElementsByTagName('tbody')[0];
-            table.innerHTML += `<tr><td>${name}</td><td>${date}</td><td style="color:red">محظور دائم</td></tr>`;
-        } else {
-            const table = document.getElementById('table-resignation').getElementsByTagName('tbody')[0];
-            const label = type === 'resignation' ? 'استقالة' : 'تهدئة';
-            const days = type === 'resignation' ? '3 أيام' : 'يدوي';
-            table.innerHTML += `<tr><td>${name}</td><td>${label}</td><td>${days}</td></tr>`;
-        }
-        showNotify("تمت الإضافة للسجلات");
-        document.getElementById('targetName').value = "";
-    }
-
-    function toggleSection(id) {
-        document.querySelectorAll('.admin-panel, .section-box, .hero-card').forEach(s => s.style.display = 'none');
+    function showView(id) {
+        document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
-    function submitQuiz() {
-        alert("تم إرسال إجاباتك للمراجعة من قبل الإدارة. سيتم التواصل معك قريباً.");
-        location.reload();
+    function saveRecord() {
+        const name = document.getElementById('target-name').value;
+        const faction = document.getElementById('target-faction').value;
+        const type = document.getElementById('action-type').value;
+        const admin = JSON.parse(sessionStorage.getItem("hr_auth")).name;
+        const date = new Date().toLocaleDateString('ar-EG');
+
+        if (!name) return alert("اكتب اسم الموظف!");
+
+        const table = document.getElementById('table-body');
+        const row = `<tr>
+            <td><b>${name}</b></td>
+            <td>${faction}</td>
+            <td><span class="status-badge ${type === 'بلاك ليست' ? 'bg-red' : 'bg-blue'}">${type}</span></td>
+            <td>${admin}</td>
+            <td>${date}</td>
+        </tr>`;
+        
+        table.innerHTML = row + table.innerHTML;
+        alert("تم تسجيل البيانات في قائمة " + faction);
+        document.getElementById('target-name').value = "";
+        showView('tables-area');
     }
 
-    function showNotify(msg) {
-        const n = document.getElementById('notify');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => n.style.display = 'none', 3000);
+    function filterTable(faction) {
+        const rows = document.querySelectorAll('#table-body tr');
+        rows.forEach(row => {
+            if (faction === 'الكل') {
+                row.style.display = '';
+            } else {
+                row.cells[1].innerText === faction ? row.style.display = '' : row.style.display = 'none';
+            }
+        });
     }
 </script>
 
