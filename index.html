@@ -3,139 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وزارة الموارد البشرية - بوابة التقييم</title>
+    <title>بوابة الموارد البشرية | نظام الفصائل والاستقالات</title>
     <style>
-        :root { --primary: #0b1a30; --gold: #c5a059; --bg: #f8f9fa; --success: #28a745; --danger: #dc3545; }
+        :root { --primary: #0b1a30; --gold: #c5a059; --bg: #f4f7f6; --danger: #dc3545; --success: #28a745; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; color: #333; }
+        header { background: var(--primary); color: white; padding: 20px; border-bottom: 5px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
-        /* الهيدر بنفس نمط الصورة */
-        header { background: var(--primary); color: white; padding: 30px 20px; text-align: right; border-bottom: 4px solid var(--gold); }
-        header h1 { margin: 0; font-size: 24px; }
-        header p { margin: 5px 0 0; color: var(--gold); font-size: 14px; }
-
-        .container { max-width: 800px; margin: -30px auto 40px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* التنسيقات العامة */
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.3s; }
+        .btn-gold { background: var(--gold); color: white; width: 100%; }
+        .btn-danger { background: var(--danger); color: white; width: 100%; }
+        .admin-nav-btn { background: rgba(255,255,255,0.1); color: white; border: 1px solid white; }
         
-        /* بطاقات المعلومات (نفس الصورة الأولى) */
-        .info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .card { border: 1px solid #eee; padding: 15px; text-align: center; border-radius: 10px; }
-        .card h2 { margin: 0; color: var(--gold); font-size: 28px; }
-        .card p { margin: 5px 0 0; font-size: 12px; color: #777; }
+        /* الجداول */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: var(--primary); color: white; padding: 12px; }
+        td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; }
 
-        .form-section { border-top: 1px solid #eee; padding-top: 20px; }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fafafa; }
-        .btn { background: var(--gold); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: #b08d4a; }
-
-        /* جدول الناجحين والراسبين */
-        .results-section { margin-top: 40px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 10px; overflow: hidden; }
-        th { background: var(--primary); color: white; padding: 12px; text-align: center; }
-        td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
-        .status-pass { color: var(--success); font-weight: bold; }
-        .status-fail { color: var(--danger); font-weight: bold; }
+        /* الأقسام */
+        .hidden { display: none; }
+        .cooldown-box { background: #fff3cd; color: #856404; padding: 20px; border-radius: 10px; border: 1px solid #ffeeba; text-align: center; margin-bottom: 20px; }
+        .faction-card { border-right: 5px solid var(--gold); padding-right: 15px; background: #fafafa; margin: 15px 0; padding: 10px; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h1>وزارة الموارد البشرية</h1>
-        <p>نظام الاختبارات المهنية - العدالة أساس العمل</p>
+    <div>
+        <h2 style="margin:0;">وزارة الموارد البشرية</h2>
+        <small>نظام مقابلات الفصائل والتوظيف</small>
     </div>
+    <button id="navBtn" class="btn admin-nav-btn" onclick="toggleAdminView()">دخول الإدارة</button>
 </header>
 
-<div class="container">
-    <div class="info-cards">
-        <div class="card"><h2>10</h2><p>عدد الأسئلة</p></div>
-        <div class="card"><h2>70</h2><p>درجة النجاح</p></div>
-        <div class="card"><h2>100</h2><p>الدرجة الكلية</p></div>
-        <div class="card" id="passedCount"><h2>0</h2><p>عدد الناجحين</p></div>
-    </div>
+<div id="userView" class="container">
+    <div id="cooldownMsg" class="cooldown-box hidden"></div>
 
-    <div class="form-section">
-        <h3>بيانات المتقدم للاختبار</h3>
-        <input type="text" id="userName" placeholder="الاسم الكامل كما في الهوية *">
-        <input type="number" id="userId" placeholder="رقم الهوية الوطنية *">
+    <div id="testForm">
+        <h3>نموذج تقديم طلب انضمام</h3>
+        <input type="text" id="userName" placeholder="الاسم الرباعي المعتمد في الفصيل *">
         
-        <div id="questionsArea">
-            </div>
+        <label>اختر الفصيل المستهدف:</label>
+        <select id="factionSelect" onchange="renderQuestions()">
+            <option value="">-- اختر الفصيل --</option>
+            <option value="الحكومة">الحكومة</option>
+            <option value="الشرطة">الشرطة</option>
+            <option value="التحالف الطبي">التحالف الطبي</option>
+            <option value="الجيش">الجيش</option>
+        </select>
 
-        <button class="btn" onclick="submitTest()">إرسال الإجابات للمراجعة</button>
+        <div id="questionsContainer"></div>
+        <button class="btn btn-gold" onclick="sendApplication()">إرسال طلب الانضمام</button>
     </div>
 
-    <div class="results-section">
-        <h3 style="border-right: 4px solid var(--gold); padding-right: 10px;">قائمة النتائج النهائية</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>اسم المتقدم</th>
-                    <th>الدرجة</th>
-                    <th>الحالة</th>
-                </tr>
-            </thead>
-            <tbody id="resultsTableBody">
-                </tbody>
+    <hr style="margin:40px 0;">
+
+    <div id="resignationForm">
+        <h3 style="color: var(--danger);">تقديم استقالة</h3>
+        <p style="font-size: 13px;">ملاحظة: الاستقالة تفعل نظام التهدئة (كولد داون) تلقائياً.</p>
+        <input type="text" id="resName" placeholder="اسمك المسجل في الفصيل">
+        <select id="resFaction">
+            <option value="">-- اختر الفصيل المستقيل منه --</option>
+            <option value="الحكومة">الحكومة</option>
+            <option value="الشرطة">الشرطة</option>
+            <option value="التحالف الطبي">التحالف الطبي</option>
+            <option value="الجيش">الجيش</option>
+        </select>
+        <button class="btn btn-danger" onclick="sendResignation()">تأكيد الاستقالة</button>
+    </div>
+
+    <h3>قائمة النتائج الأخيرة</h3>
+    <table>
+        <thead><tr><th>المتقدم</th><th>الفصيل</th><th>الحالة</th></tr></thead>
+        <tbody id="publicTable"></tbody>
+    </table>
+</div>
+
+<div id="adminView" class="container hidden">
+    <div id="loginSection">
+        <div style="text-align:center;">
+            <h3>تسجيل دخول الإدارة</h3>
+            <input type="password" id="adminPass" placeholder="أدخل الرمز asmar123" style="width:250px;">
+            <button class="btn btn-gold" onclick="verifyAdmin()" style="width:100px;">دخول</button>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="hidden">
+        <div style="background:var(--primary); color:white; padding:15px; border-radius:8px; margin-bottom:20px;">
+            <h4>⚙️ إعدادات النظام</h4>
+            أيام الكولد داون: <input type="number" id="cdDays" value="3" style="width:60px;">
+            <button onclick="saveCD()">حفظ</button>
+        </div>
+
+        <h3>📥 طلبات بانتظار التصحيح</h3>
+        <div id="pendingRequests"></div>
+
+        <h3 style="color:var(--danger); margin-top:40px;">📑 سجل الاستقالات</h3>
+        <table id="resTable">
+            <thead><tr><th>الاسم</th><th>الفصيل</th><th>التاريخ</th></tr></thead>
+            <tbody id="resListBody"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    const questions = ["تحدث عن خبراتك؟", "لماذا الوزارة؟", "كيف تحل المشكلات؟", "نقاط قوتك؟", "العمل تحت الضغط؟", "رؤية 2030؟", "التعامل مع الجمهور؟", "إدارة الوقت؟", "أهدافك المهنية؟", "الإبداع في العمل؟"];
-    
-    // إنشاء الأسئلة
-    const qArea = document.getElementById('questionsArea');
-    questions.forEach((q, i) => {
-        qArea.innerHTML += `<p><strong>س${i+1}:</strong> ${q}</p><textarea id="q${i}" placeholder="اكتب إجابتك هنا..."></textarea>`;
-    });
+    // الأسئلة لكل فصيل
+    const factionQs = {
+        "الحكومة": ["كيف تدير الأزمات الإدارية؟", "ما هو بروتوكول التعامل مع الوزراء؟", "رؤيتك لتطوير القوانين؟"],
+        "الشرطة": ["متى تستخدم سلاحك الوظيفي؟", "كيف تتعامل مع ملاحقة عالية السرعة؟", "بروتوكول تفتيش المركبات؟"],
+        "التحالف الطبي": ["طريقة التعامل مع إصابة طلق ناري؟", "كيف تنعش مريضاً دخل في غيبوبة؟", "بروتوكول الإخلاء الطبي؟"],
+        "الجيش": ["كيف تنفذ أمراً عسكرياً تعتقد أنه خاطئ؟", "طريقة تأمين مربع عمليات؟", "كيف تتعامل مع أسرى الحرب؟"]
+    };
 
-    function submitTest() {
+    // تبديل الواجهات
+    function toggleAdminView() {
+        const user = document.getElementById('userView');
+        const admin = document.getElementById('adminView');
+        const btn = document.getElementById('navBtn');
+
+        if(admin.classList.contains('hidden')) {
+            user.classList.add('hidden');
+            admin.classList.remove('hidden');
+            btn.innerText = "العودة للمقدِمين";
+        } else {
+            location.reload();
+        }
+    }
+
+    function verifyAdmin() {
+        if(document.getElementById('adminPass').value === "asmar123") {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('hidden');
+            loadAdminData();
+        } else { alert("رمز خاطئ!"); }
+    }
+
+    // إدارة الأسئلة
+    function renderQuestions() {
+        const faction = document.getElementById('factionSelect').value;
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = "";
+        if(!faction) return;
+        factionQs[faction].forEach((q, i) => {
+            container.innerHTML += `<div class="faction-card"><strong>س${i+1}: ${q}</strong><textarea class="q-ans"></textarea></div>`;
+        });
+    }
+
+    // إرسال الطلبات
+    function sendApplication() {
         const name = document.getElementById('userName').value;
-        const id = document.getElementById('userId').value;
-        
-        if(!name || !id) return alert("الرجاء إكمال البيانات الأساسية");
+        const faction = document.getElementById('factionSelect').value;
+        const answers = Array.from(document.querySelectorAll('.q-ans')).map(t => t.value);
+        if(!name || !faction) return alert("أكمل البيانات");
 
-        const newSubmission = {
-            name: name,
-            id: id,
-            answers: questions.map((_, i) => document.getElementById(`q${i}`).value),
-            score: null, // لم يتم التقييم بعد
-            status: "قيد الانتظار"
-        };
-
-        let data = JSON.parse(localStorage.getItem('submissions') || '[]');
-        data.push(newSubmission);
-        localStorage.setItem('submissions', JSON.stringify(data));
-        
-        alert("تم الإرسال. انتظر قرار لجنة المحاورين.");
+        let apps = JSON.parse(localStorage.getItem('apps') || '[]');
+        apps.push({ name, faction, answers, score: null, date: new Date() });
+        localStorage.setItem('apps', JSON.stringify(apps));
+        localStorage.setItem('lastTest', new Date().toISOString());
+        alert("تم الإرسال بنجاح!");
         location.reload();
     }
 
-    // عرض النتائج في الجدول
-    function loadResults() {
-        const data = JSON.parse(localStorage.getItem('submissions') || '[]');
-        const tableBody = document.getElementById('resultsTableBody');
-        let passCount = 0;
+    // إرسال الاستقالات
+    function sendResignation() {
+        const name = document.getElementById('resName').value;
+        const faction = document.getElementById('resFaction').value;
+        if(!name || !faction) return alert("أكمل البيانات");
 
-        tableBody.innerHTML = data.map(item => {
-            if (item.score === null) return ""; // لا تظهر من لم يُقيم بعد
-            
-            const isPass = item.score >= 70;
-            if(isPass) passCount++;
-
-            return `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.score}</td>
-                    <td class="${isPass ? 'status-pass' : 'status-fail'}">${isPass ? 'ناجح ✅' : 'راسب ❌'}</td>
-                </tr>
-            `;
-        }).join('');
-
-        document.getElementById('passedCount').innerHTML = `<h2>${passCount}</h2><p>عدد الناجحين</p>`;
+        let res = JSON.parse(localStorage.getItem('resigns') || '[]');
+        res.push({ name, faction, date: new Date() });
+        localStorage.setItem('resigns', JSON.stringify(res));
+        localStorage.setItem('lastTest', new Date().toISOString());
+        alert("تمت الاستقالة وتفعيل الكولد داون.");
+        location.reload();
     }
 
-    loadResults();
-</script>
+    // فحص الكولد داون
+    function checkCD() {
+        const last = localStorage.getItem('lastTest');
+        const days = parseInt(localStorage.getItem('cdConfig') || "3");
+        if(last) {
+            const diff = (new Date() - new Date(last)) / (1000 * 60 * 60 * 24);
+            if(diff < days) {
+                document.getElementById('testForm').classList.add('hidden');
+                document.getElementById('resignationForm').classList.add('hidden');
+                const box = document.getElementById('cooldownMsg');
+                box.classList.remove('hidden');
+                box.innerHTML = `🛑 أنت في فترة تهدئة. المتبقي: ${Math.ceil(days - diff)} يوم/أيام.`;
+            }
+        }
+    }
 
+    // الإدارة: تحميل البيانات
+    function loadAdminData() {
+        // طلبات
+        const apps = JSON.parse(localStorage.getItem('apps') || '[]');
+        const container = document.getElementById('pendingRequests');
+        container.innerHTML = "";
+        apps.forEach((app, i) => {
+            if(app.score !== null) return;
+            let ansStr = app.answers.map((a, j) => `<p>س${j+1}: ${a}</p>`).join('');
+            container.innerHTML += `<div class="faction-card">
+                <strong>المتقدم: ${app.name} (${app.faction})</strong>${ansStr}
+                الدرجة: <input type="number" id="sc_${i}" style="width:80px;">
+                <button onclick="saveScore(${i})">اعتماد</button>
+            </div>`;
+        });
+
+        // استقالات
+        const resigns = JSON.parse(localStorage.getItem('resigns') || '[]');
+        document.getElementById('resListBody').innerHTML = resigns.map(r => `
+            <tr><td>${r.name}</td><td>${r.faction}</td><td>${new Date(r.date).toLocaleDateString()}</td></tr>
+        `).join('');
+    }
+
+    function saveScore(idx) {
+        let apps = JSON.parse(localStorage.getItem('apps'));
+        apps[idx].score = document.getElementById(`sc_${idx}`).value;
+        localStorage.setItem('apps', JSON.stringify(apps));
+        alert("تم الحفظ");
+        loadAdminData();
+        renderPublic();
+    }
+
+    function saveCD() {
+        localStorage.setItem('cdConfig', document.getElementById('cdDays').value);
+        alert("تم الحفظ");
+    }
+
+    // عرض النتائج للكل
+    function renderPublic() {
+        const apps = JSON.parse(localStorage.getItem('apps') || '[]');
+        document.getElementById('publicTable').innerHTML = apps.map(app => `
+            <tr>
+                <td>${app.name}</td>
+                <td>${app.faction}</td>
+                <td style="color:${app.score >= 70 ? 'green':'red'}">
+                    ${app.score === null ? 'بانتظار الإدارة' : (app.score >= 70 ? 'ناجح ✅' : 'راسب ❌')}
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    checkCD();
+    renderPublic();
+</script>
 </body>
 </html>
