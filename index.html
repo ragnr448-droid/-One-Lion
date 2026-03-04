@@ -3,171 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام اختبارات القبول | وزارة الموارد البشرية</title>
+    <title>وزارة الموارد البشرية - بوابة التقييم</title>
     <style>
-        :root { --primary: #0f172a; --gold: #c5a048; --bg: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
-        header { background: var(--primary); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); }
-        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 3px solid var(--gold); }
+        :root { --primary: #0b1a30; --gold: #c5a059; --bg: #f8f9fa; --success: #28a745; --danger: #dc3545; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; color: #333; }
         
-        /* حالة الوصول */
-        .locked { display: none; } /* الأقسام المقفلة للزوار */
-        .unlocked { display: block; } /* الأقسام المفتوحة للجميع مثل الاختبار */
+        /* الهيدر بنفس نمط الصورة */
+        header { background: var(--primary); color: white; padding: 30px 20px; text-align: right; border-bottom: 4px solid var(--gold); }
+        header h1 { margin: 0; font-size: 24px; }
+        header p { margin: 5px 0 0; color: var(--gold); font-size: 14px; }
 
-        input, textarea, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; }
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-gold { background: var(--gold); color: white; width: 100%; }
-        .btn-red { background: #ef4444; color: white; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--primary); display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid var(--gold); }
-        .nav-item { color: white; cursor: pointer; font-size: 0.8rem; text-align: center; opacity: 0.7; }
-        .active-nav { opacity: 1; color: var(--gold); }
+        .container { max-width: 800px; margin: -30px auto 40px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
-        .exam-item { background: #f1f5f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-right: 5px solid var(--gold); }
-        .admin-only { display: none; }
+        /* بطاقات المعلومات (نفس الصورة الأولى) */
+        .info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .card { border: 1px solid #eee; padding: 15px; text-align: center; border-radius: 10px; }
+        .card h2 { margin: 0; color: var(--gold); font-size: 28px; }
+        .card p { margin: 5px 0 0; font-size: 12px; color: #777; }
+
+        .form-section { border-top: 1px solid #eee; padding-top: 20px; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #fafafa; }
+        .btn { background: var(--gold); color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #b08d4a; }
+
+        /* جدول الناجحين والراسبين */
+        .results-section { margin-top: 40px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 10px; overflow: hidden; }
+        th { background: var(--primary); color: white; padding: 12px; text-align: center; }
+        td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
+        .status-pass { color: var(--success); font-weight: bold; }
+        .status-fail { color: var(--danger); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <h2>وزارة الموارد البشرية</h2>
-    <p id="access-msg" style="font-size: 0.8rem; color: var(--gold);">نظام الاختبارات متاح الآن للجميع</p>
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1>وزارة الموارد البشرية</h1>
+        <p>نظام الاختبارات المهنية - العدالة أساس العمل</p>
+    </div>
 </header>
 
 <div class="container">
-
-    <div id="page-exam" class="page unlocked active">
-        <div class="card">
-            <h3>📝 استمارة اختبار موظف جديد</h3>
-            <p style="font-size: 0.8rem; color: #666;">معرف جهازك: <span id="my-id-display"></span></p>
-            <input type="text" id="ex-name" placeholder="الاسم الكامل">
-            <label>1. كيف تتعامل مع الحالات الطارئة؟</label>
-            <textarea id="ex-q1" rows="3"></textarea>
-            <label>2. ما هي مهاراتك التي تفيد الوزارة؟</label>
-            <textarea id="ex-q2" rows="3"></textarea>
-            <button class="btn btn-gold" onclick="sendExam()">إرسال الاختبار للمراجعة</button>
-        </div>
+    <div class="info-cards">
+        <div class="card"><h2>10</h2><p>عدد الأسئلة</p></div>
+        <div class="card"><h2>70</h2><p>درجة النجاح</p></div>
+        <div class="card"><h2>100</h2><p>الدرجة الكلية</p></div>
+        <div class="card" id="passedCount"><h2>0</h2><p>عدد الناجحين</p></div>
     </div>
 
-    <div id="page-factions" class="page locked">
-        <div class="card">
-            <h3>🏢 دواوين الوزارة المعتمدة</h3>
-            <div id="factions-data">
-                <p>يتم تحميل بيانات الموظفين...</p>
+    <div class="form-section">
+        <h3>بيانات المتقدم للاختبار</h3>
+        <input type="text" id="userName" placeholder="الاسم الكامل كما في الهوية *">
+        <input type="number" id="userId" placeholder="رقم الهوية الوطنية *">
+        
+        <div id="questionsArea">
             </div>
-        </div>
+
+        <button class="btn" onclick="submitTest()">إرسال الإجابات للمراجعة</button>
     </div>
 
-    <div id="page-admin" class="page admin-only">
-        <div class="card">
-            <h3>🔍 مراجعة اختبارات المتقدمين</h3>
-            <div id="review-list">لا يوجد اختبارات بانتظار المراجعة.</div>
-        </div>
-        <button class="btn btn-red" style="width:100%" onclick="fullReset()">تصفير شامل للنظام</button>
+    <div class="results-section">
+        <h3 style="border-right: 4px solid var(--gold); padding-right: 10px;">قائمة النتائج النهائية</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>اسم المتقدم</th>
+                    <th>الدرجة</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+                </tbody>
+        </table>
     </div>
-
 </div>
 
-<nav class="nav-bar">
-    <div class="nav-item active-nav" onclick="navTo('page-exam')">📝<br>الاختبار</div>
-    <div class="nav-item" onclick="navTo('page-factions')">🏢<br>الدواوين</div>
-    <div class="nav-item admin-only" id="admin-nav" onclick="navTo('page-admin')">⚙️<br>الإدارة</div>
-    <div class="nav-item" onclick="adminLogin()">🔑<br>دخول أسمر</div>
-</nav>
-
 <script>
-    const myId = localStorage.getItem('did') || 'ID-' + Math.floor(Math.random()*9999);
-    localStorage.setItem('did', myId);
-    document.getElementById('my-id-display').innerText = myId;
+    const questions = ["تحدث عن خبراتك؟", "لماذا الوزارة؟", "كيف تحل المشكلات؟", "نقاط قوتك؟", "العمل تحت الضغط؟", "رؤية 2030؟", "التعامل مع الجمهور؟", "إدارة الوقت؟", "أهدافك المهنية؟", "الإبداع في العمل؟"];
+    
+    // إنشاء الأسئلة
+    const qArea = document.getElementById('questionsArea');
+    questions.forEach((q, i) => {
+        qArea.innerHTML += `<p><strong>س${i+1}:</strong> ${q}</p><textarea id="q${i}" placeholder="اكتب إجابتك هنا..."></textarea>`;
+    });
 
-    let role = localStorage.getItem('role') || 'Guest'; // Guest, Staff, Asmar
-
-    // التحقق من الصلاحيات وتحديث الواجهة
-    function syncAccess() {
-        const auths = JSON.parse(localStorage.getItem('auth_list') || "{}");
-        if(auths[myId]) role = auths[myId]; // (Staff or Asmar)
-        if(localStorage.getItem('isAsmar') === 'true') role = 'Asmar';
-
-        if(role === 'Asmar' || role === 'Staff') {
-            document.querySelectorAll('.locked').forEach(el => el.style.display = 'block');
-            document.getElementById('access-msg').innerText = `مرحباً بك: ${role === 'Asmar' ? 'المشرف العام' : 'موظف معتمد'}`;
-        }
+    function submitTest() {
+        const name = document.getElementById('userName').value;
+        const id = document.getElementById('userId').value;
         
-        if(role === 'Asmar') {
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
-            renderExamsForReview();
-        }
-    }
+        if(!name || !id) return alert("الرجاء إكمال البيانات الأساسية");
 
-    // إرسال الاختبار (متاح للزائر)
-    function sendExam() {
-        const name = document.getElementById('ex-name').value;
-        const q1 = document.getElementById('ex-q1').value;
-        if(!name || !q1) return alert("الرجاء إكمال بيانات الاختبار");
-
-        let exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
-        exams.push({
-            id: myId,
+        const newSubmission = {
             name: name,
-            answers: [q1, document.getElementById('ex-q2').value],
-            date: new Date().toLocaleString()
-        });
-        localStorage.setItem('pending_exams', JSON.stringify(exams));
-        alert("تم إرسال اختبارك بنجاح! انتظر مراجعة أسمر لتعميد جهازك.");
+            id: id,
+            answers: questions.map((_, i) => document.getElementById(`q${i}`).value),
+            score: null, // لم يتم التقييم بعد
+            status: "قيد الانتظار"
+        };
+
+        let data = JSON.parse(localStorage.getItem('submissions') || '[]');
+        data.push(newSubmission);
+        localStorage.setItem('submissions', JSON.stringify(data));
+        
+        alert("تم الإرسال. انتظر قرار لجنة المحاورين.");
+        location.reload();
     }
 
-    // عرض الاختبارات للمشرف (أسمر)
-    function renderExamsForReview() {
-        const exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
-        const list = document.getElementById('review-list');
-        if(exams.length === 0) { list.innerHTML = "لا يوجد اختبارات حالياً."; return; }
+    // عرض النتائج في الجدول
+    function loadResults() {
+        const data = JSON.parse(localStorage.getItem('submissions') || '[]');
+        const tableBody = document.getElementById('resultsTableBody');
+        let passCount = 0;
 
-        list.innerHTML = exams.map(ex => `
-            <div class="exam-item">
-                <b>المتقدم: ${ex.name}</b> <small>(${ex.id})</small><br>
-                <p>إجابة 1: ${ex.answers[0]}</p>
-                <p>إجابة 2: ${ex.answers[1]}</p>
-                <button class="btn btn-gold" style="width:auto; padding:5px 10px;" onclick="approveExam('${ex.id}', '${ex.name}')">قبول وتعميد كـ موظف ✅</button>
-            </div>
-        `).join('');
+        tableBody.innerHTML = data.map(item => {
+            if (item.score === null) return ""; // لا تظهر من لم يُقيم بعد
+            
+            const isPass = item.score >= 70;
+            if(isPass) passCount++;
+
+            return `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.score}</td>
+                    <td class="${isPass ? 'status-pass' : 'status-fail'}">${isPass ? 'ناجح ✅' : 'راسب ❌'}</td>
+                </tr>
+            `;
+        }).join('');
+
+        document.getElementById('passedCount').innerHTML = `<h2>${passCount}</h2><p>عدد الناجحين</p>`;
     }
 
-    // قبول الموظف وتعميده فوراً
-    function approveExam(deviceId, name) {
-        let auths = JSON.parse(localStorage.getItem('auth_list') || "{}");
-        auths[deviceId] = 'Staff'; // منحه رتبة موظف
-        localStorage.setItem('auth_list', JSON.stringify(auths));
-
-        // إضافة الموظف لديوان HR تلقائياً
-        let staff = JSON.parse(localStorage.getItem('staff_db') || "[]");
-        staff.push({ name: name, faction: 'المحاورين', rank: 'موظف مستجد' });
-        localStorage.setItem('staff_db', JSON.stringify(staff));
-
-        // حذف الاختبار من قائمة الانتظار
-        let exams = JSON.parse(localStorage.getItem('pending_exams') || "[]");
-        localStorage.setItem('pending_exams', JSON.stringify(exams.filter(e => e.id !== deviceId)));
-
-        alert(`تم قبول ${name} وتفعيله كـ موظف مشاهد في النظام.`);
-        renderExamsForReview();
-    }
-
-    function navTo(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-        document.getElementById(pageId).style.display = 'block';
-    }
-
-    function adminLogin() {
-        if(prompt("رمز المشرف العام:") === "asmar123") {
-            localStorage.setItem('isAsmar', 'true');
-            location.reload();
-        }
-    }
-
-    function logout() { localStorage.clear(); location.reload(); }
-    function fullReset() { if(confirm("حذف شامل؟")) { localStorage.clear(); location.reload(); } }
-
-    window.onload = syncAccess;
+    loadResults();
 </script>
+
 </body>
 </html>
