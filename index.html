@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة اختبار المحاورين | وزارة العدل</title>
+    <title>منصة اختبارات الكفاءة - المقابلات</title>
     <style>
         :root {
-            --primary-bg: #10141d;
-            --card-bg: #1a1f2b;
-            --gold: #c5a048;
-            --text-white: #ffffff;
-            --text-gray: #b0b3b8;
+            --primary-bg: #0f1218;
+            --card-bg: #161b22;
+            --gold: #d4af37;
+            --text-white: #e6edf3;
+            --border-color: #30363d;
         }
 
         body {
@@ -18,211 +18,226 @@
             background-color: var(--primary-bg);
             color: var(--text-white);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
-        .container { max-width: 800px; margin: auto; }
+        .container { max-width: 600px; margin: 20px auto; }
 
-        /* الهيدر */
-        header {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 2px solid var(--gold);
-            margin-bottom: 30px;
-        }
+        header { text-align: center; padding: 20px; margin-bottom: 20px; }
+        .logo-title { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 1px; }
+        .sub-title { color: var(--text-white); font-size: 14px; opacity: 0.8; }
 
-        .logo-title { font-size: 24px; font-weight: bold; }
-        .sub-title { color: var(--gold); font-size: 14px; }
-
-        /* الكروت */
         .card {
             background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
             margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .question { margin-bottom: 20px; border-right: 4px solid var(--gold); padding-right: 15px; }
-        
+        .faction-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: #1c2128;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .faction-btn:hover { background: var(--gold); color: #000; }
+
         input, select, button {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
-            border-radius: 6px;
-            border: 1px solid #333;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
             background: #0d1117;
             color: white;
+            box-sizing: border-box;
         }
 
-        button {
+        .submit-btn {
             background-color: var(--gold);
             color: #000;
             font-weight: bold;
-            cursor: pointer;
             border: none;
-            transition: 0.3s;
+            cursor: pointer;
+            margin-top: 20px;
         }
 
-        button:hover { background-color: #e0b85c; }
+        #quizSection, #waitingScreen, #adminPanel { display: none; }
 
-        /* لوحة التحكم */
-        #adminPanel, #waitingScreen { display: none; }
-        .status-badge { padding: 5px 10px; border-radius: 4px; font-size: 12px; }
-        .pending { background: #f39c12; color: #000; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #333; text-align: right; }
-        th { background: var(--gold); color: #000; }
+        .question-block { border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 15px; }
+        .question-text { font-size: 15px; color: var(--gold); margin-bottom: 8px; display: block; }
 
-        .admin-nav { display: flex; justify-content: space-between; align-items: center; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 10px; border: 1px solid #333; text-align: center; }
+        th { background: var(--gold); color: black; }
+
+        .loader { font-size: 40px; margin: 20px 0; animation: spin 2s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="quizScreen">
+    
+    <div id="welcomeScreen">
         <header>
-            <div class="logo-title">وزارة العدل</div>
-            <div class="sub-title">نظام اختبار كفاءة المحاورين والمقابلات</div>
+            <div class="logo-title">نظام اختبار المحاورين</div>
+            <div class="sub-title">يرجى اختيار الفصيل الذي تود إجراء المقابلات له</div>
         </header>
-
         <div class="card">
-            <h3>بيانات المتقدم</h3>
-            <input type="text" id="applicantName" placeholder="اسم المتقدم الثلاثي">
+            <button class="faction-btn" onclick="startQuiz('الحكومة')">🏛️ اختبار الحكومة</button>
+            <button class="faction-btn" onclick="startQuiz('الشرطة')">👮 اختبار الشرطة</button>
+            <button class="faction-btn" onclick="startQuiz('الجيش')">🎖️ اختبار الجيش</button>
+            <button class="faction-btn" onclick="startQuiz('التحالف الطبي')">🚑 اختبار التحالف الطبي</button>
+        </div>
+        <center><small onclick="checkAdmin()" style="color: #444; cursor: pointer;">لوحة التحكم</small></center>
+    </div>
+
+    <div id="quizSection">
+        <header>
+            <div id="factionTitle" class="logo-title">الاختبار</div>
+            <div class="sub-title">أجب على الأسئلة بناءً على قوانين الفصيل</div>
+        </header>
+        
+        <div class="card">
+            <input type="text" id="applicantName" placeholder="اسمك في السيرفر">
             <input type="text" id="discordID" placeholder="ID الديسكورد">
         </div>
 
-        <div id="questionsContainer">
-            <div class="card question">
-                <p>1. (ARM-A6) هل يسمح للعسكري باستخدام مركبة مدنية داخل القاعدة؟</p>
-                <select class="answer">
-                    <option value="">-- اختر الإجابة --</option>
-                    <option value="صح">نعم، بتصريح</option>
-                    <option value="خطأ">يمنع منعاً باتاً والعقوبة فصل</option>
-                </select>
+        <div class="card" id="questionsArea">
             </div>
-
-            <div class="card question">
-                <p>2. (MED-A4) ما هو الإجراء المتبع عند تواجد المسعف في حالة AFK أثناء الخدمة؟</p>
-                <select class="answer">
-                    <option value="صح">إنذار ثم توبيخ</option>
-                    <option value="خطأ">خصم راتب فقط</option>
-                </select>
-            </div>
-
-            <div class="card question">
-                <p>3. (PD-A10) متى يسمح لرجل الشرطة بإطلاق النار؟</p>
-                <select class="answer">
-                    <option value="">-- اختر الإجابة --</option>
-                    <option value="صح">وجود تهديد مباشر للحياة أو بأمر القيادة</option>
-                    <option value="خطأ">عند هروب أي سيارة فوراً</option>
-                </select>
-            </div>
-        </div>
-
-        <button onclick="submitQuiz()">إرسال الإجابات للمراجعة</button>
-        <br><br>
-        <center><small onclick="openAdmin()" style="cursor:pointer; color:var(--text-gray)">دخول الإدارة</small></center>
+        
+        <button class="submit-btn" onclick="finishQuiz()">إرسال الاختبار للمراجعة</button>
     </div>
 
     <div id="waitingScreen" class="card" style="text-align: center;">
-        <h2 style="color: var(--gold);">تم استلام طلبك بنجاح</h2>
-        <p>جاري انتظار مراجعة الإدارة المختصة...</p>
-        <div class="loader">🔄</div>
-        <p style="font-size: 13px; color: var(--text-gray);">سيتم إشعارك بالنتيجة فور اعتمادها.</p>
+        <div class="loader">⏳</div>
+        <h2 style="color: var(--gold);">تم الإرسال بنجاح</h2>
+        <p>جاري انتظار مراجعة الإدارة المختصة لطلبك...</p>
+        <p style="font-size: 12px; color: gray;">لا تغلق الصفحة حتى تظهر نتيجتك (اختياري)</p>
     </div>
 
     <div id="adminPanel">
-        <div class="admin-nav">
-            <h2>لوحة تحكم الإدارة</h2>
-            <button onclick="logoutAdmin()" style="width: auto; padding: 5px 15px;">خروج</button>
-        </div>
-        <div class="card">
+        <header><div class="logo-title">إدارة الاختبارات</div></header>
+        <div class="card" style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
                         <th>المتقدم</th>
-                        <th>ID</th>
+                        <th>الفصيل</th>
                         <th>الحالة</th>
                         <th>الإجراء</th>
                     </tr>
                 </thead>
-                <tbody id="adminTableBody">
-                    </tbody>
+                <tbody id="adminTableBody"></tbody>
             </table>
+            <button onclick="location.reload()" style="background: #333; margin-top: 15px;">الخروج</button>
         </div>
     </div>
+
 </div>
 
 <script>
-    let applicants = JSON.parse(localStorage.getItem('applicants')) || [];
+    let currentFaction = "";
+    const questionsData = {
+        'الحكومة': [
+            { q: "GOV-A4: هل يسمح بالتواجد في حالة AFK أثناء ساعات العمل؟", a: ["ممنوع منعاً باتاً", "مسموح لمدة 5 دقائق", "مسموح بإذن الإدارة"], correct: "ممنوع منعاً باتاً" },
+            { q: "GOV-A2: ما هو التصرف عند اكتشاف فساد أو استغلال منصب؟", a: ["إنذار ثم فصل عند التكرار", "تنبيه شفوي فقط", "خصم 50% من الراتب"], correct: "إنذار ثم فصل عند التكرار" }
+        ],
+        'الشرطة': [
+            { q: "PD-A9: ما هو التسلسل الصحيح لاستخدام القوة؟", a: ["سلاح ناري فوراً", "تحذير -> صاعق -> سلاح ناري (عند الضرورة)", "صاعق فقط"], correct: "تحذير -> صاعق -> سلاح ناري (عند الضرورة)" },
+            { q: "PD-A8: هل يسمح بتفتيش شخص أو مركبة بدون سبب RP؟", a: ["نعم مسموح دائماً", "يمنع (العقوبة إنذار وفي التكرار توبيخ)", "مسموح للرتب العليا فقط"], correct: "يمنع (العقوبة إنذار وفي التكرار توبيخ)" }
+        ],
+        'الجيش': [
+            { q: "ARM-A6: ما هي عقوبة استخدام المركبات المدنية داخل القاعدة؟", a: ["توبيخ وفصل عند التكرار", "مسموح للرتب العسكرية", "إنذار بسيط"], correct: "توبيخ وفصل عند التكرار" },
+            { q: "ARM-A4: هل يسمح بترك الشخصية AFK أثناء أداء المهام العسكرية؟", a: ["نعم", "ممنوع (العقوبة توبيخ وفي التكرار فصل)", "مسموح في غرف الاستراحة"], correct: "ممنوع (العقوبة توبيخ وفي التكرار فصل)" }
+        ],
+        'التحالف الطبي': [
+            { q: "MED-A6: هل يسمح بالإنعاش الفوري دون تمثيل طبي (Medical RP)؟", a: ["نعم لسرعة الوقت", "يمنع (العقوبة إنذار مباشر -> توبيخ)", "مسموح في حالات الحروب"], correct: "يمنع (العقوبة إنذار مباشر -> توبيخ)" },
+            { q: "MED-A9: ما هي عقوبة التسبب بقتل لاعب باستخدام سلاح من الفصيل الطبي؟", a: ["فصل فوري ونهائي", "إنذار بسيط", "توبيخ"], correct: "فصل فوري ونهائي" }
+        ]
+    };
 
-    // إرسال الاختبار
-    function submitQuiz() {
+    function startQuiz(faction) {
+        currentFaction = faction;
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'block';
+        document.getElementById('factionTitle').innerText = "اختبار محاور " + faction;
+        
+        const area = document.getElementById('questionsArea');
+        area.innerHTML = "";
+        questionsData[faction].forEach((item, index) => {
+            let options = item.a.map(opt => `<option value="${opt}">${opt}</option>`).join("");
+            area.innerHTML += `
+                <div class="question-block">
+                    <span class="question-text">${index + 1}. ${item.q}</span>
+                    <select class="user-answer">
+                        <option value="">إختر الإجابة...</option>
+                        ${options}
+                    </select>
+                </div>
+            `;
+        });
+    }
+
+    function finishQuiz() {
         const name = document.getElementById('applicantName').value;
-        const id = document.getElementById('discordID').value;
+        const disc = document.getElementById('discordID').value;
+        if(!name || !disc) return alert("يرجى إكمال البيانات الأساسية!");
 
-        if(!name || !id) return alert("يرجى ملء كافة البيانات");
+        let apps = JSON.parse(localStorage.getItem('rp_apps')) || [];
+        apps.push({ name, disc, faction: currentFaction, status: 'انتظار الإدارة' });
+        localStorage.setItem('rp_apps', JSON.stringify(apps));
 
-        const newApplicant = {
-            name: name,
-            id: id,
-            status: 'قيد الانتظار',
-            time: new Date().toLocaleString()
-        };
-
-        applicants.push(newApplicant);
-        localStorage.setItem('applicants', JSON.stringify(applicants));
-
-        document.getElementById('quizScreen').style.display = 'none';
+        document.getElementById('quizSection').style.display = 'none';
         document.getElementById('waitingScreen').style.display = 'block';
     }
 
-    // دخول الإدارة
-    function openAdmin() {
-        const pass = prompt("كلمة سر دخول الإدارة:");
-        if (pass === "Asmar123") {
-            showAdmin();
+    function checkAdmin() {
+        if(prompt("كلمة السر:") === "Asmar123") {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadAdminData();
         } else {
-            alert("كلمة السر خاطئة!");
+            alert("خطأ!");
         }
     }
 
-    function showAdmin() {
-        document.getElementById('quizScreen').style.display = 'none';
-        document.getElementById('waitingScreen').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        renderTable();
-    }
-
-    function renderTable() {
+    function loadAdminData() {
+        let apps = JSON.parse(localStorage.getItem('rp_apps')) || [];
         const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = '';
-        applicants.forEach((app, index) => {
+        tbody.innerHTML = "";
+        apps.forEach((a, i) => {
             tbody.innerHTML += `
                 <tr>
-                    <td>${app.name}</td>
-                    <td>${app.id}</td>
-                    <td><span class="status-badge pending">${app.status}</span></td>
+                    <td>${a.name}</td>
+                    <td>${a.faction}</td>
+                    <td style="color:${a.status=='مقبول'?'#00ff00':'#ff9900'}">${a.status}</td>
                     <td>
-                        <button onclick="updateStatus(${index}, 'مقبول')" style="background:green; width:70px; font-size:10px; color:white">قبول</button>
-                        <button onclick="updateStatus(${index}, 'مرفوض')" style="background:red; width:70px; font-size:10px; color:white">رفض</button>
+                        <button onclick="changeStatus(${i}, 'مقبول')" style="padding:2px; background:green; font-size:10px;">قبول</button>
+                        <button onclick="changeStatus(${i}, 'مرفوض')" style="padding:2px; background:red; font-size:10px;">رفض</button>
                     </td>
                 </tr>
             `;
         });
     }
 
-    function updateStatus(index, newStatus) {
-        applicants[index].status = newStatus;
-        localStorage.setItem('applicants', JSON.stringify(applicants));
-        renderTable();
-        alert("تم تحديث حالة المتقدم إلى: " + newStatus);
-    }
-
-    function logoutAdmin() {
-        location.reload();
+    function changeStatus(i, status) {
+        let apps = JSON.parse(localStorage.getItem('rp_apps'));
+        apps[i].status = status;
+        localStorage.setItem('rp_apps', JSON.stringify(apps));
+        loadAdminData();
     }
 </script>
 
