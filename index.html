@@ -3,206 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة وزارة الموارد البشرية | المطور الذكي</title>
+    <title>منصة اختبار المحاورين | وزارة العدل</title>
     <style>
-        :root { --primary: #0b1a30; --gold: #c5a059; --bg: #f4f7f6; --danger: #dc3545; --success: #28a745; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; color: #333; }
-        header { background: var(--primary); color: white; padding: 20px; border-bottom: 5px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.3s; width: 100%; }
-        .btn-gold { background: var(--gold); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-admin { background: rgba(255,255,255,0.1); color: white; border: 1px solid white; width: auto; }
-        .hidden { display: none; }
-        .card { background: #f9f9f9; padding: 15px; border-right: 5px solid var(--gold); margin-bottom: 15px; border-radius: 0 8px 8px 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { background: var(--primary); color: white; padding: 10px; }
-        td { border-bottom: 1px solid #eee; padding: 10px; text-align: center; }
-        .cooldown-active { background: #fff3cd; color: #856404; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        :root {
+            --primary-bg: #10141d;
+            --card-bg: #1a1f2b;
+            --gold: #c5a048;
+            --text-white: #ffffff;
+            --text-gray: #b0b3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-white);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 800px; margin: auto; }
+
+        /* الهيدر */
+        header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--gold);
+            margin-bottom: 30px;
+        }
+
+        .logo-title { font-size: 24px; font-weight: bold; }
+        .sub-title { color: var(--gold); font-size: 14px; }
+
+        /* الكروت */
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .question { margin-bottom: 20px; border-right: 4px solid var(--gold); padding-right: 15px; }
+        
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #0d1117;
+            color: white;
+        }
+
+        button {
+            background-color: var(--gold);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        button:hover { background-color: #e0b85c; }
+
+        /* لوحة التحكم */
+        #adminPanel, #waitingScreen { display: none; }
+        .status-badge { padding: 5px 10px; border-radius: 4px; font-size: 12px; }
+        .pending { background: #f39c12; color: #000; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #333; text-align: right; }
+        th { background: var(--gold); color: #000; }
+
+        .admin-nav { display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-<header>
-    <div>
-        <h2 style="margin:0;">وزارة الموارد البشرية</h2>
-        <small>الإدارة العامة لشؤون الفصائل</small>
-    </div>
-    <button class="btn btn-admin" onclick="toggleAdminView()">دخول الإدارة</button>
-</header>
+<div class="container">
+    <div id="quizScreen">
+        <header>
+            <div class="logo-title">وزارة العدل</div>
+            <div class="sub-title">نظام اختبار كفاءة المحاورين والمقابلات</div>
+        </header>
 
-<div id="userPortal" class="container">
-    <div id="cdBanner" class="cooldown-active hidden">🛑 نظام التهدئة نشط على حسابك حالياً.</div>
+        <div class="card">
+            <h3>بيانات المتقدم</h3>
+            <input type="text" id="applicantName" placeholder="اسم المتقدم الثلاثي">
+            <input type="text" id="discordID" placeholder="ID الديسكورد">
+        </div>
 
-    <div id="testForm">
-        <h3>تقديم طلب جديد</h3>
-        <input type="text" id="app_name" placeholder="اسمك في الفصيل (يجب أن يكون دقيقاً) *">
-        <select id="app_faction" onchange="loadQs()">
-            <option value="">-- اختر الفصيل --</option>
-            <option value="government">الحكومة</option>
-            <option value="police">الشرطة</option>
-            <option value="medical">التحالف الطبي</option>
-            <option value="army">الجيش</option>
-        </select>
-        <div id="qsBox"></div>
-        <button class="btn btn-gold" onclick="sendApp()">إرسال الطلب</button>
-    </div>
-
-    <h3 style="margin-top:40px;">نتائج القبول المبدئي</h3>
-    <table id="publicResults">
-        <thead><tr><th>المتقدم</th><th>الفصيل</th><th>الحالة</th></tr></thead>
-        <tbody></tbody>
-    </table>
-</div>
-
-<div id="adminPortal" class="container hidden">
-    <div id="adminLogin">
-        <h3 style="text-align:center;">دخول الموظفين المصرح لهم</h3>
-        <input type="password" id="passInput" placeholder="أدخل كلمة المرور">
-        <button class="btn btn-gold" onclick="checkAuth()">دخول النظام</button>
-    </div>
-
-    <div id="adminDashboard" class="hidden">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-            <div class="card">
-                <h3>📥 طلبات التوظيف</h3>
-                <div id="appsList"></div>
-            </div>
-
-            <div class="card" style="border-color: var(--danger);">
-                <h3>🚫 إدارة الاستقالات والتهدئة</h3>
-                <label>اسم الشخص المستقيل:</label>
-                <input type="text" id="res_name" placeholder="الاسم الكامل">
-                <label>فصيله الحالي:</label>
-                <select id="res_faction">
-                    <option value="government">الحكومة</option>
-                    <option value="police">الشرطة</option>
-                    <option value="medical">التحالف الطبي</option>
-                    <option value="army">الجيش</option>
+        <div id="questionsContainer">
+            <div class="card question">
+                <p>1. (ARM-A6) هل يسمح للعسكري باستخدام مركبة مدنية داخل القاعدة؟</p>
+                <select class="answer">
+                    <option value="">-- اختر الإجابة --</option>
+                    <option value="صح">نعم، بتصريح</option>
+                    <option value="خطأ">يمنع منعاً باتاً والعقوبة فصل</option>
                 </select>
-                <button class="btn btn-danger" onclick="applyManualCD()">تفعيل الكولد داون فوراً</button>
-                
-                <h4 style="margin-top:20px;">سجل التهدئة النشط:</h4>
-                <div id="cdList"></div>
             </div>
+
+            <div class="card question">
+                <p>2. (MED-A4) ما هو الإجراء المتبع عند تواجد المسعف في حالة AFK أثناء الخدمة؟</p>
+                <select class="answer">
+                    <option value="صح">إنذار ثم توبيخ</option>
+                    <option value="خطأ">خصم راتب فقط</option>
+                </select>
+            </div>
+
+            <div class="card question">
+                <p>3. (PD-A10) متى يسمح لرجل الشرطة بإطلاق النار؟</p>
+                <select class="answer">
+                    <option value="">-- اختر الإجابة --</option>
+                    <option value="صح">وجود تهديد مباشر للحياة أو بأمر القيادة</option>
+                    <option value="خطأ">عند هروب أي سيارة فوراً</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="submitQuiz()">إرسال الإجابات للمراجعة</button>
+        <br><br>
+        <center><small onclick="openAdmin()" style="cursor:pointer; color:var(--text-gray)">دخول الإدارة</small></center>
+    </div>
+
+    <div id="waitingScreen" class="card" style="text-align: center;">
+        <h2 style="color: var(--gold);">تم استلام طلبك بنجاح</h2>
+        <p>جاري انتظار مراجعة الإدارة المختصة...</p>
+        <div class="loader">🔄</div>
+        <p style="font-size: 13px; color: var(--text-gray);">سيتم إشعارك بالنتيجة فور اعتمادها.</p>
+    </div>
+
+    <div id="adminPanel">
+        <div class="admin-nav">
+            <h2>لوحة تحكم الإدارة</h2>
+            <button onclick="logoutAdmin()" style="width: auto; padding: 5px 15px;">خروج</button>
+        </div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>المتقدم</th>
+                        <th>ID</th>
+                        <th>الحالة</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
-    const factionQs = {
-        "government": ["ما هو دور المحاور؟", "قانون السلوك المهني (GOV-A1)؟", "بروتوكول التعامل مع المراجعين؟"],
-        "police": ["ما هو دور المحاور؟", "قانون استخدام القوة (PD-A9)؟", "حالات التفتيش القانونية (PD-A8)؟"],
-        "medical": ["ما هو دور المحاور؟", "قانون التعامل مع الحالات الجسيمة (MED-A7)؟", "قوانين حمل السلاح للمسعف (MED-A9)؟"],
-        "army": ["ما هو دور المحاور؟", "قانون جودة التمثيل العسكري (ARM-A5)؟", "قانون الالتزام بالأوامر (ARM-A7)؟"]
-    };
+    let applicants = JSON.parse(localStorage.getItem('applicants')) || [];
 
-    function toggleAdminView() {
-        document.getElementById('userPortal').classList.toggle('hidden');
-        document.getElementById('adminPortal').classList.toggle('hidden');
+    // إرسال الاختبار
+    function submitQuiz() {
+        const name = document.getElementById('applicantName').value;
+        const id = document.getElementById('discordID').value;
+
+        if(!name || !id) return alert("يرجى ملء كافة البيانات");
+
+        const newApplicant = {
+            name: name,
+            id: id,
+            status: 'قيد الانتظار',
+            time: new Date().toLocaleString()
+        };
+
+        applicants.push(newApplicant);
+        localStorage.setItem('applicants', JSON.stringify(applicants));
+
+        document.getElementById('quizScreen').style.display = 'none';
+        document.getElementById('waitingScreen').style.display = 'block';
     }
 
-    function checkAuth() {
-        // كلمة السر مخفية تماماً في الكود ولا تظهر للمستخدم
-        if(document.getElementById('passInput').value === "asmar123") {
-            document.getElementById('adminLogin').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            renderAdminContent();
-        } else { alert("كلمة المرور غير صحيحة!"); }
+    // دخول الإدارة
+    function openAdmin() {
+        const pass = prompt("كلمة سر دخول الإدارة:");
+        if (pass === "Asmar123") {
+            showAdmin();
+        } else {
+            alert("كلمة السر خاطئة!");
+        }
     }
 
-    function loadQs() {
-        const f = document.getElementById('app_faction').value;
-        const b = document.getElementById('qsBox');
-        b.innerHTML = "";
-        if(f) factionQs[f].forEach((q, i) => {
-            b.innerHTML += `<div class="card"><strong>س${i+1}: ${q}</strong><textarea class="ans"></textarea></div>`;
+    function showAdmin() {
+        document.getElementById('quizScreen').style.display = 'none';
+        document.getElementById('waitingScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        renderTable();
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
+        applicants.forEach((app, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${app.name}</td>
+                    <td>${app.id}</td>
+                    <td><span class="status-badge pending">${app.status}</span></td>
+                    <td>
+                        <button onclick="updateStatus(${index}, 'مقبول')" style="background:green; width:70px; font-size:10px; color:white">قبول</button>
+                        <button onclick="updateStatus(${index}, 'مرفوض')" style="background:red; width:70px; font-size:10px; color:white">رفض</button>
+                    </td>
+                </tr>
+            `;
         });
     }
 
-    function sendApp() {
-        const name = document.getElementById('app_name').value;
-        const faction = document.getElementById('app_faction').value;
-        const answers = Array.from(document.querySelectorAll('.ans')).map(t => t.value);
-        
-        if(!name || !faction) return alert("الرجاء تعبئة الاسم والفصيل");
+    function updateStatus(index, newStatus) {
+        applicants[index].status = newStatus;
+        localStorage.setItem('applicants', JSON.stringify(applicants));
+        renderTable();
+        alert("تم تحديث حالة المتقدم إلى: " + newStatus);
+    }
 
-        // فحص إذا كان الاسم تحت الكولد داون
-        let cooldowns = JSON.parse(localStorage.getItem('f_cooldowns') || '[]');
-        if(cooldowns.includes(name)) return alert("عذراً، اسمك مدرج في قائمة التهدئة حالياً.");
-
-        let apps = JSON.parse(localStorage.getItem('f_apps') || '[]');
-        apps.push({ name, faction, answers, score: null });
-        localStorage.setItem('f_apps', JSON.stringify(apps));
-        alert("تم إرسال طلبك!");
+    function logoutAdmin() {
         location.reload();
     }
-
-    function applyManualCD() {
-        const name = document.getElementById('res_name').value;
-        if(!name) return alert("أدخل اسم الشخص");
-        
-        let cooldowns = JSON.parse(localStorage.getItem('f_cooldowns') || '[]');
-        if(!cooldowns.includes(name)) cooldowns.push(name);
-        
-        localStorage.setItem('f_cooldowns', JSON.stringify(cooldowns));
-        alert("تم تفعيل الكولد داون بنجاح لـ " + name);
-        renderAdminContent();
-    }
-
-    function removeCD(name) {
-        let cooldowns = JSON.parse(localStorage.getItem('f_cooldowns') || '[]');
-        cooldowns = cooldowns.filter(n => n !== name);
-        localStorage.setItem('f_cooldowns', JSON.stringify(cooldowns));
-        renderAdminContent();
-    }
-
-    function renderAdminContent() {
-        // عرض الطلبات
-        const apps = JSON.parse(localStorage.getItem('f_apps') || '[]');
-        const list = document.getElementById('appsList');
-        list.innerHTML = apps.filter(a => a.score === null).map((a, i) => `
-            <div class="card">
-                <b>${a.name} - ${a.faction}</b>
-                <button onclick="alert('الأجوبة: ${a.answers.join(' | ')}')">رؤية الأجوبة</button>
-                <input type="number" id="sc_${i}" placeholder="الدرجة">
-                <button onclick="saveScore(${i})">حفظ</button>
-            </div>
-        `).join('') || "لا يوجد طلبات حالياً";
-
-        // عرض قائمة الكولد داون
-        const cooldowns = JSON.parse(localStorage.getItem('f_cooldowns') || '[]');
-        const cdList = document.getElementById('cdList');
-        cdList.innerHTML = cooldowns.map(name => `
-            <div style="display:flex; justify-content:space-between; padding:5px; background:#fff; margin:2px;">
-                <span>${name}</span>
-                <button style="color:red; border:none; cursor:pointer;" onclick="removeCD('${name}')">حذف ❌</button>
-            </div>
-        `).join('') || "القائمة فارغة";
-    }
-
-    function saveScore(idx) {
-        let apps = JSON.parse(localStorage.getItem('f_apps'));
-        apps[idx].score = document.getElementById(`sc_${idx}`).value;
-        localStorage.setItem('f_apps', JSON.stringify(apps));
-        renderAdminContent();
-        renderPublicResults();
-    }
-
-    function renderPublicResults() {
-        const apps = JSON.parse(localStorage.getItem('f_apps') || '[]');
-        const tbody = document.querySelector('#publicResults tbody');
-        tbody.innerHTML = apps.map(a => `
-            <tr>
-                <td>${a.name}</td>
-                <td>${a.faction}</td>
-                <td style="color:${a.score >= 70 ? 'green':'red'}">${a.score === null ? 'بانتظار الإدارة' : (a.score >= 70 ? 'ناجح ✅' : 'راسب ❌')}</td>
-            </tr>
-        `).join('');
-    }
-
-    renderPublicResults();
 </script>
+
 </body>
 </html>
