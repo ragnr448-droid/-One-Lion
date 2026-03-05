@@ -3,87 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة اختبارات الكفاءة - المقابلات</title>
+    <title>نظام اختبار المحاورين المعتمد</title>
     <style>
         :root {
-            --primary-bg: #0f1218;
+            --primary-bg: #0d1117;
             --card-bg: #161b22;
-            --gold: #d4af37;
-            --text-white: #e6edf3;
-            --border-color: #30363d;
+            --gold: #d2a106;
+            --text-white: #f0f6fc;
+            --border: #30363d;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--primary-bg);
             color: var(--text-white);
-            margin: 0;
-            padding: 10px;
+            margin: 0; padding: 15px;
         }
 
-        .container { max-width: 600px; margin: 20px auto; }
+        .container { max-width: 700px; margin: auto; }
 
-        header { text-align: center; padding: 20px; margin-bottom: 20px; }
-        .logo-title { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 1px; }
-        .sub-title { color: var(--text-white); font-size: 14px; opacity: 0.8; }
+        header { text-align: center; padding: 30px 0; border-bottom: 1px solid var(--gold); margin-bottom: 20px; }
+        .logo-title { font-size: 28px; font-weight: bold; color: var(--gold); text-shadow: 0 2px 10px rgba(210, 161, 6, 0.3); }
 
         .card {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            border: 1px solid var(--border);
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .faction-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: #1c2128;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: 0.3s;
+            display: block; width: 100%; padding: 15px; margin: 10px 0;
+            background: #21262d; border: 1px solid var(--gold); color: var(--gold);
+            border-radius: 8px; cursor: pointer; font-size: 17px; font-weight: bold; transition: 0.3s;
         }
-
         .faction-btn:hover { background: var(--gold); color: #000; }
 
-        input, select, button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: #0d1117;
-            color: white;
-            box-sizing: border-box;
+        input, select, textarea, button {
+            width: 100%; padding: 12px; margin-top: 10px; border-radius: 6px;
+            border: 1px solid var(--border); background: #010409; color: white; box-sizing: border-box;
         }
 
-        .submit-btn {
-            background-color: var(--gold);
-            color: #000;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
+        textarea { height: 100px; resize: none; }
+
+        .submit-btn { background: var(--gold); color: #000; font-weight: bold; border: none; cursor: pointer; margin-top: 20px; font-size: 18px; }
+
+        .question-block { border-bottom: 1px solid #30363d; padding: 15px 0; }
+        .q-text { color: var(--gold); font-weight: bold; margin-bottom: 10px; display: block; }
 
         #quizSection, #waitingScreen, #adminPanel { display: none; }
 
-        .question-block { border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 15px; }
-        .question-text { font-size: 15px; color: var(--gold); margin-bottom: 8px; display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #333; text-align: center; font-size: 14px; }
+        th { background: var(--gold); color: #000; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { padding: 10px; border: 1px solid #333; text-align: center; }
-        th { background: var(--gold); color: black; }
-
-        .loader { font-size: 40px; margin: 20px 0; animation: spin 2s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .pending { background: #f39c12; color: black; }
+        .approved { background: #238636; color: white; }
     </style>
 </head>
 <body>
@@ -92,46 +69,54 @@
     
     <div id="welcomeScreen">
         <header>
-            <div class="logo-title">نظام اختبار المحاورين</div>
-            <div class="sub-title">يرجى اختيار الفصيل الذي تود إجراء المقابلات له</div>
+            <div class="logo-title">مركز اختبار المحاورين</div>
+            <p>اختر القسم الذي ترغب في التقدم له كمحاور</p>
         </header>
         <div class="card">
-            <button class="faction-btn" onclick="startQuiz('الحكومة')">🏛️ اختبار الحكومة</button>
-            <button class="faction-btn" onclick="startQuiz('الشرطة')">👮 اختبار الشرطة</button>
-            <button class="faction-btn" onclick="startQuiz('الجيش')">🎖️ اختبار الجيش</button>
-            <button class="faction-btn" onclick="startQuiz('التحالف الطبي')">🚑 اختبار التحالف الطبي</button>
+            <button class="faction-btn" onclick="startQuiz('الحكومة')">🏛️ قسم الحكومة</button>
+            <button class="faction-btn" onclick="startQuiz('الشرطة')">👮 قسم الشرطة</button>
+            <button class="faction-btn" onclick="startQuiz('الجيش')">🎖️ قسم الجيش</button>
+            <button class="faction-btn" onclick="startQuiz('التحالف الطبي')">🚑 قسم التحالف الطبي</button>
         </div>
-        <center><small onclick="checkAdmin()" style="color: #444; cursor: pointer;">لوحة التحكم</small></center>
+        <center><small onclick="enterAdmin()" style="cursor:pointer; color:#444">لوحة الإدارة</small></center>
     </div>
 
     <div id="quizSection">
         <header>
-            <div id="factionTitle" class="logo-title">الاختبار</div>
-            <div class="sub-title">أجب على الأسئلة بناءً على قوانين الفصيل</div>
+            <div id="factionTitle" class="logo-title">اسم الفصيل</div>
         </header>
-        
+
         <div class="card">
-            <input type="text" id="applicantName" placeholder="اسمك في السيرفر">
-            <input type="text" id="discordID" placeholder="ID الديسكورد">
+            <h3>المعلومات الشخصية</h3>
+            <input type="text" id="userName" placeholder="الاسم الرباعي">
+            <input type="text" id="userDiscord" placeholder="معرف الديسكورد (ID)">
         </div>
 
-        <div class="card" id="questionsArea">
+        <div class="card" id="questionsContainer">
             </div>
-        
-        <button class="submit-btn" onclick="finishQuiz()">إرسال الاختبار للمراجعة</button>
+
+        <div class="card">
+            <h3 style="color: var(--gold);">الأسئلة المقالية</h3>
+            <label>ما هو دور محاور المتقدمين من وجهة نظرك؟</label>
+            <textarea id="essay1"></textarea>
+            <br><br>
+            <label>صف نفسك ولماذا ترى نفسك مناسباً لهذا المنصب؟</label>
+            <textarea id="essay2"></textarea>
+        </div>
+
+        <button class="submit-btn" onclick="submitData()">إرسال الاختبار</button>
     </div>
 
-    <div id="waitingScreen" class="card" style="text-align: center;">
-        <div class="loader">⏳</div>
-        <h2 style="color: var(--gold);">تم الإرسال بنجاح</h2>
-        <p>جاري انتظار مراجعة الإدارة المختصة لطلبك...</p>
-        <p style="font-size: 12px; color: gray;">لا تغلق الصفحة حتى تظهر نتيجتك (اختياري)</p>
+    <div id="waitingScreen" class="card" style="text-align: center; padding: 50px 20px;">
+        <h2 style="color: var(--gold);">جاري انتظار الإدارة...</h2>
+        <p>تم استلام إجاباتك بنجاح، يرجى انتظار المراجعة من قبل المسؤولين.</p>
+        <div style="font-size: 50px;">⏳</div>
     </div>
 
     <div id="adminPanel">
-        <header><div class="logo-title">إدارة الاختبارات</div></header>
+        <header><div class="logo-title">لوحة تحكم الإدارة</div></header>
         <div class="card" style="overflow-x: auto;">
-            <table>
+            <table id="adminTable">
                 <thead>
                     <tr>
                         <th>المتقدم</th>
@@ -140,104 +125,132 @@
                         <th>الإجراء</th>
                     </tr>
                 </thead>
-                <tbody id="adminTableBody"></tbody>
+                <tbody id="tableBody"></tbody>
             </table>
-            <button onclick="location.reload()" style="background: #333; margin-top: 15px;">الخروج</button>
+            <button onclick="location.reload()" style="background:#333; margin-top:20px;">خروج</button>
         </div>
     </div>
 
 </div>
 
 <script>
-    let currentFaction = "";
-    const questionsData = {
+    const questionsPool = {
         'الحكومة': [
-            { q: "GOV-A4: هل يسمح بالتواجد في حالة AFK أثناء ساعات العمل؟", a: ["ممنوع منعاً باتاً", "مسموح لمدة 5 دقائق", "مسموح بإذن الإدارة"], correct: "ممنوع منعاً باتاً" },
-            { q: "GOV-A2: ما هو التصرف عند اكتشاف فساد أو استغلال منصب؟", a: ["إنذار ثم فصل عند التكرار", "تنبيه شفوي فقط", "خصم 50% من الراتب"], correct: "إنذار ثم فصل عند التكرار" }
+            {q: "GOV-A1: ما هي عقوبة الفساد الإداري؟", a: ["فصل فوري", "تنبيه", "توبيخ"]},
+            {q: "GOV-A2: هل يسمح بتجاوز الرتب؟", a: ["نعم", "يمنع منعاً باتاً", "في الحالات الطارئة"]},
+            {q: "GOV-A4: عقوبة الـ AFK في ساعات العمل؟", a: ["خصم راتب", "تنبيه ثم توبيخ", "سجن"]},
+            {q: "GOV-A6: هل يسمح للمحاور بتسريب الأسئلة؟", a: ["نعم للأصدقاء", "يمنع (بلاك لست)", "بإذن المدير"]},
+            {q: "GOV-A7: ما هو الإجراء عند غياب موظف بدون عذر؟", a: ["فصل", "إنذار", "تجاهل"]},
+            {q: "GOV-A10: هل يجب الالتزام بالزي الرسمي؟", a: ["نعم دائماً", "لا", "اختياري"]},
+            {q: "GOV-A12: ما هو التصرف عند وجود مشادة كلامية؟", a: ["المشاركة فيها", "الرفع للإدارة", "السكوت"]},
+            {q: "GOV-A15: هل يحق للمحاور قبول شخص بدون مقابلة؟", a: ["لا أبداً", "نعم", "فقط للرتب العالية"]}
         ],
         'الشرطة': [
-            { q: "PD-A9: ما هو التسلسل الصحيح لاستخدام القوة؟", a: ["سلاح ناري فوراً", "تحذير -> صاعق -> سلاح ناري (عند الضرورة)", "صاعق فقط"], correct: "تحذير -> صاعق -> سلاح ناري (عند الضرورة)" },
-            { q: "PD-A8: هل يسمح بتفتيش شخص أو مركبة بدون سبب RP؟", a: ["نعم مسموح دائماً", "يمنع (العقوبة إنذار وفي التكرار توبيخ)", "مسموح للرتب العليا فقط"], correct: "يمنع (العقوبة إنذار وفي التكرار توبيخ)" }
+            {q: "PD-A5: متى يتم استخدام الصاعق الكهربائي؟", a: ["عند الهروب مشياً", "فوراً", "للمزاح"]},
+            {q: "PD-A8: عقوبة التفتيش بدون سبب RP؟", a: ["إنذار ثم توبيخ", "لا توجد عقوبة", "فصل فوري"]},
+            {q: "PD-A9: متى يسمح بإطلاق النار؟", a: ["تهديد حياة", "هروب سيارة", "دائماً"]},
+            {q: "PD-A11: هل يسمح بالدخول للمناطق المحظورة بدون إذن؟", a: ["نعم", "لا", "فقط للرتب العليا"]},
+            {q: "PD-A14: ما هي عقوبة عدم احترام الرتبة؟", a: ["توبيخ", "سجن", "طرد"]},
+            {q: "PD-A16: هل يسمح بترك الدورية في الشارع؟", a: ["لا", "نعم", "بإذن"]},
+            {q: "PD-A20: عقوبة استخدام القوة المفرطة؟", a: ["فصل", "إنذار", "تنبيه"]},
+            {q: "PD-A22: هل يسمح بمصادرة الأغراض بدون محضر؟", a: ["يمنع", "مسموح", "اختياري"]}
         ],
         'الجيش': [
-            { q: "ARM-A6: ما هي عقوبة استخدام المركبات المدنية داخل القاعدة؟", a: ["توبيخ وفصل عند التكرار", "مسموح للرتب العسكرية", "إنذار بسيط"], correct: "توبيخ وفصل عند التكرار" },
-            { q: "ARM-A4: هل يسمح بترك الشخصية AFK أثناء أداء المهام العسكرية؟", a: ["نعم", "ممنوع (العقوبة توبيخ وفي التكرار فصل)", "مسموح في غرف الاستراحة"], correct: "ممنوع (العقوبة توبيخ وفي التكرار فصل)" }
+            {q: "ARM-A4: عقوبة الـ AFK داخل القاعدة؟", a: ["توبيخ ثم فصل", "تنبيه", "سجن"]},
+            {q: "ARM-A6: هل يسمح بالمركبات المدنية؟", a: ["يمنع منعاً باتاً", "نعم", "فقط للرتب"]},
+            {q: "ARM-A9: عقوبة الخروج من القاعدة بدون إذن؟", a: ["فصل", "توبيخ", "إنذار"]},
+            {q: "ARM-A10: ما هو التصرف عند رؤية متسلل؟", a: ["إطلاق نار فوراً", "تحذير ثم اعتقال", "تجاهل"]},
+            {q: "ARM-A12: هل يسمح بإفشاء أسرار العمليات؟", a: ["لا (بلاك لست)", "نعم", "للأصدقاء"]},
+            {q: "ARM-A14: عقوبة النوم أثناء الحراسة؟", a: ["فصل", "توبيخ", "تنبيه"]},
+            {q: "ARM-A15: هل يسمح باستخدام سلاح الجيش خارج الدوام؟", a: ["يمنع", "مسموح", "بإذن"]},
+            {q: "ARM-A18: عقوبة مخالفة أوامر القائد؟", a: ["توبيخ وفصل", "إنذار", "لا شيء"]}
         ],
         'التحالف الطبي': [
-            { q: "MED-A6: هل يسمح بالإنعاش الفوري دون تمثيل طبي (Medical RP)؟", a: ["نعم لسرعة الوقت", "يمنع (العقوبة إنذار مباشر -> توبيخ)", "مسموح في حالات الحروب"], correct: "يمنع (العقوبة إنذار مباشر -> توبيخ)" },
-            { q: "MED-A9: ما هي عقوبة التسبب بقتل لاعب باستخدام سلاح من الفصيل الطبي؟", a: ["فصل فوري ونهائي", "إنذار بسيط", "توبيخ"], correct: "فصل فوري ونهائي" }
+            {q: "MED-A3: هل يسمح بالانشغال بالجوال أثناء العمل؟", a: ["لا (تنبيه ثم توبيخ)", "نعم", "أحياناً"]},
+            {q: "MED-A6: هل يسمح بالإنعاش بدون Medical RP؟", a: ["يمنع (إنذار مباشر)", "نعم للسرعة", "مسموح"]},
+            {q: "MED-A9: عقوبة القتل العمد بسلاح طبي؟", a: ["فصل نهائي", "توبيخ", "سجن"]},
+            {q: "MED-A11: هل يسمح بدخول غرف العمليات لغير المختصين؟", a: ["لا", "نعم", "بإذن"]},
+            {q: "MED-A13: عقوبة سرقة الأدوية؟", a: ["فصل", "تنبيه", "توبيخ"]},
+            {q: "MED-A15: هل يسمح بطلب مبالغ إضافية من المرضى؟", a: ["يمنع", "مسموح", "بإذن"]},
+            {q: "MED-A17: عقوبة ترك المصابين بدون علاج؟", a: ["توبيخ وفصل", "إنذار", "لا شيء"]},
+            {q: "MED-A20: هل يسمح للمسعف بالمشاركة في الجرائم؟", a: ["لا (بلاك لست)", "نعم", "بإذن"]}
         ]
     };
 
+    let selectedFaction = "";
+
     function startQuiz(faction) {
-        currentFaction = faction;
+        selectedFaction = faction;
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
         document.getElementById('factionTitle').innerText = "اختبار محاور " + faction;
         
-        const area = document.getElementById('questionsArea');
-        area.innerHTML = "";
-        questionsData[faction].forEach((item, index) => {
-            let options = item.a.map(opt => `<option value="${opt}">${opt}</option>`).join("");
-            area.innerHTML += `
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = "";
+        questionsPool[faction].forEach((q, i) => {
+            let options = q.a.map(opt => `<option value="${opt}">${opt}</option>`).join("");
+            container.innerHTML += `
                 <div class="question-block">
-                    <span class="question-text">${index + 1}. ${item.q}</span>
-                    <select class="user-answer">
-                        <option value="">إختر الإجابة...</option>
-                        ${options}
-                    </select>
+                    <span class="q-text">${i+1}. ${q.q}</span>
+                    <select class="quiz-ans"><option value="">اختر...</option>${options}</select>
                 </div>
             `;
         });
     }
 
-    function finishQuiz() {
-        const name = document.getElementById('applicantName').value;
-        const disc = document.getElementById('discordID').value;
-        if(!name || !disc) return alert("يرجى إكمال البيانات الأساسية!");
+    function submitData() {
+        const name = document.getElementById('userName').value;
+        const disc = document.getElementById('userDiscord').value;
+        const e1 = document.getElementById('essay1').value;
+        const e2 = document.getElementById('essay2').value;
 
-        let apps = JSON.parse(localStorage.getItem('rp_apps')) || [];
-        apps.push({ name, disc, faction: currentFaction, status: 'انتظار الإدارة' });
-        localStorage.setItem('rp_apps', JSON.stringify(apps));
+        if(!name || !disc || !e1 || !e2) return alert("يرجى إكمال جميع الحقول والأسئلة المقالية!");
+
+        let apps = JSON.parse(localStorage.getItem('f_apps')) || [];
+        apps.push({ name, disc, faction: selectedFaction, status: 'انتظار الإدارة', e1, e2 });
+        localStorage.setItem('f_apps', JSON.stringify(apps));
 
         document.getElementById('quizSection').style.display = 'none';
         document.getElementById('waitingScreen').style.display = 'block';
     }
 
-    function checkAdmin() {
+    function enterAdmin() {
         if(prompt("كلمة السر:") === "Asmar123") {
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
-            loadAdminData();
-        } else {
-            alert("خطأ!");
-        }
+            loadTable();
+        } else { alert("خطأ!"); }
     }
 
-    function loadAdminData() {
-        let apps = JSON.parse(localStorage.getItem('rp_apps')) || [];
-        const tbody = document.getElementById('adminTableBody');
-        tbody.innerHTML = "";
+    function loadTable() {
+        let apps = JSON.parse(localStorage.getItem('f_apps')) || [];
+        const body = document.getElementById('tableBody');
+        body.innerHTML = "";
         apps.forEach((a, i) => {
-            tbody.innerHTML += `
+            body.innerHTML += `
                 <tr>
                     <td>${a.name}</td>
                     <td>${a.faction}</td>
-                    <td style="color:${a.status=='مقبول'?'#00ff00':'#ff9900'}">${a.status}</td>
+                    <td><span class="status-badge pending">${a.status}</span></td>
                     <td>
-                        <button onclick="changeStatus(${i}, 'مقبول')" style="padding:2px; background:green; font-size:10px;">قبول</button>
-                        <button onclick="changeStatus(${i}, 'مرفوض')" style="padding:2px; background:red; font-size:10px;">رفض</button>
+                        <button onclick="viewAnswers(${i})" style="padding:4px; font-size:10px; background:blue">عرض</button>
+                        <button onclick="setStatus(${i}, 'مقبول')" style="padding:4px; font-size:10px; background:green">قبول</button>
                     </td>
                 </tr>
             `;
         });
     }
 
-    function changeStatus(i, status) {
-        let apps = JSON.parse(localStorage.getItem('rp_apps'));
-        apps[i].status = status;
-        localStorage.setItem('rp_apps', JSON.stringify(apps));
-        loadAdminData();
+    function viewAnswers(i) {
+        let a = JSON.parse(localStorage.getItem('f_apps'))[i];
+        alert(`المقال 1: ${a.e1}\n\nالمقال 2: ${a.e2}`);
+    }
+
+    function setStatus(i, s) {
+        let apps = JSON.parse(localStorage.getItem('f_apps'));
+        apps[i].status = s;
+        localStorage.setItem('f_apps', JSON.stringify(apps));
+        loadTable();
     }
 </script>
 
